@@ -66,7 +66,7 @@ export default function PartnerDashboard() {
   return (
     <>
       {/* Top bar */}
-      <header style={{ background: "white", borderBottom: "1px solid var(--border)", padding: "14px 32px", display: "flex", alignItems: "center", gap: 24 }}>
+      <header style={{ background: "white", borderBottom: "1px solid var(--border)", padding: "14px 32px", display: "flex", alignItems: "center", gap: 24, marginTop: 73 }}>
         <Link href="/" className="logo">
           <div className="logo-mark">🥐</div>
           <div className="logo-text">
@@ -139,7 +139,7 @@ export default function PartnerDashboard() {
           {/* Stat cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
             {stats.map((s) => (
-              <div key={s.lbl} style={{ background: "white", borderRadius: 16, border: "1px solid var(--border)", padding: 22 }}>
+              <div key={s.lbl} className="card-hover" style={{ background: "white", borderRadius: 16, border: "1px solid var(--border)", padding: 22 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--cream)", display: "grid", placeItems: "center", fontSize: 18 }}>{s.ic}</div>
                   <span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>{s.lbl}</span>

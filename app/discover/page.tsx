@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -42,19 +43,126 @@ function FilterGroup({ title, options }: { title: string; options: string[] }) {
   );
 }
 
+function BoxSkeleton() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {[1, 2, 3].map((i) => (
+        <div key={i} style={{
+          background: "white",
+          borderRadius: 18,
+          border: "1px solid var(--border)",
+          padding: 14,
+          display: "grid",
+          gridTemplateColumns: "140px 1fr auto",
+          gap: 18,
+          alignItems: "center",
+        }}>
+          <div style={{ width: 140, height: 140, borderRadius: 14, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ height: 14, width: "30%", borderRadius: 6, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div style={{ height: 20, width: "60%", borderRadius: 6, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div style={{ height: 28, width: "40%", borderRadius: 6, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div style={{ height: 12, width: "70%", borderRadius: 6, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+          </div>
+          <div style={{ width: 80, height: 36, borderRadius: 999, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+async function BoxList({ sort }: { sort: string }) {
+  const boxes = await getBoxes(sort);
+
+  if (boxes.length === 0) {
+    return (
+      <div style={{ textAlign: "center", padding: "64px 0", color: "var(--text-muted)" }}>
+        <div style={{ fontSize: 48, marginBottom: 12 }}>🥲</div>
+        <p style={{ fontSize: 16, fontWeight: 600 }}>Hôm nay chưa có box nào</p>
+        <p style={{ fontSize: 13, marginTop: 6 }}>Quay lại sau nhé!</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {boxes.map((box, i) => {
+        const disc = discountPercent(box.priceOriginal, box.priceSale);
+        const emoji = EMOJIS[i % EMOJIS.length];
+        const isLow = box.quantityLeft <= 2;
+        const tone = i % 2 === 0 ? "warm" : "cream";
+
+        return (
+          <Link key={box.id} href={`/box/${box.id}`} className="card-hover card-hover-warm" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
+            background: "white",
+            borderRadius: 18,
+            border: "1px solid var(--border)",
+            padding: 14,
+            display: "grid",
+            gridTemplateColumns: "140px 1fr auto",
+            gap: 18,
+            alignItems: "center",
+          }}>
+            <div style={{
+              width: 140, height: 140, borderRadius: 14, fontSize: 56,
+              background: tone === "warm"
+                ? "linear-gradient(135deg, #fde6d4, #f5d4b3)"
+                : "linear-gradient(135deg, #fdf5e6, #e8dcc6)",
+              display: "grid", placeItems: "center",
+            }}>{emoji}</div>
+
+            <div>
+              <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                <span className="badge badge-primary">−{disc}%</span>
+                {isLow && <span className="badge badge-warm">🔥 Sắp hết</span>}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
+                {box.store.name}
+              </div>
+              <h3 style={{ fontSize: 18, margin: "4px 0 10px" }}>{box.name}</h3>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 10 }}>
+                <span style={{ fontSize: 12, color: "var(--text-muted)", textDecoration: "line-through" }}>
+                  {formatPrice(box.priceOriginal)}
+                </span>
+                <span style={{ fontSize: 22, fontWeight: 800, color: "var(--primary)" }}>
+                  {formatPrice(box.priceSale)}
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: 16, fontSize: 11, color: "var(--text-muted)" }}>
+                <span>🕒 {box.pickupStart} - {box.pickupEnd}</span>
+                <span>📍 {box.store.address.split(",")[0]}</span>
+                <span style={{ color: isLow ? "var(--danger)" : "var(--accent)", fontWeight: 600 }}>
+                  📦 Còn {box.quantityLeft} box
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-end" }}>
+              <button
+                style={{ width: 36, height: 36, borderRadius: 999, background: "var(--cream)", display: "grid", placeItems: "center", fontSize: 16 }}
+                onClick={(e) => e.preventDefault()}
+              >♡</button>
+              <span className="btn btn-primary">Xem Box</span>
+            </div>
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
 export default async function DiscoverPage({
   searchParams,
 }: {
   searchParams: Promise<{ sort?: string }>;
 }) {
   const { sort = "default" } = await searchParams;
-  const boxes = await getBoxes(sort);
 
   return (
     <>
-      <SiteHeader active="discover" />
+      <SiteHeader />
 
-      <div style={{ background: "white", padding: "0 64px", borderBottom: "1px solid var(--border)" }}>
+      <div className="rise rise-1" style={{ background: "white", padding: "0 64px", borderBottom: "1px solid var(--border)", paddingTop: 73 }}>
         <div style={{ display: "flex", gap: 32 }}>
           {[
             { label: "Khám phá Box", active: true },
@@ -73,10 +181,10 @@ export default async function DiscoverPage({
         </div>
       </div>
 
-      <main style={{ padding: "32px 64px 48px" }}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
+      <main style={{ padding: "32px 64px 48px", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div className="rise rise-2" style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
           <h2 style={{ fontSize: 24, flex: 1 }}>
-            Box hôm nay · <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>{boxes.length} kết quả</span>
+            Box hôm nay
           </h2>
           <div style={{ display: "flex", gap: 8 }}>
             {[
@@ -98,7 +206,7 @@ export default async function DiscoverPage({
 
         <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: 24, alignItems: "flex-start" }}>
           {/* Filters */}
-          <aside style={{ background: "white", padding: 24, borderRadius: 20, border: "1px solid var(--border)", position: "sticky", top: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+          <aside className="rise rise-3" style={{ background: "white", padding: 24, borderRadius: 20, border: "1px solid var(--border)", position: "sticky", top: 24, display: "flex", flexDirection: "column", gap: 16 }}>
             <h3 style={{ fontSize: 18 }}>Bộ lọc</h3>
             <FilterGroup title="Loại box" options={["Bánh ngọt", "Bánh mặn", "Đồ uống", "Mix"]} />
             <FilterGroup title="Khoảng giá" options={["Dưới 50.000đ", "50k – 100k", "100k – 150k"]} />
@@ -108,76 +216,10 @@ export default async function DiscoverPage({
           </aside>
 
           {/* Results */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {boxes.length === 0 && (
-              <div style={{ textAlign: "center", padding: "64px 0", color: "var(--text-muted)" }}>
-                <div style={{ fontSize: 48, marginBottom: 12 }}>🥲</div>
-                <p style={{ fontSize: 16, fontWeight: 600 }}>Hôm nay chưa có box nào</p>
-                <p style={{ fontSize: 13, marginTop: 6 }}>Quay lại sau nhé!</p>
-              </div>
-            )}
-
-            {boxes.map((box, i) => {
-              const disc = discountPercent(box.priceOriginal, box.priceSale);
-              const emoji = EMOJIS[i % EMOJIS.length];
-              const isLow = box.quantityLeft <= 2;
-              const tone = i % 2 === 0 ? "warm" : "cream";
-
-              return (
-                <Link key={box.id} href={`/box/${box.id}`} className="card-hover card-hover-warm" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
-                  background: "white",
-                  borderRadius: 18,
-                  border: "1px solid var(--border)",
-                  padding: 14,
-                  display: "grid",
-                  gridTemplateColumns: "140px 1fr auto",
-                  gap: 18,
-                  alignItems: "center",
-                }}>
-                  <div style={{
-                    width: 140, height: 140, borderRadius: 14, fontSize: 56,
-                    background: tone === "warm"
-                      ? "linear-gradient(135deg, #fde6d4, #f5d4b3)"
-                      : "linear-gradient(135deg, #fdf5e6, #e8dcc6)",
-                    display: "grid", placeItems: "center",
-                  }}>{emoji}</div>
-
-                  <div>
-                    <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-                      <span className="badge badge-primary">−{disc}%</span>
-                      {isLow && <span className="badge badge-warm">🔥 Sắp hết</span>}
-                    </div>
-                    <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
-                      {box.store.name}
-                    </div>
-                    <h3 style={{ fontSize: 18, margin: "4px 0 10px" }}>{box.name}</h3>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 10 }}>
-                      <span style={{ fontSize: 12, color: "var(--text-muted)", textDecoration: "line-through" }}>
-                        {formatPrice(box.priceOriginal)}
-                      </span>
-                      <span style={{ fontSize: 22, fontWeight: 800, color: "var(--primary)" }}>
-                        {formatPrice(box.priceSale)}
-                      </span>
-                    </div>
-                    <div style={{ display: "flex", gap: 16, fontSize: 11, color: "var(--text-muted)" }}>
-                      <span>🕒 {box.pickupStart} - {box.pickupEnd}</span>
-                      <span>📍 {box.store.address.split(",")[0]}</span>
-                      <span style={{ color: isLow ? "var(--danger)" : "var(--accent)", fontWeight: 600 }}>
-                        📦 Còn {box.quantityLeft} box
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-end" }}>
-                    <button
-                      style={{ width: 36, height: 36, borderRadius: 999, background: "var(--cream)", display: "grid", placeItems: "center", fontSize: 16 }}
-                      onClick={(e) => e.preventDefault()}
-                    >♡</button>
-                    <span className="btn btn-primary">Xem Box</span>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="rise rise-4" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <Suspense fallback={<BoxSkeleton />}>
+              <BoxList sort={sort} />
+            </Suspense>
           </div>
         </div>
       </main>

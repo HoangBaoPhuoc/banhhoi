@@ -1,18 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "./LogoutButton";
+import NavLinks from "./NavLinks";
+import SearchBar from "./SearchBar";
 
-export default async function SiteHeader({ active }: { active?: string }) {
+export default async function SiteHeader() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-
-  const items = [
-    { href: "/discover", label: "Khám phá Box", key: "discover" },
-    { href: "/#how", label: "Cách hoạt động", key: "how" },
-    { href: "/about", label: "Về chúng tôi", key: "about" },
-    { href: "/partner", label: "Dành cho cửa hàng", key: "partner" },
-    { href: "/delivery", label: "Giao hàng", key: "delivery" },
-  ];
 
   return (
     <header className="site-header">
@@ -29,13 +23,9 @@ export default async function SiteHeader({ active }: { active?: string }) {
         <span>Hồ Chí Minh, Việt Nam</span>
       </div>
 
-      <nav className="nav">
-        {items.map((item) => (
-          <Link key={item.key} href={item.href} className={active === item.key ? "active" : ""}>
-            {item.label}
-          </Link>
-        ))}
-      </nav>
+      <NavLinks />
+
+      <SearchBar />
 
       {user ? (
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

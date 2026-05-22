@@ -26,14 +26,14 @@ const faqs = [
 export default function AboutPage() {
   return (
     <>
-      <SiteHeader active="about" />
+      <SiteHeader />
 
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "96px 64px 80px", position: "relative", overflow: "hidden" }}>
+      <section style={{ backgroundColor: "var(--cream)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center", padding: "169px 64px 80px", position: "relative", overflow: "hidden", minHeight: "100vh", display: "flex", alignItems: "center" }}>
         <div style={{ position: "absolute", top: 60, left: 100, fontSize: 140, opacity: 0.06, transform: "rotate(-15deg)" }}>🥐</div>
         <div style={{ position: "absolute", bottom: 40, right: 120, fontSize: 140, opacity: 0.06, transform: "rotate(20deg)" }}>🌿</div>
 
-        <div className="container" style={{ position: "relative", textAlign: "center", maxWidth: 800 }}>
+        <div className="container" style={{ position: "relative", textAlign: "center", maxWidth: 800, width: "100%" }}>
           <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
             Câu chuyện của chúng tôi
           </div>
@@ -52,7 +52,7 @@ export default function AboutPage() {
       <section style={{ padding: "96px 0", background: "white" }}>
         <div className="container">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
-            <div style={{
+            <div className="card-hover" data-reveal data-reveal-delay="1" style={{
               background: "linear-gradient(135deg, var(--primary-soft) 0%, #f9e0c4 100%)",
               borderRadius: 28,
               padding: "44px 40px",
@@ -72,7 +72,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div style={{
+            <div className="card-hover" data-reveal data-reveal-delay="2" style={{
               background: "linear-gradient(135deg, var(--accent-soft) 0%, #c5dcbf 100%)",
               borderRadius: 28,
               padding: "44px 40px",
@@ -96,9 +96,9 @@ export default function AboutPage() {
       </section>
 
       {/* CORE VALUES */}
-      <section id="impact" style={{ padding: "96px 0", background: "var(--ivory)" }}>
+      <section id="impact" style={{ padding: "96px 0", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Giá trị cốt lõi
             </div>
@@ -106,8 +106,8 @@ export default function AboutPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-            {values.map((v) => (
-              <div key={v.title} style={{
+            {values.map((v, i) => (
+              <div key={v.title} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
                 background: "white",
                 borderRadius: 20,
                 padding: "32px 24px",
@@ -135,7 +135,7 @@ export default function AboutPage() {
       <section style={{ padding: "96px 0", background: "white" }}>
         <div className="container">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 56, alignItems: "center" }}>
-            <div>
+            <div data-reveal>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
                 Chính sách chất lượng
               </div>
@@ -149,9 +149,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {quality.map((q) => (
-                <div key={q.n} style={{
+            <div data-reveal data-reveal-delay="2" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {quality.map((q, i) => (
+                <div key={q.n} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
                   background: "var(--cream)",
                   borderRadius: 18,
                   padding: 24,
@@ -174,9 +174,9 @@ export default function AboutPage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" style={{ padding: "96px 0", background: "var(--ivory)" }}>
+      <section id="faq" style={{ padding: "96px 0", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="container" style={{ maxWidth: 880 }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 48 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               FAQ
             </div>
@@ -185,7 +185,7 @@ export default function AboutPage() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {faqs.map((f, i) => (
-              <details key={i} style={{
+              <details key={i} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
                 background: "white",
                 borderRadius: 16,
                 border: "1px solid var(--border)",
@@ -230,7 +230,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section style={{ padding: "72px 0 96px", background: "white" }}>
         <div className="container">
-          <div style={{
+          <div data-reveal style={{
             background: "var(--text)",
             borderRadius: 28,
             padding: "56px 56px",

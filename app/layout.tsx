@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ViewTransitions } from "next-view-transitions";
 import ScrollRevealProvider from "@/components/ScrollRevealProvider";
+import ScrollToTop from "@/components/ScrollToTop";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
         <body>
           <ScrollRevealProvider />
           {children}
+          <ScrollToTop />
         </body>
       </html>
     </ViewTransitions>

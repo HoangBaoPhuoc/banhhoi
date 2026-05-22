@@ -20,21 +20,21 @@ const rules = [
 export default function DeliveryPage() {
   return (
     <>
-      <SiteHeader active="delivery" />
+      <SiteHeader />
 
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "72px 64px 56px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <section style={{ background: "var(--cream)", padding: "145px 64px 56px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 20, left: 80, fontSize: 100, opacity: 0.07, transform: "rotate(-20deg)" }}>🛍️</div>
         <div style={{ position: "absolute", bottom: 20, right: 80, fontSize: 100, opacity: 0.07, transform: "rotate(15deg)" }}>📱</div>
         <div className="container" style={{ position: "relative" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
+          <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
             Hướng dẫn nhận hàng
           </div>
-          <h1 style={{ fontSize: 56, marginBottom: 16, lineHeight: 1.1 }}>
+          <h1 className="rise rise-2" style={{ fontSize: 56, marginBottom: 16, lineHeight: 1.1 }}>
             Đơn giản — chỉ <em style={{ color: "var(--primary)", fontStyle: "italic" }}>4 bước</em><br />
             để nhận Surprise Box
           </h1>
-          <p style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 560, margin: "0 auto" }}>
+          <p className="rise rise-3" style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 560, margin: "0 auto" }}>
             Hiện tại Still Good hỗ trợ hình thức <strong style={{ color: "var(--text)" }}>tự đến lấy tại cửa hàng (Pick-up)</strong>.
             Giao tận nơi đang được phát triển.
           </p>
@@ -44,7 +44,7 @@ export default function DeliveryPage() {
       {/* PICKUP STEPS */}
       <section style={{ padding: "72px 0", background: "white" }}>
         <div className="container">
-          <h2 style={{ fontSize: 36, textAlign: "center", marginBottom: 48 }}>Quy trình tự đến lấy</h2>
+          <h2 data-reveal style={{ fontSize: 36, textAlign: "center", marginBottom: 48 }}>Quy trình tự đến lấy</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, position: "relative" }}>
             {/* Connecting dashed line */}
@@ -53,12 +53,12 @@ export default function DeliveryPage() {
             </svg>
 
             {pickupSteps.map((s) => (
-              <div key={s.n} style={{ position: "relative", textAlign: "center", zIndex: 1 }}>
+              <div key={s.n} className="card-hover" data-reveal data-reveal-delay={String(s.n)} style={{ position: "relative", textAlign: "center", zIndex: 1, padding: "24px 16px", borderRadius: 20, border: "1px solid var(--border)", background: "white" }}>
                 <div style={{
                   width: 100,
                   height: 100,
                   borderRadius: 28,
-                  background: "white",
+                  background: "var(--cream)",
                   border: "2px solid var(--border)",
                   margin: "0 auto 20px",
                   display: "grid",
@@ -95,7 +95,7 @@ export default function DeliveryPage() {
       {/* QR DEMO */}
       <section style={{ padding: "72px 0", background: "var(--ivory)" }}>
         <div className="container">
-          <div style={{
+          <div data-reveal style={{
             background: "white",
             borderRadius: 28,
             padding: "48px 56px",
@@ -168,7 +168,7 @@ export default function DeliveryPage() {
       {/* RULES */}
       <section style={{ padding: "72px 0", background: "white" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 40 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "var(--danger)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Lưu ý quan trọng
             </div>
@@ -179,8 +179,8 @@ export default function DeliveryPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 1000, margin: "0 auto" }}>
-            {rules.map((r) => (
-              <div key={r.title} style={{
+            {rules.map((r, i) => (
+              <div key={r.title} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
                 background: r.strong ? "var(--cream)" : "white",
                 border: r.strong ? "1px solid var(--badge)" : "1px solid var(--border)",
                 borderRadius: 16,
@@ -202,7 +202,7 @@ export default function DeliveryPage() {
       {/* COMING SOON DELIVERY */}
       <section style={{ padding: "56px 0 96px", background: "var(--ivory)" }}>
         <div className="container">
-          <div style={{
+          <div data-reveal style={{
             background: "linear-gradient(135deg, #4c8c4a 0%, #6ba968 100%)",
             borderRadius: 24,
             padding: "48px 56px",

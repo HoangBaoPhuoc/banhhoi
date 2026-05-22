@@ -11,9 +11,9 @@ const reviews = [
 export default function BoxDetailPage({ params }: { params: { id: string } }) {
   return (
     <>
-      <SiteHeader active="discover" />
+      <SiteHeader />
 
-      <div style={{ padding: "16px 64px", background: "white", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ padding: "16px 64px", paddingTop: 89, background: "white", borderBottom: "1px solid var(--border)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
           <Link href="/discover" style={{ color: "var(--text-muted)" }}>Khám phá</Link>
           <span>›</span>
