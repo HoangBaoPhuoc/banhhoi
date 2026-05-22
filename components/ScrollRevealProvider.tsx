@@ -19,12 +19,12 @@ export default function ScrollRevealProvider() {
       { threshold: 0.08, rootMargin: "0px 0px -48px 0px" }
     );
 
-    // Small delay so DOM settles after page transition
+    // Small delay so DOM settles after view transition
     const timer = setTimeout(() => {
       document.querySelectorAll("[data-reveal]").forEach((el) => {
         observer.observe(el);
       });
-    }, 60);
+    }, 80);
 
     return () => {
       clearTimeout(timer);

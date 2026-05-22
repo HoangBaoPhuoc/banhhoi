@@ -4,8 +4,27 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, discountPercent, getVietnamToday } from "@/lib/utils";
+import MapView from "@/components/MapView";
+import type { StorePin } from "@/components/MapView";
 
 const EMOJIS = ["🥐", "☕", "🥖", "🧁", "🥪", "🎁"];
+
+async function getStorePins(): Promise<StorePin[]> {
+  const { from, to } = getVietnamToday();
+  const stores = await prisma.store.findMany({
+    where: { lat: { not: null }, lng: { not: null } },
+    select: {
+      id: true, name: true, lat: true, lng: true,
+      boxes: {
+        where: { active: true, quantityLeft: { gt: 0 }, date: { gte: from, lt: to } },
+        select: { id: true },
+      },
+    },
+  });
+  return stores
+    .filter((s) => s.lat !== null && s.lng !== null)
+    .map((s) => ({ id: s.id, name: s.name, lat: s.lat!, lng: s.lng!, boxCount: s.boxes.length }));
+}
 
 async function getBoxes(sort: string) {
   const { from, to } = getVietnamToday();
@@ -157,12 +176,13 @@ export default async function DiscoverPage({
   searchParams: Promise<{ sort?: string }>;
 }) {
   const { sort = "default" } = await searchParams;
+  const storePins = await getStorePins();
 
   return (
     <>
       <SiteHeader />
 
-      <div className="rise rise-1" style={{ background: "white", padding: "0 64px", borderBottom: "1px solid var(--border)", paddingTop: 73 }}>
+      <div className="rise rise-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", padding: "0 64px", borderBottom: "1px solid var(--border)", paddingTop: 73, position: "sticky", top: 0, zIndex: 90 }}>
         <div style={{ display: "flex", gap: 32 }}>
           {[
             { label: "Khám phá Box", active: true },
@@ -182,44 +202,142 @@ export default async function DiscoverPage({
       </div>
 
       <main style={{ padding: "32px 64px 48px", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
-        <div className="rise rise-2" style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
-          <h2 style={{ fontSize: 24, flex: 1 }}>
-            Box hôm nay
-          </h2>
-          <div style={{ display: "flex", gap: 8 }}>
-            {[
-              { label: "Mặc định", value: "default" },
-              { label: "Giá thấp nhất", value: "price_asc" },
-              { label: "Giá cao nhất", value: "price_desc" },
-            ].map((s) => (
-              <Link
-                key={s.value}
-                href={`/discover?sort=${s.value}`}
-                className={sort === s.value ? "btn btn-primary" : "btn btn-ghost"}
-                style={{ fontSize: 12, padding: "8px 14px" }}
-              >
-                {s.label}
-              </Link>
-            ))}
+        <div style={{ display: "grid", gridTemplateColumns: "240px 1fr 260px", gap: 24, alignItems: "stretch" }}>
+          {/* Filters wrapper — stretches to row height so sticky inside can travel */}
+          <div>
+            <aside className="rise rise-3" style={{ background: "white", padding: 24, borderRadius: 20, border: "1px solid var(--border)", position: "sticky", top: 130, display: "flex", flexDirection: "column", gap: 16 }}>
+              <h3 style={{ fontSize: 18 }}>Bộ lọc</h3>
+              <FilterGroup title="Loại box" options={["Bánh ngọt", "Bánh mặn", "Đồ uống", "Mix"]} />
+              <FilterGroup title="Khoảng giá" options={["Dưới 50.000đ", "50k – 100k", "100k – 150k"]} />
+              <FilterGroup title="Giờ nhận" options={["Trong 2 giờ tới", "Hôm nay"]} />
+              <FilterGroup title="Đánh giá" options={["★★★★★", "★★★★ trở lên"]} />
+              <button className="btn btn-ghost" style={{ width: "100%" }}>Xóa bộ lọc</button>
+            </aside>
           </div>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: 24, alignItems: "flex-start" }}>
-          {/* Filters */}
-          <aside className="rise rise-3" style={{ background: "white", padding: 24, borderRadius: 20, border: "1px solid var(--border)", position: "sticky", top: 24, display: "flex", flexDirection: "column", gap: 16 }}>
-            <h3 style={{ fontSize: 18 }}>Bộ lọc</h3>
-            <FilterGroup title="Loại box" options={["Bánh ngọt", "Bánh mặn", "Đồ uống", "Mix"]} />
-            <FilterGroup title="Khoảng giá" options={["Dưới 50.000đ", "50k – 100k", "100k – 150k"]} />
-            <FilterGroup title="Giờ nhận" options={["Trong 2 giờ tới", "Hôm nay"]} />
-            <FilterGroup title="Đánh giá" options={["★★★★★", "★★★★ trở lên"]} />
-            <button className="btn btn-ghost" style={{ width: "100%" }}>Xóa bộ lọc</button>
-          </aside>
 
           {/* Results */}
           <div className="rise rise-4" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+              <h2 style={{ fontSize: 22, flex: 1 }}>Box hôm nay</h2>
+              <div style={{ display: "flex", gap: 8 }}>
+                {[
+                  { label: "Mặc định", value: "default" },
+                  { label: "Giá thấp nhất", value: "price_asc" },
+                  { label: "Giá cao nhất", value: "price_desc" },
+                ].map((s) => (
+                  <Link
+                    key={s.value}
+                    href={`/discover?sort=${s.value}`}
+                    className={sort === s.value ? "btn btn-primary" : "btn btn-ghost"}
+                    style={{ fontSize: 12, padding: "8px 14px" }}
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
             <Suspense fallback={<BoxSkeleton />}>
               <BoxList sort={sort} />
             </Suspense>
+          </div>
+
+          {/* Right sidebar wrapper — stretches to row height so sticky inside can travel */}
+          <div>
+            <aside style={{ display: "flex", flexDirection: "column", gap: 16, position: "sticky", top: 130 }}>
+
+              {/* Map */}
+              <div className="rise rise-4" style={{
+                background: "white",
+                borderRadius: 20,
+                border: "1px solid var(--border)",
+                overflow: "hidden",
+              }}>
+                <MapView stores={storePins} height={220} />
+                <div style={{ padding: "10px 14px", fontSize: 12, color: "var(--text-muted)", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>📍</span>
+                  <span>Bấm vị trí trên header để định vị</span>
+                </div>
+              </div>
+
+              {/* Impact card */}
+              <div className="rise rise-5" style={{
+                background: "white",
+                borderRadius: 20,
+                border: "1px solid var(--border)",
+                padding: 20,
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+              }}>
+                <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 16 }}>Tác động của bạn</div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{
+                    background: "var(--accent-soft)",
+                    borderRadius: 14,
+                    padding: "14px 16px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                  }}>
+                    <div style={{
+                      width: 44, height: 44,
+                      borderRadius: 12,
+                      background: "white",
+                      display: "grid",
+                      placeItems: "center",
+                      fontSize: 22,
+                      boxShadow: "0 2px 8px rgba(76,140,74,0.15)",
+                    }}>🌿</div>
+                    <div>
+                      <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>Bạn đã cứu</div>
+                      <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent)", lineHeight: 1 }}>— box</div>
+                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>trong tháng này</div>
+                    </div>
+                  </div>
+
+                  <div style={{
+                    background: "var(--cream)",
+                    borderRadius: 14,
+                    padding: "14px 16px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                  }}>
+                    <div style={{
+                      width: 44, height: 44,
+                      borderRadius: 12,
+                      background: "white",
+                      display: "grid",
+                      placeItems: "center",
+                      fontSize: 22,
+                      boxShadow: "0 2px 8px rgba(232,119,34,0.12)",
+                    }}>🏭</div>
+                    <div>
+                      <div style={{ fontSize: 11, color: "var(--primary)", fontWeight: 600, marginBottom: 2 }}>CO₂ giảm phát thải</div>
+                      <div style={{ fontSize: 22, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>— kg</div>
+                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>tương đương tháng này</div>
+                    </div>
+                  </div>
+                </div>
+
+                <button style={{
+                  marginTop: 14,
+                  width: "100%",
+                  padding: "10px 0",
+                  borderRadius: 999,
+                  border: "1px solid var(--border)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--text-muted)",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}>
+                  Xem tác động của cộng đồng →
+                </button>
+              </div>
+
+            </aside>
           </div>
         </div>
       </main>

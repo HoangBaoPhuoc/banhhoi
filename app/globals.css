@@ -468,6 +468,10 @@ h4 {
   100% { transform: translateX(-50%); }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
@@ -477,8 +481,6 @@ h4 {
   0%, 100% { transform: translateX(-50%) translateY(0);    opacity: 0.6; }
   50%       { transform: translateX(-50%) translateY(6px); opacity: 1;   }
 }
-
-html { scroll-behavior: smooth; }
 
 ::view-transition-old(root) {
   animation: vt-out 0.18s ease-in forwards;

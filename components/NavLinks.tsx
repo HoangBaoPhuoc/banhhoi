@@ -25,6 +25,7 @@ export default function NavLinks() {
   // recompute active underline position after DOM settles
   useEffect(() => {
     const activeIdx = items.findIndex((item) => {
+      if (item.key === "partner") return false;
       if (item.key === "home") return pathname === "/";
       return pathname.startsWith(item.href);
     });
@@ -47,7 +48,8 @@ export default function NavLinks() {
     >
       {items.map((item, i) => {
         const active =
-          item.key === "home" ? pathname === "/"
+          item.key === "partner" ? false
+          : item.key === "home" ? pathname === "/"
           : pathname.startsWith(item.href);
 
         return (
@@ -69,6 +71,7 @@ export default function NavLinks() {
               } else if (item.key === "partner") {
                 e.preventDefault();
                 setPartnerOpen(true);
+                setIsHovering(false);
               }
             }}
           >

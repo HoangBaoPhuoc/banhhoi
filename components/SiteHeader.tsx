@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "./LogoutButton";
 import NavLinks from "./NavLinks";
 import SearchBar from "./SearchBar";
+import LocationPill from "./LocationPill";
 
 export default async function SiteHeader() {
   const supabase = await createClient();
@@ -18,10 +19,7 @@ export default async function SiteHeader() {
         </div>
       </Link>
 
-      <div className="addr-pill">
-        <span>📍</span>
-        <span>Hồ Chí Minh, Việt Nam</span>
-      </div>
+      <LocationPill />
 
       <NavLinks />
 

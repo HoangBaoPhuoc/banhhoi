@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { ViewTransitions } from "next-view-transitions";
 import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import ScrollToTop from "@/components/ScrollToTop";
+import ProgressBar from "@/components/ProgressBar";
+import { LocationProvider } from "@/lib/location-context";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,9 +21,12 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="vi">
         <body>
-          <ScrollRevealProvider />
-          {children}
-          <ScrollToTop />
+          <LocationProvider>
+            <ProgressBar />
+            <ScrollRevealProvider />
+            {children}
+            <ScrollToTop />
+          </LocationProvider>
         </body>
       </html>
     </ViewTransitions>
