@@ -77,11 +77,10 @@ export default function HomePage() {
             </div>
 
             {/* Floating mini-card */}
-            <div style={{
+            <div className="card-hover glass" style={{
               position: "absolute",
               bottom: -24,
               left: -32,
-              background: "white",
               padding: "14px 18px",
               borderRadius: 16,
               boxShadow: "var(--shadow-lg)",
@@ -102,7 +101,7 @@ export default function HomePage() {
       {/* HOW IT WORKS */}
       <section id="how" style={{ padding: "96px 0", background: "var(--ivory)" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Đơn giản — 4 bước
             </div>
@@ -116,14 +115,13 @@ export default function HomePage() {
               { icon: "🛍️", n: 3, title: "Nhận hàng", desc: "Đến tiệm hoặc nhận giao tận nơi nhanh chóng" },
               { icon: "♻️", n: 4, title: "Giảm lãng phí", desc: "Cùng cộng đồng giải cứu thực phẩm mỗi ngày" },
             ].map((s, i) => (
-              <div key={i} style={{
+              <div key={i} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
                 background: "white",
                 padding: "32px 24px",
                 borderRadius: 20,
                 border: "1px solid var(--border)",
                 textAlign: "center",
                 position: "relative",
-                transition: "transform 0.3s, box-shadow 0.3s",
               }}>
                 <div style={{ position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)", width: 32, height: 32, borderRadius: 999, background: "var(--primary)", color: "white", display: "grid", placeItems: "center", fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 14 }}>
                   {s.n}
@@ -142,7 +140,7 @@ export default function HomePage() {
       {/* FEATURED BOXES */}
       <section style={{ padding: "80px 0", background: "white" }}>
         <div className="container">
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 32 }}>
+          <div data-reveal style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 32 }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>
                 Hôm nay
@@ -156,12 +154,11 @@ export default function HomePage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
             {featuredBoxes.map((b, i) => (
-              <Link key={i} href={`/box/${i + 1}`} style={{
+              <Link key={i} href={`/box/${i + 1}`} className="card-hover card-hover-warm" data-reveal data-reveal-delay={String(i + 1)} style={{
                 background: "white",
                 borderRadius: 20,
                 border: "1px solid var(--border)",
                 overflow: "hidden",
-                transition: "transform 0.25s, box-shadow 0.25s",
                 display: "block",
               }}>
                 <div style={{
@@ -201,13 +198,13 @@ export default function HomePage() {
       {/* COMMUNITY IMPACT */}
       <section style={{ padding: "96px 0", background: "var(--cream)", position: "relative", overflow: "hidden" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Cùng nhau làm điều tốt
             </div>
             <h2 style={{ fontSize: 44, marginBottom: 12 }}>Tác động cộng đồng</h2>
             <p style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 520, margin: "0 auto" }}>
-              Cùng Bánh Hỡi và cộng đồng giải cứu thực phẩm mỗi ngày — từng box nhỏ, tác động lớn.
+              Cùng Still Good và cộng đồng giải cứu thực phẩm mỗi ngày — từng box nhỏ, tác động lớn.
             </p>
           </div>
 
@@ -217,7 +214,7 @@ export default function HomePage() {
               { icon: "💧", num: "312,6 tấn", label: "Thực phẩm giảm lãng phí", sub: "Tương đương 850 hộ gia đình", color: "var(--primary)" },
               { icon: "🏪", num: "2.850+", label: "Cửa hàng đồng hành", sub: "Trên 18 tỉnh thành", color: "var(--text)" },
             ].map((s, i) => (
-              <div key={i} style={{
+              <div key={i} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
                 background: "white",
                 padding: "36px 32px",
                 borderRadius: 24,
@@ -244,7 +241,7 @@ export default function HomePage() {
       {/* PARTNER CTA */}
       <section style={{ padding: "80px 64px", background: "white" }}>
         <div className="container">
-          <div style={{
+          <div data-reveal style={{
             background: "linear-gradient(120deg, var(--badge) 0%, #f7d27a 100%)",
             borderRadius: 28,
             padding: "48px 56px",
@@ -264,7 +261,7 @@ export default function HomePage() {
                 Bạn là chủ tiệm bánh<br />hoặc quán cà phê?
               </h2>
               <p style={{ fontSize: 15, color: "var(--text)", maxWidth: 560, lineHeight: 1.6 }}>
-                Tham gia Bánh Hỡi để tăng doanh thu và cùng chúng tôi giảm lãng phí thực phẩm mỗi ngày — không phí khởi tạo, không ràng buộc.
+                Tham gia Still Good để tăng doanh thu và cùng chúng tôi giảm lãng phí thực phẩm mỗi ngày — không phí khởi tạo, không ràng buộc.
               </p>
             </div>
             <Link href="/partner" className="btn btn-primary btn-lg">

@@ -1,15 +1,23 @@
 {
-  "name": "banh-hoi",
+  "name": "still-good",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "tsx --env-file=.env prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.106.1",
+    "@types/pg": "^8.20.0",
     "next": "^16.2.6",
+    "next-view-transitions": "^0.3.5",
+    "pg": "^8.21.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -17,6 +25,9 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "dotenv": "^17.4.2",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }

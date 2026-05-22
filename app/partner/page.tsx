@@ -70,7 +70,7 @@ export default function PartnerDashboard() {
         <Link href="/" className="logo">
           <div className="logo-mark">🥐</div>
           <div className="logo-text">
-            <strong>Bánh Hỡi</strong>
+            <strong>Still Good</strong>
             <span>Dành cho cửa hàng</span>
           </div>
         </Link>

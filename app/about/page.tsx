@@ -16,11 +16,11 @@ const quality = [
 
 const faqs = [
   { q: "Surprise Box là gì, có biết trước món không?", a: "Surprise Box là hộp \"bí ẩn\" gồm các sản phẩm cuối ngày được cửa hàng tự chọn (bánh, đồ uống, đồ ăn nhẹ...). Bạn sẽ không biết chính xác món gì cho đến khi nhận, nhưng giá trị luôn cao hơn số tiền bạn trả 2–3 lần." },
-  { q: "Tôi hoàn tiền thế nào, ai giải quyết khi có vấn đề?", a: "Hoàn tiền tự động vào tài khoản trong 3–5 ngày làm việc nếu cửa hàng hết box hoặc lỗi từ phía họ. Đội ngũ Bánh Hỡi sẽ trực tiếp xử lý — bạn không cần làm việc với cửa hàng." },
+  { q: "Tôi hoàn tiền thế nào, ai giải quyết khi có vấn đề?", a: "Hoàn tiền tự động vào tài khoản trong 3–5 ngày làm việc nếu cửa hàng hết box hoặc lỗi từ phía họ. Đội ngũ Still Good sẽ trực tiếp xử lý — bạn không cần làm việc với cửa hàng." },
   { q: "Hình thức tự đến lấy hoạt động như nào?", a: "Sau khi thanh toán, bạn nhận mã QR riêng. Đến cửa hàng trong khung giờ đã đặt, đưa QR cho nhân viên quét — xong! Xem chi tiết trong trang Giao hàng & Nhận hàng." },
   { q: "Nếu đến cửa hàng hết box, hoặc sản phẩm không đúng chất lượng?", a: "Trong trường hợp hiếm gặp này, bạn được hoàn 100% tiền hoặc đổi box tương đương. Đối với lỗi chất lượng, vui lòng phản ánh kèm hình ảnh trong 24h để được hỗ trợ." },
   { q: "Tôi có thể hủy đơn hàng sau khi đã thanh toán không?", a: "Bạn có thể hủy đơn miễn phí trước khung giờ nhận ít nhất 2 tiếng. Sau thời điểm đó, đơn không thể hủy để đảm bảo cửa hàng đã chuẩn bị Box." },
-  { q: "Bánh Hỡi có an toàn thực phẩm không khi là hàng cuối ngày?", a: "Có. Tất cả sản phẩm đều là hàng mới làm trong ngày, chỉ là chưa bán hết trước giờ đóng cửa. Cửa hàng có nghĩa vụ kiểm tra chất lượng trước khi đóng Box." },
+  { q: "Still Good có an toàn thực phẩm không khi là hàng cuối ngày?", a: "Có. Tất cả sản phẩm đều là hàng mới làm trong ngày, chỉ là chưa bán hết trước giờ đóng cửa. Cửa hàng có nghĩa vụ kiểm tra chất lượng trước khi đóng Box." },
 ];
 
 export default function AboutPage() {
@@ -42,7 +42,7 @@ export default function AboutPage() {
             đều xứng đáng có người thưởng thức.
           </h1>
           <p className="rise rise-3" style={{ fontSize: 18, color: "var(--text-muted)", lineHeight: 1.6, maxWidth: 620, margin: "0 auto" }}>
-            Bánh Hỡi ra đời từ một câu hỏi nhỏ: "Tại sao mỗi tối, bao nhiêu bánh ngon phải bị bỏ đi
+            Still Good ra đời từ một câu hỏi nhỏ: "Tại sao mỗi tối, bao nhiêu bánh ngon phải bị bỏ đi
             chỉ vì hết giờ bán?" Chúng tôi tin rằng có cách tốt hơn — và đó là lý do bạn đang ở đây.
           </p>
         </div>

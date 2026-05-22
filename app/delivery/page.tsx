@@ -35,7 +35,7 @@ export default function DeliveryPage() {
             để nhận Surprise Box
           </h1>
           <p style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 560, margin: "0 auto" }}>
-            Hiện tại Bánh Hỡi hỗ trợ hình thức <strong style={{ color: "var(--text)" }}>tự đến lấy tại cửa hàng (Pick-up)</strong>.
+            Hiện tại Still Good hỗ trợ hình thức <strong style={{ color: "var(--text)" }}>tự đến lấy tại cửa hàng (Pick-up)</strong>.
             Giao tận nơi đang được phát triển.
           </p>
         </div>

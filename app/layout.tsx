@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { ViewTransitions } from "next-view-transitions";
+import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Bánh Hỡi · Surprise Box",
+  title: "Still Good · Save Food, Save Money",
   description:
-    "Cứu bánh ngon cuối ngày, săn deal hời mỗi tối. Nền tảng giải cứu thực phẩm Surprise Box từ các tiệm bánh, quán cà phê yêu thích của bạn.",
+    "Still Good — good food, not wasted. Grab end-of-day boxes from your favourite bakeries and cafés at up to 70% off.",
 };
 
 export default function RootLayout({
@@ -13,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi">
-      <body>{children}</body>
-    </html>
+    <ViewTransitions>
+      <html lang="vi">
+        <body>
+          <ScrollRevealProvider />
+          {children}
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

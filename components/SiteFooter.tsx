@@ -5,7 +5,7 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-grid">
         <div className="footer-col">
-          <h4>Bánh Hỡi</h4>
+          <h4>Still Good</h4>
           <p>Cứu bánh ngon cuối ngày,<br />lan tỏa lối sống xanh.</p>
           <p style={{ marginTop: 16, display: "flex", gap: 12 }}>
             <span style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.1)", display: "grid", placeItems: "center" }}>f</span>
@@ -29,12 +29,12 @@ export default function SiteFooter() {
         </div>
         <div className="footer-col">
           <h4>Liên hệ</h4>
-          <p>✉ hello@banhhoi.vn</p>
+          <p>✉ hello@stillgood.vn</p>
           <p>📞 1900 1234</p>
-          <p>📍 Hà Nội, Việt Nam</p>
+          <p>📍 Hồ Chí Minh, Việt Nam</p>
         </div>
       </div>
-      <div className="footer-bottom">© 2026 Bánh Hỡi. All rights reserved.</div>
+      <div className="footer-bottom">© 2026 Still Good. All rights reserved.</div>
     </footer>
   );
 }

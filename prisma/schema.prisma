@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  phone     String?
+  avatar    String?
+  address   String?
+  createdAt DateTime @default(now())
+
+  orders  Order[]
+  reviews Review[]
+  stores  Store[]
+}
+
+model Store {
+  id          String   @id @default(uuid())
+  ownerId     String
+  name        String
+  address     String
+  lat         Float?
+  lng         Float?
+  logo        String?
+  description String?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  owner  User    @relation(fields: [ownerId], references: [id])
+  boxes  Box[]
+  orders Order[]
+  reviews Review[]
+}
+
+model Box {
+  id              String   @id @default(uuid())
+  storeId         String
+  name            String
+  description     String?
+  priceOriginal   Int
+  priceSale       Int
+  quantityTotal   Int
+  quantityLeft    Int
+  pickupStart     String
+  pickupEnd       String
+  date            DateTime
+  image           String?
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  store      Store       @relation(fields: [storeId], references: [id])
+  orderItems OrderItem[]
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  userId        String
+  storeId       String
+  status        OrderStatus @default(PENDING)
+  total         Int
+  paymentMethod String      @default("cash")
+  pickupCode    String      @unique @default(cuid())
+  createdAt     DateTime    @default(now())
+
+  user  User        @relation(fields: [userId], references: [id])
+  store Store       @relation(fields: [storeId], references: [id])
+  items OrderItem[]
+  review Review?
+}
+
+model OrderItem {
+  id          String @id @default(uuid())
+  orderId     String
+  boxId       String
+  quantity    Int
+  priceAtTime Int
+
+  order Order @relation(fields: [orderId], references: [id])
+  box   Box   @relation(fields: [boxId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  storeId   String
+  orderId   String   @unique
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  store Store @relation(fields: [storeId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PICKED_UP
+  CANCELLED
+}
