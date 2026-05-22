@@ -58,6 +58,7 @@ export default function HomePage() {
 
       {/* HERO */}
       <section
+        className="hero-section"
         style={{
           backgroundColor: "var(--cream)",
           backgroundImage: "url('/low-opacity-cumpled-paper.png')",
@@ -71,13 +72,11 @@ export default function HomePage() {
         }}
       >
         <div
-          className="container"
+          className="container hero-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: "1.1fr 0.9fr",
             gap: 64,
-            padding: "64px 64px",
             paddingTop: 73 + 64,
+            paddingBottom: 64,
             alignItems: "center",
             width: "100%",
           }}
@@ -110,7 +109,7 @@ export default function HomePage() {
               Đang giải cứu 412 box hôm nay
             </div>
             <h1
-              className="rise rise-2"
+              className="rise rise-2 hero-title"
               style={{
                 fontSize: 64,
                 lineHeight: 1.05,
@@ -147,42 +146,44 @@ export default function HomePage() {
               thích của bạn — giá siêu hời, giảm lãng phí thực phẩm.
             </p>
 
+            {/* CTA buttons */}
+            <div
+              className="rise rise-3"
+              style={{
+                display: "flex",
+                gap: 12,
+                flexWrap: "wrap",
+                marginBottom: 24,
+              }}
+            >
+              <Link href="/discover" className="btn btn-primary btn-lg">
+                Khám phá Box ngay →
+              </Link>
+              <Link href="/about" className="btn btn-ghost btn-lg">
+                Tìm hiểu thêm
+              </Link>
+            </div>
+
             {/* Marquee tags */}
             <div
               className="rise rise-4 tag-strip"
-              style={{ marginTop: 32, width: "100%", overflow: "hidden" }}
+              style={{ marginTop: 16, width: "100%", overflow: "hidden" }}
             >
               <div className="marquee-wrap">
                 <div className="marquee-track">
                   {[
                     { icon: "🍞", text: "Giảm tới 70%", accent: "primary" },
-                    {
-                      icon: "🔒",
-                      text: "Thanh toán an toàn",
-                      accent: "accent",
-                    },
+                    { icon: "🔒", text: "Thanh toán an toàn", accent: "accent" },
                     { icon: "📦", text: "Đa dạng hàng quán", accent: null },
                     { icon: "🎁", text: "125k+ Box đã cứu", accent: "primary" },
                     { icon: "🏪", text: "2.850 Đối tác", accent: null },
-                    {
-                      icon: "🌿",
-                      text: "Hôm nay +312 kg cứu khỏi rác",
-                      accent: "accent",
-                    },
+                    { icon: "🌿", text: "Hôm nay +312 kg cứu khỏi rác", accent: "accent" },
                     { icon: "🍞", text: "Giảm tới 70%", accent: "primary" },
-                    {
-                      icon: "🔒",
-                      text: "Thanh toán an toàn",
-                      accent: "accent",
-                    },
+                    { icon: "🔒", text: "Thanh toán an toàn", accent: "accent" },
                     { icon: "📦", text: "Đa dạng hàng quán", accent: null },
                     { icon: "🎁", text: "125k+ Box đã cứu", accent: "primary" },
                     { icon: "🏪", text: "2.850 Đối tác", accent: null },
-                    {
-                      icon: "🌿",
-                      text: "Hôm nay +312 kg cứu khỏi rác",
-                      accent: "accent",
-                    },
+                    { icon: "🌿", text: "Hôm nay +312 kg cứu khỏi rác", accent: "accent" },
                   ].map((tag, i) => (
                     <span
                       key={i}
@@ -211,7 +212,7 @@ export default function HomePage() {
 
           {/* Hero image */}
           <div
-            className="rise-right rise-img"
+            className="rise-right rise-img hero-img-col"
             style={{
               display: "flex",
               justifyContent: "center",
@@ -258,13 +259,7 @@ export default function HomePage() {
             <h2 style={{ fontSize: 44 }}>Cách hoạt động</h2>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 20,
-            }}
-          >
+          <div className="steps-grid" style={{ gap: 20 }}>
             {[
               {
                 icon: "🔍",
@@ -365,6 +360,8 @@ export default function HomePage() {
               alignItems: "flex-end",
               justifyContent: "space-between",
               marginBottom: 32,
+              flexWrap: "wrap",
+              gap: 12,
             }}
           >
             <div>
@@ -401,13 +398,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 20,
-            }}
-          >
+          <div className="boxes-grid" style={{ gap: 20 }}>
             {featuredBoxes.map((b, i) => (
               <Link
                 key={i}
@@ -575,13 +566,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 24,
-            }}
-          >
+          <div className="impact-grid" style={{ gap: 24 }}>
             {[
               {
                 icon: "🌿",
@@ -682,19 +667,17 @@ export default function HomePage() {
       </section>
 
       {/* PARTNER CTA */}
-      <section style={{ padding: "80px 64px", background: "white" }}>
+      <section style={{ padding: "80px 0", background: "white" }}>
         <div className="container">
           <div
             data-reveal
+            className="partner-cta-grid"
             style={{
               background:
                 "linear-gradient(120deg, var(--badge) 0%, #f7d27a 100%)",
               borderRadius: 28,
               padding: "48px 56px",
-              display: "grid",
-              gridTemplateColumns: "1fr auto",
               gap: 32,
-              alignItems: "center",
               position: "relative",
               overflow: "hidden",
             }}

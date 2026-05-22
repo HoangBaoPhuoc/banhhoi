@@ -4,6 +4,7 @@ import LogoutButton from "./LogoutButton";
 import NavLinks from "./NavLinks";
 import SearchBar from "./SearchBar";
 import LocationPill from "./LocationPill";
+import MobileMenuToggle from "./MobileMenuToggle";
 
 export default async function SiteHeader() {
   const supabase = await createClient();
@@ -19,31 +20,34 @@ export default async function SiteHeader() {
         </div>
       </Link>
 
-      <LocationPill />
+      {/* Desktop-only middle section */}
+      <div className="header-middle" style={{ display: "contents" }}>
+        <LocationPill />
+        <NavLinks />
+        <SearchBar />
+      </div>
 
-      <NavLinks />
+      {/* Desktop-only auth buttons */}
+      <div className="header-auth">
+        {user ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Link href="/profile" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600 }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: "var(--primary-soft)", border: "2px solid var(--primary)", display: "grid", placeItems: "center", fontSize: 15 }}>
+                👤
+              </div>
+            </Link>
+            <LogoutButton />
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: 8 }}>
+            <Link href="/login"    className="btn btn-ghost"   style={{ padding: "9px 16px", fontSize: 13 }}>Đăng nhập</Link>
+            <Link href="/register" className="btn btn-primary" style={{ padding: "9px 16px", fontSize: 13 }}>Đăng ký</Link>
+          </div>
+        )}
+      </div>
 
-      <SearchBar />
-
-      {user ? (
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Link href="/profile" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600 }}>
-            <div style={{ width: 34, height: 34, borderRadius: "50%", background: "var(--primary-soft)", border: "2px solid var(--primary)", display: "grid", placeItems: "center", fontSize: 15 }}>
-              👤
-            </div>
-          </Link>
-          <LogoutButton />
-        </div>
-      ) : (
-        <div style={{ display: "flex", gap: 8 }}>
-          <Link href="/login" className="btn btn-ghost" style={{ padding: "9px 16px", fontSize: 13 }}>
-            Đăng nhập
-          </Link>
-          <Link href="/register" className="btn btn-primary" style={{ padding: "9px 16px", fontSize: 13 }}>
-            Đăng ký
-          </Link>
-        </div>
-      )}
+      {/* Mobile hamburger — hidden on desktop via CSS */}
+      <MobileMenuToggle isLoggedIn={!!user} />
     </header>
   );
 }

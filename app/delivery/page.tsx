@@ -23,14 +23,14 @@ export default function DeliveryPage() {
       <SiteHeader />
 
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "145px 64px 56px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <section style={{ background: "var(--cream)", paddingTop: 145, paddingBottom: 56, textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 20, left: 80, fontSize: 100, opacity: 0.07, transform: "rotate(-20deg)" }}>🛍️</div>
         <div style={{ position: "absolute", bottom: 20, right: 80, fontSize: 100, opacity: 0.07, transform: "rotate(15deg)" }}>📱</div>
         <div className="container" style={{ position: "relative" }}>
           <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
             Hướng dẫn nhận hàng
           </div>
-          <h1 className="rise rise-2" style={{ fontSize: 56, marginBottom: 16, lineHeight: 1.1 }}>
+          <h1 className="rise rise-2 delivery-hero-title" style={{ fontSize: 56, marginBottom: 16, lineHeight: 1.1 }}>
             Đơn giản — chỉ <em style={{ color: "var(--primary)", fontStyle: "italic" }}>4 bước</em><br />
             để nhận Surprise Box
           </h1>
@@ -46,9 +46,9 @@ export default function DeliveryPage() {
         <div className="container">
           <h2 data-reveal style={{ fontSize: 36, textAlign: "center", marginBottom: 48 }}>Quy trình tự đến lấy</h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, position: "relative" }}>
-            {/* Connecting dashed line */}
-            <svg style={{ position: "absolute", top: 50, left: "12%", right: "12%", height: 2, width: "76%", zIndex: 0 }}>
+          <div className="steps-grid" style={{ gap: 20, position: "relative" }}>
+            {/* Connecting dashed line — hidden on mobile via .steps-connector class */}
+            <svg className="steps-connector" style={{ position: "absolute", top: 50, left: "12%", right: "12%", height: 2, width: "76%", zIndex: 0 }}>
               <line x1="0" y1="1" x2="100%" y2="1" stroke="var(--border-strong)" strokeWidth="2" strokeDasharray="6 6" />
             </svg>
 
@@ -95,14 +95,11 @@ export default function DeliveryPage() {
       {/* QR DEMO */}
       <section style={{ padding: "72px 0", background: "var(--ivory)" }}>
         <div className="container">
-          <div data-reveal style={{
+          <div data-reveal className="right-auto-grid" style={{
             background: "white",
             borderRadius: 28,
             padding: "48px 56px",
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
             gap: 48,
-            alignItems: "center",
             border: "1px solid var(--border)",
             boxShadow: "var(--shadow-md)",
           }}>
@@ -142,13 +139,11 @@ export default function DeliveryPage() {
             }}>
               <div style={{ background: "white", padding: 18, borderRadius: 12, boxShadow: "var(--shadow-sm)", display: "inline-block" }}>
                 <svg width="160" height="160" viewBox="0 0 160 160">
-                  {/* Simple QR-like pattern */}
                   {Array.from({ length: 200 }).map((_, i) => {
                     const r = Math.floor(i / 14), c = i % 14;
                     const seed = (r * 7 + c * 13) % 100;
                     return seed > 50 ? <rect key={i} x={c * 11 + 4} y={r * 11 + 4} width="10" height="10" fill="#221c16" /> : null;
                   })}
-                  {/* Corner finders */}
                   {[[4, 4], [114, 4], [4, 114]].map(([x, y], i) => (
                     <g key={i}>
                       <rect x={x} y={y} width="34" height="34" fill="#221c16" />
@@ -178,7 +173,7 @@ export default function DeliveryPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 1000, margin: "0 auto" }}>
+          <div className="two-col-grid" style={{ gap: 16, maxWidth: 1000, margin: "0 auto" }}>
             {rules.map((r, i) => (
               <div key={r.title} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
                 background: r.strong ? "var(--cream)" : "white",
@@ -202,15 +197,12 @@ export default function DeliveryPage() {
       {/* COMING SOON DELIVERY */}
       <section style={{ padding: "56px 0 96px", background: "var(--ivory)" }}>
         <div className="container">
-          <div data-reveal style={{
+          <div data-reveal className="right-auto-grid" style={{
             background: "linear-gradient(135deg, #4c8c4a 0%, #6ba968 100%)",
             borderRadius: 24,
             padding: "48px 56px",
             color: "white",
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
             gap: 32,
-            alignItems: "center",
             position: "relative",
             overflow: "hidden",
           }}>
@@ -227,7 +219,7 @@ export default function DeliveryPage() {
                 Đăng ký nhận thông báo khi tính năng ra mắt nhé!
               </p>
             </div>
-            <button className="btn" style={{ background: "white", color: "var(--accent)" }}>Đăng ký nhận tin →</button>
+            <button className="btn" style={{ background: "white", color: "var(--accent)", whiteSpace: "nowrap" }}>Đăng ký nhận tin →</button>
           </div>
         </div>
       </section>

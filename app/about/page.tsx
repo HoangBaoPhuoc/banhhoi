@@ -29,7 +29,19 @@ export default function AboutPage() {
       <SiteHeader />
 
       {/* HERO */}
-      <section style={{ backgroundColor: "var(--cream)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center", padding: "169px 64px 80px", position: "relative", overflow: "hidden", minHeight: "100vh", display: "flex", alignItems: "center" }}>
+      <section style={{
+        backgroundColor: "var(--cream)",
+        backgroundImage: "url('/low-opacity-cumpled-paper.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        paddingTop: 169,
+        paddingBottom: 80,
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+      }}>
         <div style={{ position: "absolute", top: 60, left: 100, fontSize: 140, opacity: 0.06, transform: "rotate(-15deg)" }}>🥐</div>
         <div style={{ position: "absolute", bottom: 40, right: 120, fontSize: 140, opacity: 0.06, transform: "rotate(20deg)" }}>🌿</div>
 
@@ -37,7 +49,7 @@ export default function AboutPage() {
           <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
             Câu chuyện của chúng tôi
           </div>
-          <h1 className="rise rise-2" style={{ fontSize: 72, marginBottom: 24, lineHeight: 1.05 }}>
+          <h1 className="rise rise-2 about-hero-title" style={{ fontSize: 72, marginBottom: 24, lineHeight: 1.05 }}>
             Mỗi <em style={{ color: "var(--primary)", fontStyle: "italic", fontWeight: 800 }}>chiếc bánh</em><br />
             đều xứng đáng có người thưởng thức.
           </h1>
@@ -51,7 +63,7 @@ export default function AboutPage() {
       {/* MISSION + VISION */}
       <section style={{ padding: "96px 0", background: "white" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+          <div className="mission-grid" style={{ gap: 32 }}>
             <div className="card-hover" data-reveal data-reveal-delay="1" style={{
               background: "linear-gradient(135deg, var(--primary-soft) 0%, #f9e0c4 100%)",
               borderRadius: 28,
@@ -105,7 +117,7 @@ export default function AboutPage() {
             <h2 style={{ fontSize: 44 }}>Bốn điều chúng tôi cam kết</h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+          <div className="values-grid" style={{ gap: 16 }}>
             {values.map((v, i) => (
               <div key={v.title} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
                 background: "white",
@@ -134,7 +146,7 @@ export default function AboutPage() {
       {/* QUALITY POLICY */}
       <section style={{ padding: "96px 0", background: "white" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 56, alignItems: "center" }}>
+          <div className="quality-grid" style={{ gap: 56 }}>
             <div data-reveal>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
                 Chính sách chất lượng
@@ -233,7 +245,7 @@ export default function AboutPage() {
           <div data-reveal style={{
             background: "var(--text)",
             borderRadius: 28,
-            padding: "56px 56px",
+            padding: "56px 40px",
             color: "white",
             textAlign: "center",
             position: "relative",

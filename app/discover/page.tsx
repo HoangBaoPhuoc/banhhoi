@@ -66,7 +66,7 @@ function BoxSkeleton() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {[1, 2, 3].map((i) => (
-        <div key={i} style={{
+        <div key={i} className="box-card-row" style={{
           background: "white",
           borderRadius: 18,
           border: "1px solid var(--border)",
@@ -76,7 +76,7 @@ function BoxSkeleton() {
           gap: 18,
           alignItems: "center",
         }}>
-          <div style={{ width: 140, height: 140, borderRadius: 14, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
+          <div className="box-card-img" style={{ width: 140, height: 140, borderRadius: 14, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ height: 14, width: "30%", borderRadius: 6, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
             <div style={{ height: 20, width: "60%", borderRadius: 6, background: "var(--cream)", animation: "pulse 1.5s ease-in-out infinite" }} />
@@ -112,17 +112,20 @@ async function BoxList({ sort }: { sort: string }) {
         const tone = i % 2 === 0 ? "warm" : "cream";
 
         return (
-          <Link key={box.id} href={`/box/${box.id}`} className="card-hover card-hover-warm" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
-            background: "white",
-            borderRadius: 18,
-            border: "1px solid var(--border)",
-            padding: 14,
-            display: "grid",
-            gridTemplateColumns: "140px 1fr auto",
-            gap: 18,
-            alignItems: "center",
-          }}>
-            <div style={{
+          <Link key={box.id} href={`/box/${box.id}`}
+            className="card-hover card-hover-warm box-card-row"
+            data-reveal data-reveal-delay={String(Math.min(i + 1, 4))}
+            style={{
+              background: "white",
+              borderRadius: 18,
+              border: "1px solid var(--border)",
+              padding: 14,
+              display: "grid",
+              gridTemplateColumns: "140px 1fr auto",
+              gap: 18,
+              alignItems: "center",
+            }}>
+            <div className="box-card-img" style={{
               width: 140, height: 140, borderRadius: 14, fontSize: 56,
               background: tone === "warm"
                 ? "linear-gradient(135deg, #fde6d4, #f5d4b3)"
@@ -147,7 +150,7 @@ async function BoxList({ sort }: { sort: string }) {
                   {formatPrice(box.priceSale)}
                 </span>
               </div>
-              <div style={{ display: "flex", gap: 16, fontSize: 11, color: "var(--text-muted)" }}>
+              <div style={{ display: "flex", gap: 16, fontSize: 11, color: "var(--text-muted)", flexWrap: "wrap" }}>
                 <span>🕒 {box.pickupStart} - {box.pickupEnd}</span>
                 <span>📍 {box.store.address.split(",")[0]}</span>
                 <span style={{ color: isLow ? "var(--danger)" : "var(--accent)", fontWeight: 600 }}>
@@ -182,8 +185,21 @@ export default async function DiscoverPage({
     <>
       <SiteHeader />
 
-      <div className="rise rise-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", padding: "0 64px", borderBottom: "1px solid var(--border)", paddingTop: 73, position: "sticky", top: 0, zIndex: 90 }}>
-        <div style={{ display: "flex", gap: 32 }}>
+      {/* Tab bar */}
+      <div
+        className="rise rise-1 discover-tabs"
+        style={{
+          background: "rgba(255,255,255,0.88)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          borderBottom: "1px solid var(--border)",
+          paddingTop: 73,
+          position: "sticky",
+          top: 0,
+          zIndex: 90,
+        }}
+      >
+        <div className="discover-tabs-inner" style={{ display: "flex", gap: 32 }}>
           {[
             { label: "Khám phá Box", active: true },
             { label: "Đơn hàng của tôi" },
@@ -196,16 +212,27 @@ export default async function DiscoverPage({
               color: t.active ? "var(--primary)" : "var(--text-muted)",
               borderBottom: t.active ? "3px solid var(--primary)" : "3px solid transparent",
               cursor: "pointer",
+              whiteSpace: "nowrap",
             }}>{t.label}</div>
           ))}
         </div>
       </div>
 
-      <main style={{ padding: "32px 64px 48px", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "240px 1fr 260px", gap: 24, alignItems: "stretch" }}>
-          {/* Filters wrapper — stretches to row height so sticky inside can travel */}
+      <main className="discover-main">
+        <div className="discover-layout" style={{ gap: 24 }}>
+          {/* Filters sidebar */}
           <div>
-            <aside className="rise rise-3" style={{ background: "white", padding: 24, borderRadius: 20, border: "1px solid var(--border)", position: "sticky", top: 130, display: "flex", flexDirection: "column", gap: 16 }}>
+            <aside className="rise rise-3" style={{
+              background: "white",
+              padding: 24,
+              borderRadius: 20,
+              border: "1px solid var(--border)",
+              position: "sticky",
+              top: 130,
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+            }}>
               <h3 style={{ fontSize: 18 }}>Bộ lọc</h3>
               <FilterGroup title="Loại box" options={["Bánh ngọt", "Bánh mặn", "Đồ uống", "Mix"]} />
               <FilterGroup title="Khoảng giá" options={["Dưới 50.000đ", "50k – 100k", "100k – 150k"]} />
@@ -217,9 +244,9 @@ export default async function DiscoverPage({
 
           {/* Results */}
           <div className="rise rise-4" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 4, flexWrap: "wrap", gap: 8 }}>
               <h2 style={{ fontSize: 22, flex: 1 }}>Box hôm nay</h2>
-              <div style={{ display: "flex", gap: 8 }}>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {[
                   { label: "Mặc định", value: "default" },
                   { label: "Giá thấp nhất", value: "price_asc" },
@@ -241,7 +268,7 @@ export default async function DiscoverPage({
             </Suspense>
           </div>
 
-          {/* Right sidebar wrapper — stretches to row height so sticky inside can travel */}
+          {/* Right sidebar (map + impact) */}
           <div>
             <aside style={{ display: "flex", flexDirection: "column", gap: 16, position: "sticky", top: 130 }}>
 
@@ -280,15 +307,7 @@ export default async function DiscoverPage({
                     alignItems: "center",
                     gap: 14,
                   }}>
-                    <div style={{
-                      width: 44, height: 44,
-                      borderRadius: 12,
-                      background: "white",
-                      display: "grid",
-                      placeItems: "center",
-                      fontSize: 22,
-                      boxShadow: "0 2px 8px rgba(76,140,74,0.15)",
-                    }}>🌿</div>
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "0 2px 8px rgba(76,140,74,0.15)" }}>🌿</div>
                     <div>
                       <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>Bạn đã cứu</div>
                       <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent)", lineHeight: 1 }}>— box</div>
@@ -304,15 +323,7 @@ export default async function DiscoverPage({
                     alignItems: "center",
                     gap: 14,
                   }}>
-                    <div style={{
-                      width: 44, height: 44,
-                      borderRadius: 12,
-                      background: "white",
-                      display: "grid",
-                      placeItems: "center",
-                      fontSize: 22,
-                      boxShadow: "0 2px 8px rgba(232,119,34,0.12)",
-                    }}>🏭</div>
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "0 2px 8px rgba(232,119,34,0.12)" }}>🏭</div>
                     <div>
                       <div style={{ fontSize: 11, color: "var(--primary)", fontWeight: 600, marginBottom: 2 }}>CO₂ giảm phát thải</div>
                       <div style={{ fontSize: 22, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>— kg</div>

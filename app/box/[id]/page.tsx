@@ -13,18 +13,21 @@ export default function BoxDetailPage({ params }: { params: { id: string } }) {
     <>
       <SiteHeader />
 
-      <div style={{ padding: "16px 64px", paddingTop: 89, background: "white", borderBottom: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
-          <Link href="/discover" style={{ color: "var(--text-muted)" }}>Khám phá</Link>
-          <span>›</span>
-          <span>Café An Nhiên</span>
-          <span>›</span>
-          <span style={{ color: "var(--text)", fontWeight: 600 }}>Box Đồ Uống & Bánh</span>
+      {/* Breadcrumb */}
+      <div style={{ paddingTop: 89, paddingBottom: 16, background: "white", borderBottom: "1px solid var(--border)" }}>
+        <div className="container">
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
+            <Link href="/discover" style={{ color: "var(--text-muted)" }}>Khám phá</Link>
+            <span>›</span>
+            <span>Café An Nhiên</span>
+            <span>›</span>
+            <span style={{ color: "var(--text)", fontWeight: 600 }}>Box Đồ Uống & Bánh</span>
+          </div>
         </div>
       </div>
 
-      <main style={{ padding: "32px 64px 64px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: 40, alignItems: "flex-start" }}>
+      <main style={{ paddingTop: 32, paddingBottom: 64 }}>
+        <div className="container box-detail-grid" style={{ gap: 40 }}>
           {/* LEFT — gallery + info */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Big image */}
@@ -76,9 +79,9 @@ export default function BoxDetailPage({ params }: { params: { id: string } }) {
 
             {/* Shop info card */}
             <div style={{ background: "white", borderRadius: 20, border: "1px solid var(--border)", padding: 28 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                 <div style={{ width: 64, height: 64, borderRadius: 999, background: "var(--accent-soft)", display: "grid", placeItems: "center", fontSize: 30 }}>☕</div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <h2 style={{ fontSize: 22, marginBottom: 4 }}>Café An Nhiên</h2>
                   <div style={{ fontSize: 12, color: "var(--text-muted)" }}>⭐ 4.7 (89 đánh giá) · 📍 12 Hoàng Diệu, Ba Đình, Hà Nội</div>
                   <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>📞 0901 234 567 · 🕒 Mở cửa 7:00 – 21:00</div>
@@ -115,7 +118,7 @@ export default function BoxDetailPage({ params }: { params: { id: string } }) {
 
             {/* Reviews */}
             <div style={{ background: "white", borderRadius: 20, border: "1px solid var(--border)", padding: 28 }}>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: 18 }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: 18, flexWrap: "wrap", gap: 8 }}>
                 <h3 style={{ fontSize: 18, flex: 1, fontFamily: "var(--font-body)" }}>Đánh giá từ khách hàng</h3>
                 <span style={{ fontSize: 14, fontWeight: 700, color: "var(--primary)" }}>⭐ 4.7 / 5 · 89 đánh giá</span>
               </div>

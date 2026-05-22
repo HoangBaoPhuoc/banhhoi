@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,58 +36,171 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--cream)", display: "grid", placeItems: "center", padding: 24 }}>
-      <div style={{ width: "100%", maxWidth: 420 }}>
-        {/* Logo */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "center", marginBottom: 32 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "var(--shadow-warm)" }}>🥐</div>
-          <div style={{ lineHeight: 1.1 }}>
-            <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: "-0.02em" }}>Still Good</div>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "var(--primary)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Good Food. Saved.</div>
-          </div>
-        </Link>
+    <div style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "42% 1fr" }}>
 
-        <div style={{ background: "white", borderRadius: 24, padding: "36px 32px", border: "1px solid var(--border)", boxShadow: "var(--shadow-md)" }}>
-          <h1 style={{ fontSize: 26, marginBottom: 6, textAlign: "center" }}>Đăng nhập</h1>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", textAlign: "center", marginBottom: 28 }}>
+      {/* ── LEFT BRAND PANEL ── */}
+      <div style={{
+        background: "var(--text)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "48px 40px",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+        {/* Decorative blobs */}
+        <div style={{ position: "absolute", top: -80, left: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(232,119,34,0.12)" }} />
+        <div style={{ position: "absolute", bottom: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(76,140,74,0.10)" }} />
+
+        <div style={{ position: "relative", textAlign: "center" }}>
+          {/* Logo mark */}
+          <div style={{
+            width: 96,
+            height: 96,
+            borderRadius: 28,
+            background: "var(--primary)",
+            display: "grid",
+            placeItems: "center",
+            fontSize: 48,
+            margin: "0 auto 28px",
+            boxShadow: "0 8px 32px rgba(232,119,34,0.4)",
+          }}>🥐</div>
+
+          <div style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 48,
+            fontWeight: 900,
+            color: "white",
+            letterSpacing: "-0.03em",
+            lineHeight: 1,
+            marginBottom: 14,
+          }}>Still Good</div>
+
+          <div style={{
+            fontSize: 11,
+            fontWeight: 700,
+            color: "var(--primary)",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            marginBottom: 32,
+          }}>Good Food. Saved.</div>
+
+          <p style={{
+            fontSize: 18,
+            fontWeight: 700,
+            color: "white",
+            lineHeight: 1.4,
+            maxWidth: 280,
+            opacity: 0.9,
+          }}>
+            Cứu bánh ngon cuối ngày,<br />
+            <em style={{ color: "var(--primary)", fontStyle: "italic" }}>tiết kiệm mỗi tối.</em>
+          </p>
+        </div>
+
+        <p style={{
+          position: "absolute",
+          bottom: 28,
+          fontSize: 12,
+          color: "rgba(255,255,255,0.35)",
+        }}>© 2026 Still Good</p>
+      </div>
+
+      {/* ── RIGHT FORM PANEL ── */}
+      <div style={{
+        background: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "48px 40px",
+      }}>
+        <div style={{ width: "100%", maxWidth: 400 }}>
+          <h1 style={{ fontSize: 28, marginBottom: 8, fontWeight: 900 }}>Đăng nhập</h1>
+          <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 32 }}>
             Chưa có tài khoản?{" "}
-            <Link href="/register" style={{ color: "var(--primary)", fontWeight: 600 }}>Đăng ký ngay</Link>
+            <Link href="/register" style={{ color: "var(--primary)", fontWeight: 700 }}>Đăng ký ngay</Link>
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
+                Địa chỉ email <span style={{ color: "var(--danger)" }}>*</span>
+              </label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ban@email.com"
-                style={{ width: "100%", padding: "11px 14px", borderRadius: 12, border: "1px solid var(--border)", fontSize: 14, outline: "none", background: "var(--ivory)", transition: "border-color 0.2s" }}
+                style={{
+                  width: "100%",
+                  padding: "13px 16px",
+                  borderRadius: 12,
+                  border: "1.5px solid var(--border)",
+                  fontSize: 14,
+                  outline: "none",
+                  background: "var(--ivory)",
+                  transition: "border-color 0.2s",
+                }}
                 onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
                 onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
               />
             </div>
 
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <label style={{ fontSize: 13, fontWeight: 600 }}>Mật khẩu</label>
-                <Link href="/forgot-password" style={{ fontSize: 12, color: "var(--primary)" }}>Quên mật khẩu?</Link>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <label style={{ fontSize: 13, fontWeight: 700 }}>
+                  Mật khẩu <span style={{ color: "var(--danger)" }}>*</span>
+                </label>
+                <Link href="/forgot-password" style={{ fontSize: 12, color: "var(--primary)", fontWeight: 600 }}>
+                  Quên mật khẩu?
+                </Link>
               </div>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                style={{ width: "100%", padding: "11px 14px", borderRadius: 12, border: "1px solid var(--border)", fontSize: 14, outline: "none", background: "var(--ivory)", transition: "border-color 0.2s" }}
-                onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showPw ? "text" : "password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  style={{
+                    width: "100%",
+                    padding: "13px 48px 13px 16px",
+                    borderRadius: 12,
+                    border: "1.5px solid var(--border)",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "var(--ivory)",
+                    transition: "border-color 0.2s",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
+                  onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw((v) => !v)}
+                  style={{
+                    position: "absolute",
+                    right: 14,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: 16,
+                    color: "var(--text-muted)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                  aria-label={showPw ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                >
+                  {showPw ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
             {error && (
-              <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>
+              <div style={{ padding: "12px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>
                 {error}
               </div>
             )}
@@ -94,11 +208,49 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary"
-              style={{ width: "100%", padding: "13px", fontSize: 15, borderRadius: 12, marginTop: 4, opacity: loading ? 0.7 : 1 }}
+              style={{
+                width: "100%",
+                padding: "14px",
+                fontSize: 15,
+                fontWeight: 700,
+                borderRadius: 12,
+                background: loading ? "var(--border)" : "var(--text)",
+                color: "white",
+                border: "none",
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "background 0.2s",
+                marginTop: 4,
+              }}
             >
-              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+              {loading ? "Đang đăng nhập..." : "ĐĂNG NHẬP"}
             </button>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "4px 0" }}>
+              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>hoặc</span>
+              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            </div>
+
+            <Link
+              href="/register"
+              style={{
+                width: "100%",
+                padding: "13px",
+                fontSize: 14,
+                fontWeight: 700,
+                borderRadius: 12,
+                background: "transparent",
+                color: "var(--text)",
+                border: "1.5px solid var(--text)",
+                textAlign: "center",
+                display: "block",
+                transition: "background 0.15s",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--cream)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+            >
+              Đăng ký tài khoản mới
+            </Link>
           </form>
         </div>
       </div>
