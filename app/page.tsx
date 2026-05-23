@@ -172,25 +172,24 @@ export default function HomePage() {
               <div className="marquee-wrap">
                 <div className="marquee-track">
                   {[
-                    { icon: "🍞", text: "Giảm tới 70%", accent: "primary" },
-                    { icon: "🔒", text: "Thanh toán an toàn", accent: "accent" },
-                    { icon: "📦", text: "Đa dạng hàng quán", accent: null },
-                    { icon: "🎁", text: "125k+ Box đã cứu", accent: "primary" },
-                    { icon: "🏪", text: "2.850 Đối tác", accent: null },
-                    { icon: "🌿", text: "Hôm nay +312 kg cứu khỏi rác", accent: "accent" },
-                    { icon: "🍞", text: "Giảm tới 70%", accent: "primary" },
-                    { icon: "🔒", text: "Thanh toán an toàn", accent: "accent" },
-                    { icon: "📦", text: "Đa dạng hàng quán", accent: null },
-                    { icon: "🎁", text: "125k+ Box đã cứu", accent: "primary" },
-                    { icon: "🏪", text: "2.850 Đối tác", accent: null },
-                    { icon: "🌿", text: "Hôm nay +312 kg cứu khỏi rác", accent: "accent" },
+                    { text: "Giảm tới 70%", accent: "primary" },
+                    { text: "Thanh toán an toàn", accent: "accent" },
+                    { text: "Đa dạng hàng quán", accent: null },
+                    { text: "125k+ Box đã cứu", accent: "primary" },
+                    { text: "2.850 Đối tác", accent: null },
+                    { text: "Hôm nay +312 kg cứu khỏi rác", accent: "accent" },
+                    { text: "Giảm tới 70%", accent: "primary" },
+                    { text: "Thanh toán an toàn", accent: "accent" },
+                    { text: "Đa dạng hàng quán", accent: null },
+                    { text: "125k+ Box đã cứu", accent: "primary" },
+                    { text: "2.850 Đối tác", accent: null },
+                    { text: "Hôm nay +312 kg cứu khỏi rác", accent: "accent" },
                   ].map((tag, i) => (
                     <span
                       key={i}
                       className="tag"
                       style={{ marginRight: 12, flexShrink: 0 }}
                     >
-                      {tag.icon}{" "}
                       <strong
                         style={{
                           color:
@@ -261,30 +260,10 @@ export default function HomePage() {
 
           <div className="steps-grid" style={{ gap: 20 }}>
             {[
-              {
-                icon: "🔍",
-                n: 1,
-                title: "Tìm box",
-                desc: "Khám phá các Surprise Box gần bạn với nhiều mức giảm hấp dẫn",
-              },
-              {
-                icon: "📅",
-                n: 2,
-                title: "Đặt trước",
-                desc: "Chọn thời gian nhận hàng và thanh toán dễ dàng",
-              },
-              {
-                icon: "🛍️",
-                n: 3,
-                title: "Nhận hàng",
-                desc: "Đến tiệm hoặc nhận giao tận nơi nhanh chóng",
-              },
-              {
-                icon: "♻️",
-                n: 4,
-                title: "Giảm lãng phí",
-                desc: "Cùng cộng đồng giải cứu thực phẩm mỗi ngày",
-              },
+              { n: 1, title: "Tìm box", desc: "Khám phá các Surprise Box gần bạn với nhiều mức giảm hấp dẫn" },
+              { n: 2, title: "Đặt trước", desc: "Chọn thời gian nhận hàng và thanh toán dễ dàng" },
+              { n: 3, title: "Nhận hàng", desc: "Đến tiệm hoặc nhận giao tận nơi nhanh chóng" },
+              { n: 4, title: "Giảm lãng phí", desc: "Cùng cộng đồng giải cứu thực phẩm mỗi ngày" },
             ].map((s, i) => (
               <div
                 key={i}
@@ -293,7 +272,7 @@ export default function HomePage() {
                 data-reveal-delay={String(i + 1)}
                 style={{
                   background: "white",
-                  padding: "32px 24px",
+                  padding: "40px 24px 32px",
                   borderRadius: 20,
                   border: "1px solid var(--border)",
                   textAlign: "center",
@@ -320,30 +299,8 @@ export default function HomePage() {
                 >
                   {s.n}
                 </div>
-                <div
-                  style={{
-                    width: 72,
-                    height: 72,
-                    margin: "16px auto 20px",
-                    borderRadius: 24,
-                    background: "var(--cream)",
-                    display: "grid",
-                    placeItems: "center",
-                    fontSize: 32,
-                  }}
-                >
-                  {s.icon}
-                </div>
                 <h3 style={{ fontSize: 22, marginBottom: 10 }}>{s.title}</h3>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "var(--text-muted)",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {s.desc}
-                </p>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>{s.desc}</p>
               </div>
             ))}
           </div>
@@ -431,7 +388,7 @@ export default function HomePage() {
                   <div style={{ display: "flex", gap: 6 }}>
                     <span className="badge badge-primary">−{b.discount}%</span>
                     {b.left <= 2 && (
-                      <span className="badge badge-warm">🔥 Sắp hết</span>
+                      <span className="badge badge-warm">Sắp hết</span>
                     )}
                   </div>
                   <div
@@ -515,9 +472,9 @@ export default function HomePage() {
                       gap: 4,
                     }}
                   >
-                    <span>🕒 {b.time}</span>
+                    <span>{b.time}</span>
                     <span style={{ color: "var(--accent)", fontWeight: 600 }}>
-                      📦 Còn {b.left} box
+                      Còn {b.left} box
                     </span>
                   </div>
                 </div>
@@ -568,27 +525,9 @@ export default function HomePage() {
 
           <div className="impact-grid" style={{ gap: 24 }}>
             {[
-              {
-                icon: "🌿",
-                num: "125.430",
-                label: "Box đã được cứu",
-                sub: "Cập nhật hôm nay",
-                color: "var(--accent)",
-              },
-              {
-                icon: "💧",
-                num: "312,6 tấn",
-                label: "Thực phẩm giảm lãng phí",
-                sub: "Tương đương 850 hộ gia đình",
-                color: "var(--primary)",
-              },
-              {
-                icon: "🏪",
-                num: "2.850+",
-                label: "Cửa hàng đồng hành",
-                sub: "Trên 18 tỉnh thành",
-                color: "var(--text)",
-              },
+              { num: "125.430", label: "Box đã được cứu",          sub: "Cập nhật hôm nay",               color: "var(--accent)" },
+              { num: "312,6 tấn", label: "Thực phẩm giảm lãng phí", sub: "Tương đương 850 hộ gia đình",   color: "var(--primary)" },
+              { num: "2.850+", label: "Cửa hàng đồng hành",         sub: "Trên 18 tỉnh thành",             color: "var(--text)" },
             ].map((s, i) => (
               <div
                 key={i}
@@ -601,40 +540,8 @@ export default function HomePage() {
                   borderRadius: 24,
                   textAlign: "center",
                   border: "1px solid var(--border)",
-                  position: "relative",
-                  overflow: "hidden",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: -20,
-                    right: -20,
-                    fontSize: 120,
-                    opacity: 0.05,
-                  }}
-                >
-                  {s.icon}
-                </div>
-                <div
-                  style={{
-                    width: 56,
-                    height: 56,
-                    margin: "0 auto 20px",
-                    borderRadius: 16,
-                    background:
-                      i === 0
-                        ? "var(--accent-soft)"
-                        : i === 1
-                          ? "var(--primary-soft)"
-                          : "var(--cream)",
-                    display: "grid",
-                    placeItems: "center",
-                    fontSize: 26,
-                  }}
-                >
-                  {s.icon}
-                </div>
                 <div
                   style={{
                     fontSize: 40,
@@ -647,19 +554,8 @@ export default function HomePage() {
                 >
                   {s.num}
                 </div>
-                <div
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    color: "var(--text)",
-                    marginBottom: 4,
-                  }}
-                >
-                  {s.label}
-                </div>
-                <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-                  {s.sub}
-                </div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>{s.label}</div>
+                <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.sub}</div>
               </div>
             ))}
           </div>
@@ -682,18 +578,6 @@ export default function HomePage() {
               overflow: "hidden",
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: -40,
-                right: 120,
-                fontSize: 200,
-                opacity: 0.15,
-                transform: "rotate(-15deg)",
-              }}
-            >
-              🏪
-            </div>
             <div style={{ position: "relative" }}>
               <div
                 style={{

@@ -12,13 +12,15 @@ export async function GET(request: Request) {
 
     if (!error && data.user) {
       // Sync user vào bảng User nếu chưa có
+      const roleFromMeta = data.user.user_metadata?.role === "BUSINESS" ? "BUSINESS" : "CUSTOMER";
       await prisma.user.upsert({
         where: { id: data.user.id },
         update: {},
         create: {
-          id: data.user.id,
+          id:    data.user.id,
           email: data.user.email!,
-          name: data.user.user_metadata?.name ?? data.user.email!.split("@")[0],
+          name:  data.user.user_metadata?.name ?? data.user.email!.split("@")[0],
+          role:  roleFromMeta as "CUSTOMER" | "BUSINESS",
         },
       });
 

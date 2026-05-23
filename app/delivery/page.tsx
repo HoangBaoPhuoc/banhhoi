@@ -24,8 +24,6 @@ export default function DeliveryPage() {
 
       {/* HERO */}
       <section style={{ background: "var(--cream)", paddingTop: 145, paddingBottom: 56, textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 20, left: 80, fontSize: 100, opacity: 0.07, transform: "rotate(-20deg)" }}>🛍️</div>
-        <div style={{ position: "absolute", bottom: 20, right: 80, fontSize: 100, opacity: 0.07, transform: "rotate(15deg)" }}>📱</div>
         <div className="container" style={{ position: "relative" }}>
           <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
             Hướng dẫn nhận hàng
@@ -53,37 +51,23 @@ export default function DeliveryPage() {
             </svg>
 
             {pickupSteps.map((s) => (
-              <div key={s.n} className="card-hover" data-reveal data-reveal-delay={String(s.n)} style={{ position: "relative", textAlign: "center", zIndex: 1, padding: "24px 16px", borderRadius: 20, border: "1px solid var(--border)", background: "white" }}>
+              <div key={s.n} className="card-hover" data-reveal data-reveal-delay={String(s.n)} style={{ position: "relative", textAlign: "center", zIndex: 1, padding: "36px 16px 28px", borderRadius: 20, border: "1px solid var(--border)", background: "white" }}>
                 <div style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 28,
-                  background: "var(--cream)",
-                  border: "2px solid var(--border)",
-                  margin: "0 auto 20px",
+                  position: "absolute",
+                  top: -16,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 32,
+                  height: 32,
+                  borderRadius: 999,
+                  background: "var(--primary)",
+                  color: "white",
                   display: "grid",
                   placeItems: "center",
-                  fontSize: 42,
-                  position: "relative",
-                  boxShadow: "var(--shadow-md)",
-                }}>
-                  {s.ic}
-                  <div style={{
-                    position: "absolute",
-                    top: -10,
-                    right: -10,
-                    width: 32,
-                    height: 32,
-                    borderRadius: 999,
-                    background: "var(--primary)",
-                    color: "white",
-                    display: "grid",
-                    placeItems: "center",
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 800,
-                    fontSize: 13,
-                  }}>{s.n}</div>
-                </div>
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: 13,
+                }}>{s.n}</div>
                 <h3 style={{ fontSize: 18, marginBottom: 8 }}>{s.title}</h3>
                 <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>{s.desc}</p>
               </div>
@@ -118,13 +102,13 @@ export default function DeliveryPage() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
-                  "🔒 Mã hoá an toàn, không thể giả mạo",
-                  "⚡ Quét 1 lần, tự động hết hiệu lực",
-                  "📲 Lưu offline, không cần mạng để hiển thị",
+                  "Mã hoá an toàn, không thể giả mạo",
+                  "Quét 1 lần, tự động hết hiệu lực",
+                  "Lưu offline, không cần mạng để hiển thị",
                 ].map((t) => (
                   <div key={t} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
-                    <span style={{ fontSize: 16 }}>{t.split(" ")[0]}</span>
-                    <span>{t.split(" ").slice(1).join(" ")}</span>
+                    <div style={{ width: 6, height: 6, borderRadius: 999, background: "var(--accent)", flexShrink: 0 }} />
+                    <span>{t}</span>
                   </div>
                 ))}
               </div>
@@ -180,14 +164,9 @@ export default function DeliveryPage() {
                 border: r.strong ? "1px solid var(--badge)" : "1px solid var(--border)",
                 borderRadius: 16,
                 padding: 22,
-                display: "flex",
-                gap: 14,
               }}>
-                <div style={{ fontSize: 24, lineHeight: 1 }}>{r.ic}</div>
-                <div>
-                  <h3 style={{ fontSize: 15, marginBottom: 6, fontFamily: "var(--font-body)" }}>{r.title}</h3>
-                  <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>{r.desc}</p>
-                </div>
+                <h3 style={{ fontSize: 15, marginBottom: 6, fontFamily: "var(--font-body)" }}>{r.title}</h3>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>{r.desc}</p>
               </div>
             ))}
           </div>
@@ -206,13 +185,12 @@ export default function DeliveryPage() {
             position: "relative",
             overflow: "hidden",
           }}>
-            <div style={{ position: "absolute", right: -30, top: -30, fontSize: 200, opacity: 0.15 }}>🛵</div>
             <div style={{ position: "relative" }}>
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12, opacity: 0.9 }}>
                 Sắp ra mắt
               </div>
               <h2 style={{ fontSize: 32, color: "white", marginBottom: 12 }}>
-                Giao tận nơi — sớm thôi! 🛵
+                Giao tận nơi — sắp có!
               </h2>
               <p style={{ fontSize: 15, opacity: 0.92, lineHeight: 1.6, maxWidth: 560 }}>
                 Chúng tôi đang phát triển mạng lưới shipper riêng để bạn có thể nhận Surprise Box mà không cần ra khỏi nhà.

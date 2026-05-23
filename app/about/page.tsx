@@ -42,9 +42,6 @@ export default function AboutPage() {
         display: "flex",
         alignItems: "center",
       }}>
-        <div style={{ position: "absolute", top: 60, left: 100, fontSize: 140, opacity: 0.06, transform: "rotate(-15deg)" }}>🥐</div>
-        <div style={{ position: "absolute", bottom: 40, right: 120, fontSize: 140, opacity: 0.06, transform: "rotate(20deg)" }}>🌿</div>
-
         <div className="container" style={{ position: "relative", textAlign: "center", maxWidth: 800, width: "100%" }}>
           <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
             Câu chuyện của chúng tôi
@@ -71,7 +68,6 @@ export default function AboutPage() {
               position: "relative",
               overflow: "hidden",
             }}>
-              <div style={{ position: "absolute", top: -20, right: -20, fontSize: 140, opacity: 0.18 }}>🎯</div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
                 Sứ mệnh
               </div>
@@ -91,7 +87,6 @@ export default function AboutPage() {
               position: "relative",
               overflow: "hidden",
             }}>
-              <div style={{ position: "absolute", top: -20, right: -20, fontSize: 140, opacity: 0.18 }}>🌏</div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
                 Tầm nhìn
               </div>
@@ -124,17 +119,8 @@ export default function AboutPage() {
                 borderRadius: 20,
                 padding: "32px 24px",
                 border: "1px solid var(--border)",
-                position: "relative",
+                borderTop: `3px solid ${v.color}`,
               }}>
-                <div style={{
-                  width: 56, height: 56,
-                  borderRadius: 16,
-                  background: v.color,
-                  display: "grid",
-                  placeItems: "center",
-                  fontSize: 26,
-                  marginBottom: 18,
-                }}>{v.ic}</div>
                 <h3 style={{ fontSize: 20, marginBottom: 10 }}>{v.title}</h3>
                 <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>{v.desc}</p>
               </div>
@@ -251,8 +237,6 @@ export default function AboutPage() {
             position: "relative",
             overflow: "hidden",
           }}>
-            <div style={{ position: "absolute", top: 24, left: 32, fontSize: 24, opacity: 0.3 }}>✦</div>
-            <div style={{ position: "absolute", bottom: 28, right: 56, fontSize: 24, opacity: 0.3 }}>✿</div>
             <h2 style={{ color: "white", fontSize: 40, marginBottom: 16, lineHeight: 1.15 }}>
               Sẵn sàng cứu chiếc bánh đầu tiên?
             </h2>

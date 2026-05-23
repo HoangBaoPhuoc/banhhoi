@@ -80,7 +80,6 @@ export default function PartnerModal({ onClose }: Props) {
 
         {/* header */}
         <div style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>🏪</div>
           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
             Dành cho đối tác cửa hàng
           </h2>
@@ -102,14 +101,14 @@ export default function PartnerModal({ onClose }: Props) {
           }}
         >
           {[
-            { icon: "📦", text: "Đăng box cuối ngày trong vài giây" },
-            { icon: "💰", text: "Không phí khởi tạo, không ràng buộc" },
-            { icon: "📊", text: "Quản lý đơn hàng và doanh thu dễ dàng" },
-            { icon: "🌿", text: "Góp phần giảm lãng phí thực phẩm mỗi ngày" },
-          ].map((b) => (
-            <div key={b.text} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
-              <span style={{ fontSize: 16 }}>{b.icon}</span>
-              <span style={{ color: "var(--text)" }}>{b.text}</span>
+            "Đăng box cuối ngày trong vài giây",
+            "Không phí khởi tạo, không ràng buộc",
+            "Quản lý đơn hàng và doanh thu dễ dàng",
+            "Góp phần giảm lãng phí thực phẩm mỗi ngày",
+          ].map((text) => (
+            <div key={text} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+              <div style={{ width: 5, height: 5, borderRadius: 999, background: "var(--primary)", flexShrink: 0 }} />
+              <span style={{ color: "var(--text)" }}>{text}</span>
             </div>
           ))}
         </div>
@@ -117,7 +116,7 @@ export default function PartnerModal({ onClose }: Props) {
         {/* actions */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <Link
-            href="/register?role=partner"
+            href="/register/business"
             className="btn btn-primary"
             style={{ textAlign: "center", padding: "13px 0", fontSize: 15, fontWeight: 600, borderRadius: 12 }}
             onClick={onClose}
@@ -125,7 +124,7 @@ export default function PartnerModal({ onClose }: Props) {
             Đăng ký cửa hàng →
           </Link>
           <Link
-            href="/login?role=partner"
+            href="/login"
             className="btn btn-ghost"
             style={{ textAlign: "center", padding: "13px 0", fontSize: 14, borderRadius: 12 }}
             onClick={onClose}

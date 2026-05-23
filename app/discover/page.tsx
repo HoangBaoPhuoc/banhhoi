@@ -96,7 +96,6 @@ async function BoxList({ sort }: { sort: string }) {
   if (boxes.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "64px 0", color: "var(--text-muted)" }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🥲</div>
         <p style={{ fontSize: 16, fontWeight: 600 }}>Hôm nay chưa có box nào</p>
         <p style={{ fontSize: 13, marginTop: 6 }}>Quay lại sau nhé!</p>
       </div>
@@ -136,7 +135,7 @@ async function BoxList({ sort }: { sort: string }) {
             <div>
               <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
                 <span className="badge badge-primary">−{disc}%</span>
-                {isLow && <span className="badge badge-warm">🔥 Sắp hết</span>}
+                {isLow && <span className="badge badge-warm">Sắp hết</span>}
               </div>
               <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
                 {box.store.name}
@@ -151,10 +150,10 @@ async function BoxList({ sort }: { sort: string }) {
                 </span>
               </div>
               <div style={{ display: "flex", gap: 16, fontSize: 11, color: "var(--text-muted)", flexWrap: "wrap" }}>
-                <span>🕒 {box.pickupStart} - {box.pickupEnd}</span>
-                <span>📍 {box.store.address.split(",")[0]}</span>
+                <span>{box.pickupStart} – {box.pickupEnd}</span>
+                <span>{box.store.address.split(",")[0]}</span>
                 <span style={{ color: isLow ? "var(--danger)" : "var(--accent)", fontWeight: 600 }}>
-                  📦 Còn {box.quantityLeft} box
+                  Còn {box.quantityLeft} box
                 </span>
               </div>
             </div>
@@ -280,9 +279,8 @@ export default async function DiscoverPage({
                 overflow: "hidden",
               }}>
                 <MapView stores={storePins} height={220} />
-                <div style={{ padding: "10px 14px", fontSize: 12, color: "var(--text-muted)", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>📍</span>
-                  <span>Bấm vị trí trên header để định vị</span>
+                <div style={{ padding: "10px 14px", fontSize: 12, color: "var(--text-muted)", borderTop: "1px solid var(--border)" }}>
+                  Bấm vị trí trên header để định vị
                 </div>
               </div>
 
@@ -299,36 +297,16 @@ export default async function DiscoverPage({
                 <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 16 }}>Tác động của bạn</div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{
-                    background: "var(--accent-soft)",
-                    borderRadius: 14,
-                    padding: "14px 16px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                  }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "0 2px 8px rgba(76,140,74,0.15)" }}>🌿</div>
-                    <div>
-                      <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>Bạn đã cứu</div>
-                      <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent)", lineHeight: 1 }}>— box</div>
-                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>trong tháng này</div>
-                    </div>
+                  <div style={{ background: "var(--accent-soft)", borderRadius: 14, padding: "14px 16px" }}>
+                    <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>Bạn đã cứu</div>
+                    <div style={{ fontSize: 22, fontWeight: 900, color: "var(--accent)", lineHeight: 1 }}>— box</div>
+                    <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>trong tháng này</div>
                   </div>
 
-                  <div style={{
-                    background: "var(--cream)",
-                    borderRadius: 14,
-                    padding: "14px 16px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                  }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "0 2px 8px rgba(232,119,34,0.12)" }}>🏭</div>
-                    <div>
-                      <div style={{ fontSize: 11, color: "var(--primary)", fontWeight: 600, marginBottom: 2 }}>CO₂ giảm phát thải</div>
-                      <div style={{ fontSize: 22, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>— kg</div>
-                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>tương đương tháng này</div>
-                    </div>
+                  <div style={{ background: "var(--cream)", borderRadius: 14, padding: "14px 16px" }}>
+                    <div style={{ fontSize: 11, color: "var(--primary)", fontWeight: 600, marginBottom: 2 }}>CO₂ giảm phát thải</div>
+                    <div style={{ fontSize: 22, fontWeight: 900, color: "var(--primary)", lineHeight: 1 }}>— kg</div>
+                    <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>tương đương tháng này</div>
                   </div>
                 </div>
 
