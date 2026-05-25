@@ -49,7 +49,8 @@ export default function ProgressBar() {
       if (!a) return;
       const href = a.getAttribute("href") ?? "";
       if (!href || /^(https?:|mailto:|tel:|#)/.test(href)) return;
-      if (href.split("?")[0] === window.location.pathname) return;
+      const hrefPath = href.split("#")[0].split("?")[0];
+      if (!hrefPath || hrefPath === window.location.pathname) return;
 
       clearAll();
       setShow(true);

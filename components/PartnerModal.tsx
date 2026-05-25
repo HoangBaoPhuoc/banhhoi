@@ -84,7 +84,7 @@ export default function PartnerModal({ onClose }: Props) {
             Dành cho đối tác cửa hàng
           </h2>
           <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 }}>
-            Tham gia Still Good để bán các box cuối ngày, tăng doanh thu và cùng cộng đồng giảm lãng phí thực phẩm.
+            Tham gia CrumbUp để bán các box cuối ngày, tăng doanh thu và cùng cộng đồng giảm lãng phí thực phẩm.
           </p>
         </div>
 

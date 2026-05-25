@@ -7,9 +7,12 @@ import { LocationProvider } from "@/lib/location-context";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Still Good · Save Food, Save Money",
+  title: "CrumbUp · Save Every Crumb, Share Every Value",
   description:
-    "Still Good — good food, not wasted. Grab end-of-day boxes from your favourite bakeries and cafés at up to 70% off.",
+    "CrumbUp — giải cứu bánh cuối ngày chất lượng cao. Mua hộp bánh từ những tiệm bánh yêu thích với giá ưu đãi 50-70%. Ăn ngon, tiết kiệm, giảm lãng phí.",
+  icons: {
+    icon: "/crumbup-logo-tabweb.jpg",
+  },
 };
 
 export default function RootLayout({

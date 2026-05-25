@@ -1,4 +1,3 @@
-import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -23,7 +22,7 @@ export default function DeliveryPage() {
       <SiteHeader />
 
       {/* HERO */}
-      <section style={{ background: "var(--cream)", paddingTop: 145, paddingBottom: 56, textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <section style={{ backgroundColor: "var(--cream)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover", backgroundPosition: "center", paddingTop: 145, paddingBottom: 56, textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="container" style={{ position: "relative" }}>
           <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
             Hướng dẫn nhận hàng
@@ -33,7 +32,7 @@ export default function DeliveryPage() {
             để nhận Surprise Box
           </h1>
           <p className="rise rise-3" style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 560, margin: "0 auto" }}>
-            Hiện tại Still Good hỗ trợ hình thức <strong style={{ color: "var(--text)" }}>tự đến lấy tại cửa hàng (Pick-up)</strong>.
+            Hiện tại CrumbUp hỗ trợ hình thức <strong style={{ color: "var(--text)" }}>tự đến lấy tại cửa hàng (Pick-up)</strong>.
             Giao tận nơi đang được phát triển.
           </p>
         </div>

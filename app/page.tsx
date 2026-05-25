@@ -518,7 +518,7 @@ export default function HomePage() {
                 margin: "0 auto",
               }}
             >
-              Cùng Still Good và cộng đồng giải cứu thực phẩm mỗi ngày — từng
+              Cùng CrumbUp và cộng đồng giải cứu thực phẩm mỗi ngày — từng
               box nhỏ, tác động lớn.
             </p>
           </div>
@@ -603,7 +603,7 @@ export default function HomePage() {
                   lineHeight: 1.6,
                 }}
               >
-                Tham gia Still Good để tăng doanh thu và cùng chúng tôi giảm
+                Tham gia CrumbUp để tăng doanh thu và cùng chúng tôi giảm
                 lãng phí thực phẩm mỗi ngày — không phí khởi tạo, không ràng
                 buộc.
               </p>

@@ -187,7 +187,7 @@ export default function BusinessRegisterPage() {
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40, position: "relative" }}>
           <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "0 4px 16px rgba(232,119,34,0.4)" }}>🥐</div>
           <div>
-            <div style={{ fontWeight: 900, fontSize: 17, color: "white", letterSpacing: "-0.02em" }}>Still Good</div>
+            <div style={{ fontWeight: 900, fontSize: 17, color: "white", letterSpacing: "-0.02em" }}>CrumbUp</div>
             <div style={{ fontSize: 10, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>Dành cho cửa hàng</div>
           </div>
         </Link>
@@ -240,7 +240,7 @@ export default function BusinessRegisterPage() {
         <div className="biz-reg-mobile-header">
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 36, height: 36, borderRadius: 12, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 18 }}>🥐</div>
-            <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: "-0.02em" }}>Still Good</span>
+            <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: "-0.02em" }}>CrumbUp</span>
           </Link>
           <span style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
             Bước {curIdx + 1}/{STEPS.length}
@@ -522,7 +522,7 @@ export default function BusinessRegisterPage() {
               <div style={{ textAlign: "center" }}>
                 <h1 style={{ ...h1, textAlign: "center" }}>Đã nhận hồ sơ!</h1>
                 <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 400, margin: "0 auto 28px" }}>
-                  Đội ngũ Still Good sẽ xét duyệt giấy tờ trong <strong style={{ color: "var(--text)" }}>1–2 ngày làm việc</strong>.
+                  Đội ngũ CrumbUp sẽ xét duyệt giấy tờ trong <strong style={{ color: "var(--text)" }}>1–2 ngày làm việc</strong>.
                   Chúng tôi sẽ email cho bạn khi có kết quả.
                 </p>
 

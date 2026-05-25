@@ -281,14 +281,14 @@ function BrandPanel() {
       <div style={{ position: "absolute", bottom: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(76,140,74,0.10)" }} />
       <div style={{ position: "relative", textAlign: "center" }}>
         <div style={{ width: 96, height: 96, borderRadius: 28, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 48, margin: "0 auto 28px", boxShadow: "0 8px 32px rgba(232,119,34,0.4)" }}>🥐</div>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: 48, fontWeight: 900, color: "white", letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 14 }}>Still Good</div>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 32 }}>Good Food. Saved.</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 48, fontWeight: 900, color: "white", letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 14 }}>CrumbUp</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 32 }}>Save Every Crumb</div>
         <p style={{ fontSize: 18, fontWeight: 700, color: "white", lineHeight: 1.4, maxWidth: 280, opacity: 0.9 }}>
           Cứu bánh ngon cuối ngày,<br />
           <em style={{ color: "var(--primary)", fontStyle: "italic" }}>tiết kiệm mỗi tối.</em>
         </p>
       </div>
-      <p style={{ position: "absolute", bottom: 28, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>© 2026 Still Good</p>
+      <p style={{ position: "absolute", bottom: 28, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>© 2026 CrumbUp</p>
     </div>
   );
 }

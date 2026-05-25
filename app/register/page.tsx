@@ -342,8 +342,8 @@ function BrandPanel({ currentStep }: { currentStep: number }) {
 
       <div style={{ position: "relative", textAlign: "center" }}>
         <div style={{ width: 80, height: 80, borderRadius: 24, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 40, margin: "0 auto 22px", boxShadow: "0 8px 32px rgba(232,119,34,0.4)" }}>🥐</div>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 900, color: "white", letterSpacing: "-0.03em", marginBottom: 8 }}>Still Good</div>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 40 }}>Good Food. Saved.</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 900, color: "white", letterSpacing: "-0.03em", marginBottom: 8 }}>CrumbUp</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 40 }}>Save Every Crumb</div>
 
         {/* Step list */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14, textAlign: "left" }}>
@@ -370,7 +370,7 @@ function BrandPanel({ currentStep }: { currentStep: number }) {
         </div>
       </div>
 
-      <p style={{ position: "absolute", bottom: 28, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>© 2026 Still Good</p>
+      <p style={{ position: "absolute", bottom: 28, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>© 2026 CrumbUp</p>
     </div>
   );
 }
