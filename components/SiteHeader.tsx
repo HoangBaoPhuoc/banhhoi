@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import NavLinks from "./NavLinks";
 import SearchBar from "./SearchBar";
@@ -37,7 +38,9 @@ export default async function SiteHeader() {
       <div className="header-middle" style={{ display: "contents" }}>
         <LocationPill />
         <NavLinks />
-        <SearchBar />
+        <Suspense fallback={<div style={{ width: 180, height: 38, borderRadius: 12, background: "var(--ivory)" }} />}>
+          <SearchBar />
+        </Suspense>
       </div>
 
       {/* Desktop-only auth buttons */}

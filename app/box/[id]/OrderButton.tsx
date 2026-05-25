@@ -14,7 +14,7 @@ const PICKUP_GUIDE = [
 ];
 
 type BoxInfo  = { id: string; name: string; priceSale: number; pickupStart: string; pickupEnd: string };
-type StoreInfo = { name: string; phone: string | null; address: string };
+type StoreInfo = { name: string; phone: string | null; address: string; email: string | null };
 
 export default function OrderButton({ box, store, isLoggedIn }: { box: BoxInfo; store: StoreInfo; isLoggedIn: boolean }) {
   const [mounted, setMounted] = useState(false);
@@ -135,6 +135,15 @@ export default function OrderButton({ box, store, isLoggedIn }: { box: BoxInfo; 
                   <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 4 }}>Chuyển khoản ngân hàng</h2>
                   <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 18 }}>Chuyển khoản đúng nội dung để đơn được xác nhận nhanh nhất</p>
 
+                  {/* VietQR */}
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                    <img
+                      src={`https://img.vietqr.io/image/MB-${BANK.number}-compact2.png?amount=${box.priceSale}&addInfo=CRUMBUP%20${shortId}&accountName=${encodeURIComponent(BANK.owner)}`}
+                      alt="QR chuyển khoản"
+                      style={{ width: 220, height: 220, borderRadius: 14, border: "1px solid var(--border)" }}
+                    />
+                  </div>
+
                   {/* Bank info */}
                   <div style={{ background: "var(--cream)", borderRadius: 14, padding: 18, marginBottom: 16 }}>
                     {[
@@ -212,10 +221,20 @@ export default function OrderButton({ box, store, isLoggedIn }: { box: BoxInfo; 
 
                   {/* Store contact */}
                   <div style={{ border: "1px solid var(--border)", borderRadius: 14, padding: 16, marginBottom: 14 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Liên hệ cửa hàng</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{store.name}</div>
-                    <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: store.phone ? 4 : 0 }}>📍 {store.address}</div>
-                    {store.phone && <div style={{ fontSize: 12, color: "var(--text-muted)" }}>📞 {store.phone}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Thông tin liên hệ</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{store.name}</div>
+                    {store.phone && (
+                      <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                        <span>📞</span>
+                        <a href={`tel:${store.phone}`} style={{ color: "var(--primary)", fontWeight: 600, textDecoration: "none" }}>{store.phone}</a>
+                      </div>
+                    )}
+                    {store.email && (
+                      <div style={{ fontSize: 12, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
+                        <span>✉️</span>
+                        <a href={`mailto:${store.email}`} style={{ color: "var(--primary)", fontWeight: 600, textDecoration: "none" }}>{store.email}</a>
+                      </div>
+                    )}
                   </div>
 
                   {/* Pickup guide */}

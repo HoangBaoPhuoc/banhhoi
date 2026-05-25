@@ -3,9 +3,11 @@ import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 import { formatPrice, discountPercent } from "@/lib/utils";
 import BoxCountdown from "./BoxCountdown";
 import StoreMapClient from "./StoreMapClient";
+import OrderButton from "./OrderButton";
 
 function timeAgo(date: Date): string {
   const diff = Date.now() - date.getTime();
@@ -20,11 +22,16 @@ function timeAgo(date: Date): string {
 export default async function BoxDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isLoggedIn = !!user;
+
   const box = await prisma.box.findUnique({
     where: { id },
     include: {
       store: {
         include: {
+          owner: { select: { email: true } },
           reviews: {
             include: { user: { select: { name: true } } },
             orderBy: { createdAt: "desc" },
@@ -193,9 +200,11 @@ export default async function BoxDetailPage({ params }: { params: Promise<{ id: 
                 <BoxCountdown pickupStart={box.pickupStart} pickupEnd={box.pickupEnd} />
               </div>
 
-              <button className="btn btn-primary btn-lg" style={{ width: "100%", marginTop: 16, padding: 16, fontSize: 15 }}>
-                Đặt ngay
-              </button>
+              <OrderButton
+                box={{ id: box.id, name: box.name, priceSale: box.priceSale, pickupStart: box.pickupStart, pickupEnd: box.pickupEnd }}
+                store={{ name: store.name, phone: store.phone ?? null, address: store.address, email: store.owner.email ?? null }}
+                isLoggedIn={isLoggedIn}
+              />
             </div>
 
             <div style={{ background: "var(--cream)", borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>

@@ -9,6 +9,7 @@ import type { StorePin } from "@/components/MapView";
 import PickupCountdown from "./PickupCountdown";
 import FilterSidebar from "./FilterSidebar";
 import SortButtons from "./SortButtons";
+import ClearSearchButton from "./ClearSearchButton";
 
 const EMOJIS = ["🥐", "☕", "🥖", "🧁", "🥪", "🎁"];
 
@@ -40,7 +41,7 @@ const PRICE_RANGES: Record<string, { gte?: number; lt?: number; lte?: number }> 
   high: { gte: 100_000, lte: 150_000 },
 };
 
-async function getBoxes(sort: string, prices: string[], pickups: string[]) {
+async function getBoxes(sort: string, prices: string[], pickups: string[], q: string) {
   const { from, to } = getVietnamToday();
 
   const priceOR = prices
@@ -51,12 +52,20 @@ async function getBoxes(sort: string, prices: string[], pickups: string[]) {
   const nowHHMM      = hasSoon ? vnTimeHHMM(0)   : "";
   const twoHoursHHMM = hasSoon ? vnTimeHHMM(120) : "";
 
+  const textFilter = q.trim().length >= 1 ? {
+    OR: [
+      { name:  { contains: q.trim(), mode: "insensitive" as const } },
+      { store: { name: { contains: q.trim(), mode: "insensitive" as const } } },
+    ],
+  } : {};
+
   return prisma.box.findMany({
     where: {
       active: true,
       quantityLeft: { gt: 0 },
       date: { gte: from, lt: to },
-      ...(priceOR.length > 0 && { OR: priceOR }),
+      ...textFilter,
+      ...(priceOR.length > 0 && { AND: [{ OR: priceOR }] }),
       ...(hasSoon && {
         pickupEnd:   { gte: nowHHMM },
         pickupStart: { lte: twoHoursHHMM },
@@ -99,8 +108,8 @@ function BoxSkeleton() {
   );
 }
 
-async function BoxList({ sort, prices, pickups }: { sort: string; prices: string[]; pickups: string[] }) {
-  const boxes = await getBoxes(sort, prices, pickups);
+async function BoxList({ sort, prices, pickups, q }: { sort: string; prices: string[]; pickups: string[]; q: string }) {
+  const boxes = await getBoxes(sort, prices, pickups, q);
 
   if (boxes.length === 0) {
     return (
@@ -184,12 +193,13 @@ async function BoxList({ sort, prices, pickups }: { sort: string; prices: string
 export default async function DiscoverPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string; price?: string | string[]; pickup?: string | string[] }>;
+  searchParams: Promise<{ sort?: string; price?: string | string[]; pickup?: string | string[]; q?: string }>;
 }) {
   const sp      = await searchParams;
   const sort    = sp.sort ?? "default";
   const prices  = sp.price  ? (Array.isArray(sp.price)  ? sp.price  : [sp.price])  : [];
   const pickups = sp.pickup ? (Array.isArray(sp.pickup) ? sp.pickup : [sp.pickup]) : [];
+  const q       = sp.q ?? "";
   const storePins = await getStorePins();
 
   return (
@@ -230,12 +240,13 @@ export default async function DiscoverPage({
           <div className="rise rise-4" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div style={{ display: "flex", alignItems: "center", marginBottom: 4, flexWrap: "wrap", gap: 8 }}>
               <h2 style={{ fontSize: 22, flex: 1 }}>Box hôm nay</h2>
+              {q && <ClearSearchButton q={q} />}
               <Suspense fallback={null}>
                 <SortButtons current={sort} />
               </Suspense>
             </div>
             <Suspense fallback={<BoxSkeleton />}>
-              <BoxList sort={sort} prices={prices} pickups={pickups} />
+              <BoxList sort={sort} prices={prices} pickups={pickups} q={q} />
             </Suspense>
           </div>
 

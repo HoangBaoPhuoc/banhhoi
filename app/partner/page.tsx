@@ -3,24 +3,11 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import CreateBoxModal from "./CreateBoxModal";
-import PartnerOrderActions from "./PartnerOrderActions";
-import BoxToggle from "./BoxToggle";
 import PartnerLogoutButton from "./PartnerLogoutButton";
+import PartnerTables from "./PartnerTables";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_LABEL: Record<string, string> = {
-  PENDING:   "Chờ xác nhận",
-  CONFIRMED: "Đã xác nhận",
-  PICKED_UP: "Đã nhận hàng",
-  CANCELLED: "Đã hủy",
-};
-const STATUS_COLOR: Record<string, React.CSSProperties> = {
-  PENDING:   { background: "#fef3c7", color: "#92400e" },
-  CONFIRMED: { background: "#dbeafe", color: "#1e40af" },
-  PICKED_UP: { background: "#dcfce7", color: "#15803d" },
-  CANCELLED: { background: "#f1f5f9", color: "#64748b" },
-};
 
 export default async function PartnerDashboard() {
   /* ── Auth ── */
@@ -178,118 +165,12 @@ export default async function PartnerDashboard() {
           ))}
         </div>
 
-        {/* Today's boxes */}
-        <section id="boxes" style={{ background: "white", borderRadius: 16, border: "1px solid var(--border)", overflow: "hidden", marginBottom: 24 }}>
-          <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--cream)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>Box hôm nay</h2>
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{todayBoxes.length} box</span>
-          </div>
-
-          {todayBoxes.length === 0 ? (
-            <div style={{ padding: "48px 24px", textAlign: "center" }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)", marginBottom: 6 }}>Chưa có box nào hôm nay</div>
-              <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Tạo box để bắt đầu bán hàng.</p>
-              <CreateBoxModal storeAddress={store.address} />
-            </div>
-          ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ background: "var(--ivory)" }}>
-                  {["Tên box", "Giá gốc", "Giá bán", "Còn lại", "Giờ nhận", "Trạng thái", ""].map((h) => (
-                    <th key={h} style={th}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {todayBoxes.map((b) => {
-                  const sold = b.quantityTotal - b.quantityLeft;
-                  const pct  = b.quantityTotal > 0 ? Math.round((sold / b.quantityTotal) * 100) : 0;
-                  return (
-                    <tr key={b.id} style={{ borderTop: "1px solid var(--cream)", opacity: b.active ? 1 : 0.5 }}>
-                      <td style={td}>
-                        <div style={{ fontWeight: 600 }}>{b.name}</div>
-                        {b.description && <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>{b.description}</div>}
-                      </td>
-                      <td style={{ ...td, color: "var(--text-muted)", textDecoration: "line-through", fontSize: 12 }}>
-                        {b.priceOriginal.toLocaleString("vi-VN")}đ
-                      </td>
-                      <td style={{ ...td, fontWeight: 700, color: "var(--primary)" }}>
-                        {b.priceSale.toLocaleString("vi-VN")}đ
-                        <div style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>
-                          -{Math.round((1 - b.priceSale / b.priceOriginal) * 100)}%
-                        </div>
-                      </td>
-                      <td style={td}>
-                        <div style={{ fontWeight: 600 }}>{b.quantityLeft}/{b.quantityTotal}</div>
-                        <div style={{ marginTop: 4, height: 4, background: "var(--cream)", borderRadius: 999, width: 60 }}>
-                          <div style={{ height: "100%", width: `${pct}%`, background: "var(--primary)", borderRadius: 999 }} />
-                        </div>
-                      </td>
-                      <td style={{ ...td, fontSize: 12, color: "var(--text-muted)" }}>{b.pickupStart} – {b.pickupEnd}</td>
-                      <td style={td}>
-                        <span style={{
-                          padding: "3px 10px", borderRadius: 999, fontSize: 11, fontWeight: 700,
-                          background: b.active && b.quantityLeft > 0 ? "var(--primary-soft)" : b.quantityLeft === 0 ? "#f1f5f9" : "#fef9f0",
-                          color: b.active && b.quantityLeft > 0 ? "var(--primary-dark)" : b.quantityLeft === 0 ? "#64748b" : "var(--accent)",
-                        }}>
-                          {b.quantityLeft === 0 ? "Hết hàng" : b.active ? "Đang bán" : "Tạm dừng"}
-                        </span>
-                      </td>
-                      <td style={td}><BoxToggle boxId={b.id} active={b.active} /></td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </section>
-
-        {/* Orders */}
-        <section id="orders" style={{ background: "white", borderRadius: 16, border: "1px solid var(--border)", overflow: "hidden" }}>
-          <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--cream)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>Đơn hàng gần đây</h2>
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{totalOrders} đơn tổng cộng</span>
-          </div>
-
-          {recentOrders.length === 0 ? (
-            <div style={{ padding: "48px 24px", textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
-              Chưa có đơn hàng nào
-            </div>
-          ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ background: "var(--ivory)" }}>
-                  {["Mã đơn", "Khách hàng", "Box", "Tổng tiền", "Thời gian", "Trạng thái", "Thao tác"].map((h) => (
-                    <th key={h} style={th}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map((o) => (
-                  <tr key={o.id} style={{ borderTop: "1px solid var(--cream)" }}>
-                    <td style={td}>
-                      <div style={{ fontWeight: 700, color: "var(--primary)", fontSize: 12 }}>#{o.pickupCode.slice(0, 8).toUpperCase()}</div>
-                    </td>
-                    <td style={{ ...td, fontWeight: 600 }}>{o.user.name}</td>
-                    <td style={{ ...td, fontSize: 12, color: "var(--text-muted)" }}>{o.items[0]?.box.name ?? "—"}</td>
-                    <td style={{ ...td, fontWeight: 700 }}>{o.total.toLocaleString("vi-VN")}đ</td>
-                    <td style={{ ...td, fontSize: 12, color: "var(--text-muted)" }}>
-                      {new Date(o.createdAt).toLocaleString("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
-                    </td>
-                    <td style={td}>
-                      <span style={{ padding: "3px 10px", borderRadius: 999, fontSize: 11, fontWeight: 700, ...STATUS_COLOR[o.status] }}>
-                        {STATUS_LABEL[o.status]}
-                      </span>
-                    </td>
-                    <td style={td}>
-                      <PartnerOrderActions orderId={o.id} status={o.status as "PENDING" | "CONFIRMED" | "PICKED_UP" | "CANCELLED"} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </section>
+        <PartnerTables
+          todayBoxes={todayBoxes}
+          recentOrders={recentOrders}
+          totalOrders={totalOrders}
+          storeAddress={store.address}
+        />
 
         {/* Box history */}
         {pastBoxes.length > 0 && (
@@ -348,3 +229,4 @@ const th: React.CSSProperties = {
   fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em",
 };
 const td: React.CSSProperties = { padding: "13px 20px", fontSize: 13, color: "var(--text)" };
+
