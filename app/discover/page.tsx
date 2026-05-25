@@ -6,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { formatPrice, discountPercent, getVietnamToday } from "@/lib/utils";
 import MapView from "@/components/MapView";
 import type { StorePin } from "@/components/MapView";
-import WishlistButton from "./WishlistButton";
+import PickupCountdown from "./PickupCountdown";
+import FilterSidebar from "./FilterSidebar";
+import SortButtons from "./SortButtons";
 
 const EMOJIS = ["🥐", "☕", "🥖", "🧁", "🥪", "🎁"];
 
@@ -27,41 +29,47 @@ async function getStorePins(): Promise<StorePin[]> {
     .map((s) => ({ id: s.id, name: s.name, lat: s.lat!, lng: s.lng!, boxCount: s.boxes.length }));
 }
 
-async function getBoxes(sort: string) {
+function vnTimeHHMM(offsetMinutes = 0): string {
+  const now = new Date(Date.now() + (7 * 60 + offsetMinutes) * 60_000);
+  return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
+}
+
+const PRICE_RANGES: Record<string, { gte?: number; lt?: number; lte?: number }> = {
+  low:  { lt: 50_000 },
+  mid:  { gte: 50_000, lt: 100_000 },
+  high: { gte: 100_000, lte: 150_000 },
+};
+
+async function getBoxes(sort: string, prices: string[], pickups: string[]) {
   const { from, to } = getVietnamToday();
+
+  const priceOR = prices
+    .filter((p) => PRICE_RANGES[p])
+    .map((p) => ({ priceSale: PRICE_RANGES[p] }));
+
+  const hasSoon      = pickups.includes("soon");
+  const nowHHMM      = hasSoon ? vnTimeHHMM(0)   : "";
+  const twoHoursHHMM = hasSoon ? vnTimeHHMM(120) : "";
 
   return prisma.box.findMany({
     where: {
       active: true,
       quantityLeft: { gt: 0 },
       date: { gte: from, lt: to },
+      ...(priceOR.length > 0 && { OR: priceOR }),
+      ...(hasSoon && {
+        pickupEnd:   { gte: nowHHMM },
+        pickupStart: { lte: twoHoursHHMM },
+      }),
     },
     include: { store: true },
     orderBy:
-      sort === "price_asc"
-        ? { priceSale: "asc" }
-        : sort === "price_desc"
-        ? { priceSale: "desc" }
-        : { quantityLeft: "asc" },
+      sort === "price_asc"  ? { priceSale: "asc" } :
+      sort === "price_desc" ? { priceSale: "desc" } :
+      { quantityLeft: "asc" },
   });
 }
 
-function FilterGroup({ title, options }: { title: string; options: string[] }) {
-  return (
-    <div style={{ paddingBottom: 16, borderBottom: "1px solid var(--border)" }}>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 12 }}>
-        <div style={{ flex: 1, fontSize: 13, fontWeight: 700 }}>{title}</div>
-        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>▾</span>
-      </div>
-      {options.map((o) => (
-        <label key={o} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, padding: "5px 0", cursor: "pointer" }}>
-          <input type="checkbox" style={{ width: 15, height: 15, accentColor: "var(--primary)" }} />
-          {o}
-        </label>
-      ))}
-    </div>
-  );
-}
 
 function BoxSkeleton() {
   return (
@@ -91,8 +99,8 @@ function BoxSkeleton() {
   );
 }
 
-async function BoxList({ sort }: { sort: string }) {
-  const boxes = await getBoxes(sort);
+async function BoxList({ sort, prices, pickups }: { sort: string; prices: string[]; pickups: string[] }) {
+  const boxes = await getBoxes(sort, prices, pickups);
 
   if (boxes.length === 0) {
     return (
@@ -114,7 +122,6 @@ async function BoxList({ sort }: { sort: string }) {
         return (
           <Link key={box.id} href={`/box/${box.id}`}
             className="card-hover card-hover-warm box-card-row"
-            data-reveal data-reveal-delay={String(Math.min(i + 1, 4))}
             style={{
               background: "white",
               borderRadius: 18,
@@ -126,12 +133,16 @@ async function BoxList({ sort }: { sort: string }) {
               alignItems: "center",
             }}>
             <div className="box-card-img" style={{
-              width: 140, height: 140, borderRadius: 14, fontSize: 56,
+              width: 140, height: 140, borderRadius: 14, fontSize: 56, flexShrink: 0,
               background: tone === "warm"
                 ? "linear-gradient(135deg, #fde6d4, #f5d4b3)"
                 : "linear-gradient(135deg, #fdf5e6, #e8dcc6)",
-              display: "grid", placeItems: "center",
-            }}>{emoji}</div>
+              display: "grid", placeItems: "center", overflow: "hidden",
+            }}>
+              {box.image
+                ? <img src={box.image} alt={box.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : emoji}
+            </div>
 
             <div>
               <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
@@ -160,7 +171,7 @@ async function BoxList({ sort }: { sort: string }) {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-end" }}>
-              <WishlistButton />
+              <PickupCountdown pickupStart={box.pickupStart} pickupEnd={box.pickupEnd} />
               <span className="btn btn-primary">Xem Box</span>
             </div>
           </Link>
@@ -173,9 +184,12 @@ async function BoxList({ sort }: { sort: string }) {
 export default async function DiscoverPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string }>;
+  searchParams: Promise<{ sort?: string; price?: string | string[]; pickup?: string | string[] }>;
 }) {
-  const { sort = "default" } = await searchParams;
+  const sp      = await searchParams;
+  const sort    = sp.sort ?? "default";
+  const prices  = sp.price  ? (Array.isArray(sp.price)  ? sp.price  : [sp.price])  : [];
+  const pickups = sp.pickup ? (Array.isArray(sp.pickup) ? sp.pickup : [sp.pickup]) : [];
   const storePins = await getStorePins();
 
   return (
@@ -197,21 +211,9 @@ export default async function DiscoverPage({
         }}
       >
         <div className="discover-tabs-inner" style={{ display: "flex", gap: 32 }}>
-          {[
-            { label: "Khám phá Box", active: true },
-            { label: "Đơn hàng của tôi" },
-            { label: "Yêu thích" },
-          ].map((t) => (
-            <div key={t.label} style={{
-              padding: "14px 0",
-              fontSize: 14,
-              fontWeight: t.active ? 700 : 500,
-              color: t.active ? "var(--primary)" : "var(--text-muted)",
-              borderBottom: t.active ? "3px solid var(--primary)" : "3px solid transparent",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}>{t.label}</div>
-          ))}
+          <div style={{ padding: "14px 0", fontSize: 14, fontWeight: 700, color: "var(--primary)", borderBottom: "3px solid var(--primary)", whiteSpace: "nowrap" }}>
+            Khám phá Box
+          </div>
         </div>
       </div>
 
@@ -219,49 +221,21 @@ export default async function DiscoverPage({
         <div className="discover-layout" style={{ gap: 24 }}>
           {/* Filters sidebar */}
           <div>
-            <aside className="rise rise-3" style={{
-              background: "white",
-              padding: 24,
-              borderRadius: 20,
-              border: "1px solid var(--border)",
-              position: "sticky",
-              top: 130,
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}>
-              <h3 style={{ fontSize: 18 }}>Bộ lọc</h3>
-              <FilterGroup title="Loại box" options={["Bánh ngọt", "Bánh mặn", "Đồ uống", "Mix"]} />
-              <FilterGroup title="Khoảng giá" options={["Dưới 50.000đ", "50k – 100k", "100k – 150k"]} />
-              <FilterGroup title="Giờ nhận" options={["Trong 2 giờ tới", "Hôm nay"]} />
-              <FilterGroup title="Đánh giá" options={["★★★★★", "★★★★ trở lên"]} />
-              <button className="btn btn-ghost" style={{ width: "100%" }}>Xóa bộ lọc</button>
-            </aside>
+            <Suspense fallback={<div style={{ width: 220, height: 200, borderRadius: 20, background: "var(--cream)" }} />}>
+              <FilterSidebar />
+            </Suspense>
           </div>
 
           {/* Results */}
           <div className="rise rise-4" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div style={{ display: "flex", alignItems: "center", marginBottom: 4, flexWrap: "wrap", gap: 8 }}>
               <h2 style={{ fontSize: 22, flex: 1 }}>Box hôm nay</h2>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {[
-                  { label: "Mặc định", value: "default" },
-                  { label: "Giá thấp nhất", value: "price_asc" },
-                  { label: "Giá cao nhất", value: "price_desc" },
-                ].map((s) => (
-                  <Link
-                    key={s.value}
-                    href={`/discover?sort=${s.value}`}
-                    className={sort === s.value ? "btn btn-primary" : "btn btn-ghost"}
-                    style={{ fontSize: 12, padding: "8px 14px" }}
-                  >
-                    {s.label}
-                  </Link>
-                ))}
-              </div>
+              <Suspense fallback={null}>
+                <SortButtons current={sort} />
+              </Suspense>
             </div>
             <Suspense fallback={<BoxSkeleton />}>
-              <BoxList sort={sort} />
+              <BoxList sort={sort} prices={prices} pickups={pickups} />
             </Suspense>
           </div>
 

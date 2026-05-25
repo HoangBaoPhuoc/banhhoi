@@ -570,6 +570,11 @@ h4 {
   }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @keyframes pulse {
   0%,
   100% {

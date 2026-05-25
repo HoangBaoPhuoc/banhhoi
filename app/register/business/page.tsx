@@ -3,24 +3,18 @@
 import Link from "next/link";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import AddressPicker from "./AddressPicker";
 
 type Step = "search" | "confirm" | "account" | "documents" | "payment" | "review" | "box";
 
 const STEPS: { key: Step; label: string; icon: string }[] = [
-  { key: "search",    label: "Tìm tiệm",          icon: "🔍" },
-  { key: "confirm",   label: "Xác nhận thông tin", icon: "✅" },
+  { key: "search",    label: "Địa chỉ tiệm",       icon: "📍" },
+  { key: "confirm",   label: "Thông tin tiệm",      icon: "🏪" },
   { key: "account",   label: "Tài khoản",          icon: "🔐" },
   { key: "documents", label: "Giấy tờ",            icon: "📋" },
   { key: "payment",   label: "Thanh toán",         icon: "🏦" },
   { key: "review",    label: "Xét duyệt",          icon: "⏳" },
   { key: "box",       label: "Tạo box đầu tiên",   icon: "📦" },
-];
-
-const MOCK_STORES = [
-  { id: 1, name: "Tiệm Bánh Mì Sài Gòn",  addr: "123 Nguyễn Huệ, Q.1, TP.HCM",   phone: "028 1234 5678", hours: "6:00 – 20:00" },
-  { id: 2, name: "Café Hương Quê",          addr: "45 Lê Lợi, Q.1, TP.HCM",         phone: "028 2345 6789", hours: "7:00 – 22:00" },
-  { id: 3, name: "Bánh Ngọt Thanh Hương",  addr: "78 Trần Hưng Đạo, Q.5, TP.HCM",  phone: "028 3456 7890", hours: "8:00 – 19:00" },
-  { id: 4, name: "Brew House Coffee",       addr: "12 Bùi Viện, Q.1, TP.HCM",       phone: "028 4567 8901", hours: "7:00 – 23:00" },
 ];
 
 const BANKS = ["Vietcombank", "BIDV", "Techcombank", "MB Bank", "VPBank", "ACB", "Agribank", "TPBank", "Sacombank", "VietinBank"];
@@ -33,18 +27,15 @@ export default function BusinessRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState("");
 
-  // Step 1: search
-  const [query, setQuery]   = useState("");
-  const [results, setResults] = useState(MOCK_STORES);
-  const [selected, setSelected] = useState<typeof MOCK_STORES[0] | null>(null);
-  const [manual, setManual] = useState(false);
-
   // Step 2: confirm / store info
-  const [storeName, setStoreName]   = useState("");
-  const [storeAddr, setStoreAddr]   = useState("");
-  const [storePhone, setStorePhone] = useState("");
-  const [storeHours, setStoreHours] = useState("");
-  const [storeDesc, setStoreDesc]   = useState("");
+  const [storeName, setStoreName]       = useState("");
+  const [storeAddr, setStoreAddr]       = useState("");
+  const [storeLat, setStoreLat]         = useState<number | null>(null);
+  const [storeLng, setStoreLng]         = useState<number | null>(null);
+  const [storePhone, setStorePhone]     = useState("");
+  const [storeOpen, setStoreOpen]       = useState("07:00");
+  const [storeClose, setStoreClose]     = useState("22:00");
+  const [storeDesc, setStoreDesc]       = useState("");
 
   // Step 3: account
   const [email, setEmail]           = useState("");
@@ -72,41 +63,6 @@ export default function BusinessRegisterPage() {
 
   const curIdx = STEPS.findIndex((s) => s.key === step);
 
-  function searchStores(q: string) {
-    setQuery(q);
-    if (!q.trim()) { setResults(MOCK_STORES); return; }
-    setResults(MOCK_STORES.filter((s) => s.name.toLowerCase().includes(q.toLowerCase()) || s.addr.toLowerCase().includes(q.toLowerCase())));
-  }
-
-  async function pickStore(s: typeof MOCK_STORES[0]) {
-    setError("");
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/auth/check?storePhone=${encodeURIComponent(s.phone)}`);
-      const data = await res.json();
-      if (data.exists) {
-        setError(`Tiệm "${s.name}" đã được đăng ký bởi chủ khác. Nếu bạn là chủ tiệm, vui lòng liên hệ hỗ trợ.`);
-        setLoading(false);
-        return;
-      }
-    } catch { /* network — proceed */ }
-    setLoading(false);
-    setSelected(s);
-    setStoreName(s.name);
-    setStoreAddr(s.addr);
-    setStorePhone(s.phone);
-    setStoreHours(s.hours);
-    setManual(false);
-    setStep("confirm");
-  }
-
-  function pickManual() {
-    setSelected(null);
-    setStoreName(""); setStoreAddr(""); setStorePhone(""); setStoreHours("");
-    setManual(true);
-    setStep("confirm");
-  }
-
   async function go(nextStep: Step, validate?: () => string | null) {
     setError("");
     const err = validate?.();
@@ -128,19 +84,6 @@ export default function BusinessRegisterPage() {
       } catch { /* proceed */ }
     }
 
-    // Step confirm → account: check store name+address for manual entry
-    if (step === "confirm" && nextStep === "account" && manual && storeName && storeAddr) {
-      try {
-        const res = await fetch(`/api/auth/check?storeName=${encodeURIComponent(storeName)}&storeAddress=${encodeURIComponent(storeAddr)}`);
-        const data = await res.json();
-        if (data.exists) {
-          setError("Tiệm này đã được đăng ký bởi chủ khác. Nếu bạn là chủ tiệm, vui lòng liên hệ hỗ trợ.");
-          setLoading(false);
-          return;
-        }
-      } catch { /* proceed */ }
-    }
-
     // Step payment → review: actually create the account + store
     if (step === "payment" && nextStep === "review") {
       try {
@@ -149,7 +92,9 @@ export default function BusinessRegisterPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email, password, name: storeName,
-            storeName, storeAddr, storePhone, storeHours, storeDesc,
+            storeName, storeAddr, storePhone,
+            storeHours: storeOpen && storeClose ? `${storeOpen} – ${storeClose}` : "",
+            storeDesc, lat: storeLat, lng: storeLng,
           }),
         });
         const data = await res.json();
@@ -185,7 +130,7 @@ export default function BusinessRegisterPage() {
 
         {/* Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40, position: "relative" }}>
-          <div style={{ width: 44, height: 44, borderRadius: 14, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 22, boxShadow: "0 4px 16px rgba(232,119,34,0.4)" }}>🥐</div>
+          <img src="/crumbup-logo-tabweb.jpg" alt="CrumbUp" style={{ width: 44, height: 44, borderRadius: 14, objectFit: "cover", boxShadow: "0 4px 16px rgba(232,119,34,0.4)" }} />
           <div>
             <div style={{ fontWeight: 900, fontSize: 17, color: "white", letterSpacing: "-0.02em" }}>CrumbUp</div>
             <div style={{ fontSize: 10, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>Dành cho cửa hàng</div>
@@ -227,6 +172,9 @@ export default function BusinessRegisterPage() {
         </div>
 
         <div style={{ paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative" }}>
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none", marginBottom: 14, fontWeight: 600 }}>
+            ← Trang chủ
+          </Link>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
             Cần hỗ trợ?<br />
             <a href="mailto:partners@stillgood.vn" style={{ color: "var(--primary)", fontWeight: 600 }}>partners@stillgood.vn</a>
@@ -239,7 +187,7 @@ export default function BusinessRegisterPage() {
         {/* Mobile top bar — hidden on desktop via CSS */}
         <div className="biz-reg-mobile-header">
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 12, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 18 }}>🥐</div>
+            <img src="/crumbup-logo-tabweb.jpg" alt="CrumbUp" style={{ width: 36, height: 36, borderRadius: 12, objectFit: "cover" }} />
             <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: "-0.02em" }}>CrumbUp</span>
           </Link>
           <span style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -261,42 +209,32 @@ export default function BusinessRegisterPage() {
             Bước {curIdx + 1} / {STEPS.length}
           </div>
 
-          {/* ── STEP 1: SEARCH ── */}
+          {/* ── STEP 1: ADDRESS SEARCH ── */}
           {step === "search" && (
             <>
-              <h1 style={h1}>Tìm tiệm của bạn</h1>
-              <p style={sub}>Nhập tên hoặc địa chỉ để chúng tôi điền sẵn thông tin — nhanh hơn 60%.</p>
+              <h1 style={h1}>Địa chỉ tiệm của bạn</h1>
+              <p style={sub}>Nhập địa chỉ và chọn từ gợi ý để xác định vị trí chính xác trên bản đồ.</p>
 
-              <div style={{ position: "relative", marginBottom: 16 }}>
-                <input
-                  type="text" value={query} placeholder="Tên tiệm hoặc địa chỉ..."
-                  onChange={(e) => searchStores(e.target.value)}
-                  style={{ ...inp, fontSize: 15 }}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                  onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
-              </div>
+              <AddressPicker
+                value={storeAddr}
+                onChange={(v) => { setStoreAddr(v); setStoreLat(null); setStoreLng(null); }}
+                onCoords={(lat, lng) => { setStoreLat(lat); setStoreLng(lng); }}
+              />
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-                {results.length > 0 ? results.map((s) => (
-                  <button key={s.id} onClick={() => pickStore(s)}
-                    style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "1.5px solid var(--border)", background: "white", textAlign: "left", cursor: "pointer", transition: "all 0.15s" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--primary)"; (e.currentTarget as HTMLElement).style.background = "var(--cream)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.background = "white"; }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>{s.name}</div>
-                    <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.addr}</div>
-                    <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.hours}</div>
-                  </button>
-                )) : (
-                  <div style={{ textAlign: "center", padding: "24px 0", color: "var(--text-muted)", fontSize: 14 }}>
-                    Không tìm thấy kết quả phù hợp
-                  </div>
-                )}
-              </div>
+              {error && <ErrBox msg={error} />}
 
-              <button onClick={pickManual}
-                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "1.5px dashed var(--border)", background: "transparent", fontSize: 14, fontWeight: 600, color: "var(--text-muted)", cursor: "pointer" }}>
-                + Không tìm thấy? Nhập thông tin tiệm thủ công
-              </button>
+              <Btn
+                onClick={() => {
+                  setError("");
+                  if (!storeAddr.trim()) { setError("Vui lòng nhập địa chỉ tiệm"); return; }
+                  if (!storeLat || !storeLng) { setError("Vui lòng chọn địa chỉ từ gợi ý để xác định vị trí trên bản đồ"); return; }
+                  setStep("confirm");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                loading={false}
+              >
+                Tiếp tục →
+              </Btn>
             </>
           )}
 
@@ -304,8 +242,14 @@ export default function BusinessRegisterPage() {
           {step === "confirm" && (
             <>
               <BackBtn onClick={() => setStep("search")} />
-              <h1 style={h1}>Xác nhận thông tin tiệm</h1>
-              <p style={sub}>{selected ? "Chúng tôi đã điền sẵn từ dữ liệu bản đồ. Kiểm tra và chỉnh sửa nếu cần." : "Điền thông tin tiệm của bạn."}</p>
+              <h1 style={h1}>Thông tin tiệm</h1>
+              <p style={sub}>Điền tên và thông tin tiệm. Địa chỉ đã được xác định ở bước trước.</p>
+
+              {/* Address read-only */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "12px 16px", background: "var(--accent-soft)", borderRadius: 12, border: "1px solid var(--accent)", marginBottom: 18 }}>
+                <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>📍</span>
+                <span style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.5 }}>{storeAddr}</span>
+              </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                 <Field label="Tên tiệm" required>
@@ -314,23 +258,26 @@ export default function BusinessRegisterPage() {
                     onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
                 </Field>
 
-                <Field label="Địa chỉ" required>
-                  <input type="text" value={storeAddr} onChange={(e) => setStoreAddr(e.target.value)} placeholder="123 Đường XYZ, Quận 1, TP.HCM" style={inp}
+                <Field label="Số điện thoại">
+                  <input type="tel" value={storePhone} onChange={(e) => setStorePhone(e.target.value)} placeholder="028 1234 5678" style={inp}
                     onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
                     onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
                 </Field>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                  <Field label="Số điện thoại">
-                    <input type="tel" value={storePhone} onChange={(e) => setStorePhone(e.target.value)} placeholder="028 1234 5678" style={inp}
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Giờ mở – đóng cửa</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 10, alignItems: "center" }}>
+                    <input type="time" value={storeOpen} onChange={(e) => setStoreOpen(e.target.value)} style={inp}
                       onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
                       onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
-                  </Field>
-                  <Field label="Giờ mở cửa">
-                    <input type="text" value={storeHours} onChange={(e) => setStoreHours(e.target.value)} placeholder="7:00 – 22:00" style={inp}
+                    <span style={{ fontSize: 14, color: "var(--text-muted)", fontWeight: 600, textAlign: "center" }}>–</span>
+                    <input type="time" value={storeClose} onChange={(e) => setStoreClose(e.target.value)} style={inp}
                       onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
                       onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
-                  </Field>
+                  </div>
+                  {storeOpen && storeClose && storeClose <= storeOpen && (
+                    <p style={{ fontSize: 12, color: "var(--danger)", marginTop: 6 }}>Giờ đóng cửa phải sau giờ mở cửa</p>
+                  )}
                 </div>
 
                 <Field label="Mô tả ngắn">
@@ -342,18 +289,15 @@ export default function BusinessRegisterPage() {
                     onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
                 </Field>
 
-                {/* Cover image upload */}
-                <Field label="Ảnh bìa tiệm">
-                  <div style={{ border: "2px dashed var(--border)", borderRadius: 14, padding: "28px 20px", textAlign: "center", cursor: "pointer", background: "white" }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Kéo thả hoặc nhấn để chọn ảnh</div>
-                    <div style={{ fontSize: 11, color: "var(--text-muted)" }}>PNG, JPG tối đa 5MB</div>
-                  </div>
-                </Field>
               </div>
 
               {error && <ErrBox msg={error} />}
 
-              <Btn onClick={() => go("account", () => !storeName.trim() ? "Vui lòng nhập tên tiệm" : !storeAddr.trim() ? "Vui lòng nhập địa chỉ" : null)} loading={loading}>
+              <Btn onClick={() => go("account", () => {
+                if (!storeName.trim()) return "Vui lòng nhập tên tiệm";
+                if (storeOpen && storeClose && storeClose <= storeOpen) return "Giờ đóng cửa phải sau giờ mở cửa";
+                return null;
+              })} loading={loading}>
                 Tiếp tục →
               </Btn>
             </>

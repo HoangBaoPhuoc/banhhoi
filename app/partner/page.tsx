@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import CreateBoxModal from "./CreateBoxModal";
 import PartnerOrderActions from "./PartnerOrderActions";
 import BoxToggle from "./BoxToggle";
+import PartnerLogoutButton from "./PartnerLogoutButton";
 
 export const dynamic = "force-dynamic";
 
@@ -57,10 +58,15 @@ export default async function PartnerDashboard() {
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const [todayBoxes, recentOrders, reviews, totalOrders] = await Promise.all([
+  const [todayBoxes, pastBoxes, recentOrders, reviews, totalOrders] = await Promise.all([
     prisma.box.findMany({
       where: { storeId: store.id, date: { gte: today, lt: tomorrow } },
       orderBy: { createdAt: "desc" },
+    }),
+    prisma.box.findMany({
+      where: { storeId: store.id, date: { lt: today } },
+      orderBy: { date: "desc" },
+      take: 30,
     }),
     prisma.order.findMany({
       where: { storeId: store.id },
@@ -107,26 +113,20 @@ export default async function PartnerDashboard() {
           </div>
         </Link>
 
-        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
-          {[
-            { href: "#overview",  label: "Tổng quan" },
-            { href: "#boxes",     label: "Box hôm nay" },
-            { href: "#orders",    label: "Đơn hàng" },
-          ].map((item) => (
-            <a key={item.href} href={item.href} style={{
-              display: "block", padding: "9px 12px", borderRadius: 10,
-              fontSize: 14, fontWeight: 500, color: "var(--text-muted)",
-              textDecoration: "none",
-            }}>
-              {item.label}
-            </a>
-          ))}
+        <nav style={{ flex: 1 }}>
+          <a href="#overview" style={{
+            display: "block", padding: "9px 12px", borderRadius: 10,
+            fontSize: 14, fontWeight: 600, color: "var(--text)",
+            textDecoration: "none", background: "var(--cream)",
+          }}>
+            Tổng quan
+          </a>
         </nav>
 
         <div style={{ borderTop: "1px solid var(--border)", paddingTop: 14, paddingLeft: 10 }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-muted)", marginBottom: 2 }}>{prismaUser.name}</div>
           <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 12 }}>Chủ cửa hàng</div>
-          <Link href="/" style={{ fontSize: 12, color: "var(--primary)", fontWeight: 600, textDecoration: "none" }}>← Về trang chủ</Link>
+          <PartnerLogoutButton />
         </div>
       </aside>
 
@@ -149,7 +149,7 @@ export default async function PartnerDashboard() {
               </div>
               <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{displayDate}</p>
             </div>
-            <CreateBoxModal />
+            <CreateBoxModal storeAddress={store.address} />
           </div>
 
           {!store.verified && (
@@ -189,7 +189,7 @@ export default async function PartnerDashboard() {
             <div style={{ padding: "48px 24px", textAlign: "center" }}>
               <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)", marginBottom: 6 }}>Chưa có box nào hôm nay</div>
               <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>Tạo box để bắt đầu bán hàng.</p>
-              <CreateBoxModal />
+              <CreateBoxModal storeAddress={store.address} />
             </div>
           ) : (
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -290,6 +290,54 @@ export default async function PartnerDashboard() {
             </table>
           )}
         </section>
+
+        {/* Box history */}
+        {pastBoxes.length > 0 && (
+          <section id="history" style={{ background: "white", borderRadius: 16, border: "1px solid var(--border)", overflow: "hidden" }}>
+            <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--cream)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>Lịch sử box</h2>
+              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{pastBoxes.length} box</span>
+            </div>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "var(--ivory)" }}>
+                  {["Ngày", "Tên box", "Giá bán", "Đã bán", "Doanh thu"].map((h) => (
+                    <th key={h} style={th}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {pastBoxes.map((b) => {
+                  const sold    = b.quantityTotal - b.quantityLeft;
+                  const revenue = sold * b.priceSale;
+                  return (
+                    <tr key={b.id} style={{ borderTop: "1px solid var(--cream)", opacity: 0.75 }}>
+                      <td style={{ ...td, fontSize: 12, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+                        {new Date(b.date).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}
+                      </td>
+                      <td style={td}>
+                        <div style={{ fontWeight: 600 }}>{b.name}</div>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{b.pickupStart} – {b.pickupEnd}</div>
+                      </td>
+                      <td style={{ ...td, fontWeight: 700, color: "var(--primary)" }}>
+                        {b.priceSale.toLocaleString("vi-VN")}đ
+                      </td>
+                      <td style={td}>
+                        <div style={{ fontWeight: 600 }}>{sold}/{b.quantityTotal}</div>
+                        <div style={{ marginTop: 4, height: 4, background: "var(--cream)", borderRadius: 999, width: 60 }}>
+                          <div style={{ height: "100%", width: `${b.quantityTotal > 0 ? Math.round((sold / b.quantityTotal) * 100) : 0}%`, background: "var(--accent)", borderRadius: 999 }} />
+                        </div>
+                      </td>
+                      <td style={{ ...td, fontWeight: 700 }}>
+                        {revenue.toLocaleString("vi-VN")}đ
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </section>
+        )}
       </main>
     </div>
   );

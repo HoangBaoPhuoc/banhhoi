@@ -49,7 +49,10 @@ export default function LoginPage() {
     <div className="auth-layout" style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "42% 1fr" }}>
       <BrandPanel />
 
-      <div style={{ background: "white", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 40px" }}>
+      <div style={{ background: "white", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 40px", position: "relative" }}>
+        <Link href="/" style={{ position: "absolute", top: 24, left: 28, display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "var(--text-muted)", textDecoration: "none" }}>
+          ← Trang chủ
+        </Link>
         <div style={{ width: "100%", maxWidth: 380 }}>
 
           <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 8 }}>Đăng nhập</h1>

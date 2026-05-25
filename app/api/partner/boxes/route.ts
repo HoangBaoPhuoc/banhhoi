@@ -11,9 +11,9 @@ export async function POST(request: Request) {
   if (!store) return NextResponse.json({ error: "No store" }, { status: 403 });
 
   const body = await request.json();
-  const { name, description, priceOriginal, priceSale, quantityTotal, pickupStart, pickupEnd, date } = body;
+  const { name, description, image, priceOriginal, priceSale, quantityTotal, pickupStart, pickupEnd, date } = body;
 
-  if (!name || !priceOriginal || !priceSale || !quantityTotal || !pickupStart || !pickupEnd || !date) {
+  if (!name || !image || !priceOriginal || !priceSale || !quantityTotal || !pickupStart || !pickupEnd || !date) {
     return NextResponse.json({ error: "Thiếu thông tin bắt buộc" }, { status: 400 });
   }
 
@@ -22,6 +22,7 @@ export async function POST(request: Request) {
       storeId:       store.id,
       name,
       description:   description || null,
+      image:         image || null,
       priceOriginal: Number(priceOriginal),
       priceSale:     Number(priceSale),
       quantityTotal: Number(quantityTotal),

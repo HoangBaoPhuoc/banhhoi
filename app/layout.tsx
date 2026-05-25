@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ViewTransitions } from "next-view-transitions";
 import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -26,7 +27,7 @@ export default function RootLayout({
         <body>
           <LocationProvider>
             <ProgressBar />
-            <ScrollRevealProvider />
+            <Suspense fallback={null}><ScrollRevealProvider /></Suspense>
             {children}
             <ScrollToTop />
           </LocationProvider>

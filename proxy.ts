@@ -49,14 +49,22 @@ export async function proxy(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
+  const isBusiness = user?.user_metadata?.role === "BUSINESS";
 
+  // ── Business accounts: can only access /partner and /api/* ─────────────
+  if (isBusiness && !pathname.startsWith("/partner") && !pathname.startsWith("/api/")) {
+    return NextResponse.redirect(new URL("/partner", request.url));
+  }
+
+  // ── Protect user-only routes ───────────────────────────────────────────
   const protectedPaths = ["/profile", "/orders", "/partner"];
   if (protectedPaths.some((p) => pathname.startsWith(p)) && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // ── Already logged-in users should not see login/register ─────────────
   if (user && ["/login", "/register"].includes(pathname)) {
-    const dest = user.user_metadata?.role === "BUSINESS" ? "/partner" : "/discover";
+    const dest = isBusiness ? "/partner" : "/discover";
     return NextResponse.redirect(new URL(dest, request.url));
   }
 

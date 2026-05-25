@@ -6,7 +6,7 @@ import type { StorePin } from "./MapView";
 
 const HCM: [number, number] = [10.7769, 106.7009];
 
-export default function MapInner({ stores, height }: { stores: StorePin[]; height: number }) {
+export default function MapInner({ stores, height, interactive = true }: { stores: StorePin[]; height?: number | string; interactive?: boolean }) {
   const { coords } = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,8 +36,11 @@ export default function MapInner({ stores, height }: { stores: StorePin[]; heigh
       map = L.map(containerRef.current, {
         center,
         zoom: 13,
-        zoomControl: false,
-        scrollWheelZoom: false,
+        zoomControl: interactive,
+        scrollWheelZoom: interactive,
+        dragging: interactive,
+        doubleClickZoom: interactive,
+        keyboard: interactive,
         attributionControl: false,
       });
 
@@ -103,5 +106,5 @@ export default function MapInner({ stores, height }: { stores: StorePin[]; heigh
     });
   }, [coords]);
 
-  return <div ref={containerRef} style={{ height, width: "100%" }} />;
+  return <div ref={containerRef} style={{ height: height ?? "100%", width: "100%" }} />;
 }

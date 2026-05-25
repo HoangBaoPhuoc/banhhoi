@@ -6,6 +6,7 @@ export async function POST(request: Request) {
   const {
     email, password, name,
     storeName, storeAddr, storePhone, storeHours, storeDesc,
+    lat, lng,
   } = await request.json();
 
   // 1. Check email not already used (by any role)
@@ -81,6 +82,8 @@ export async function POST(request: Request) {
         phone:       storePhone   || null,
         openHours:   storeHours   || null,
         description: storeDesc    || null,
+        lat:         lat          ?? null,
+        lng:         lng          ?? null,
         verified:    false,
       },
     });
