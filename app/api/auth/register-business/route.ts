@@ -53,10 +53,18 @@ export async function POST(request: Request) {
       emailRedirectTo: `${new URL(request.url).origin}/api/auth/callback`,
     },
   });
+
   if (authError) return NextResponse.json({ error: authError.message }, { status: 400 });
 
-  // 5. Create User + Store in DB (if email confirm is off, user is confirmed immediately)
-  if (data.user) {
+  if (!data.user) {
+    return NextResponse.json(
+      { error: "Email này đã được đăng ký. Vui lòng đăng nhập hoặc dùng email khác." },
+      { status: 409 },
+    );
+  }
+
+  // 5. Create User + Store in DB
+  try {
     const user = await prisma.user.create({
       data: {
         id:    data.user.id,
@@ -76,7 +84,10 @@ export async function POST(request: Request) {
         verified:    false,
       },
     });
+  } catch (err) {
+    console.error("[register-business] DB error:", err);
+    return NextResponse.json({ error: "Lỗi lưu dữ liệu. Vui lòng thử lại." }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, needsConfirm: !data.user?.confirmed_at });
+  return NextResponse.json({ ok: true, needsConfirm: !data.user.confirmed_at });
 }

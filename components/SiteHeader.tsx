@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import LogoutButton from "./LogoutButton";
 import NavLinks from "./NavLinks";
 import SearchBar from "./SearchBar";
 import LocationPill from "./LocationPill";
 import MobileMenuToggle from "./MobileMenuToggle";
+import UserMenu from "./UserMenu";
 
 export default async function SiteHeader() {
   const supabase = await createClient();
@@ -43,34 +43,10 @@ export default async function SiteHeader() {
       {/* Desktop-only auth buttons */}
       <div className="header-auth">
         {user ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Link
-              href="/profile"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                fontSize: 13,
-                fontWeight: 600,
-              }}
-            >
-              <div
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  background: "var(--primary-soft)",
-                  border: "2px solid var(--primary)",
-                  display: "grid",
-                  placeItems: "center",
-                  fontSize: 15,
-                }}
-              >
-                👤
-              </div>
-            </Link>
-            <LogoutButton />
-          </div>
+          <UserMenu
+            email={user.email ?? ""}
+            name={user.user_metadata?.name ?? user.user_metadata?.full_name ?? ""}
+          />
         ) : (
           <div style={{ display: "flex", gap: 8 }}>
             <Link

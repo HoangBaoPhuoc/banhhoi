@@ -106,7 +106,7 @@ export async function POST(request: Request) {
       email,
       password,
       options: {
-        data: { name, role: "CUSTOMER" },
+        data: { name, role: "CUSTOMER", phone: phone || null },
         emailRedirectTo: `${new URL(request.url).origin}/api/auth/callback`,
       },
     });
@@ -128,18 +128,18 @@ export async function POST(request: Request) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-    const roleFromMeta = data.user.user_metadata?.role === "BUSINESS" ? "BUSINESS" : "CUSTOMER";
-    await prisma.user.upsert({
+    const dbUser = await prisma.user.upsert({
       where:  { id: data.user.id },
       update: {},
       create: {
         id:    data.user.id,
         email: data.user.email,
         name:  data.user.user_metadata?.name ?? email.split("@")[0],
-        role:  roleFromMeta as "CUSTOMER" | "BUSINESS",
+        role:  data.user.user_metadata?.role === "BUSINESS" ? "BUSINESS" : "CUSTOMER",
       },
+      select: { role: true },
     });
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, role: dbUser.role });
   }
 
   // ── SYNC USER TO DB (after client-side OTP verify) ───────────────────────

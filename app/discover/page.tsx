@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { formatPrice, discountPercent, getVietnamToday } from "@/lib/utils";
 import MapView from "@/components/MapView";
 import type { StorePin } from "@/components/MapView";
+import WishlistButton from "./WishlistButton";
 
 const EMOJIS = ["🥐", "☕", "🥖", "🧁", "🥪", "🎁"];
 
@@ -159,10 +160,7 @@ async function BoxList({ sort }: { sort: string }) {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-end" }}>
-              <button
-                style={{ width: 36, height: 36, borderRadius: 999, background: "var(--cream)", display: "grid", placeItems: "center", fontSize: 16 }}
-                onClick={(e) => e.preventDefault()}
-              >♡</button>
+              <WishlistButton />
               <span className="btn btn-primary">Xem Box</span>
             </div>
           </Link>

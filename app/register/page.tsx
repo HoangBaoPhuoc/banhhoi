@@ -1,136 +1,75 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import OtpInput from "@/components/OtpInput";
 import { createClient } from "@/lib/supabase/client";
 
-type Step = "contact" | "otp" | "profile" | "location";
-type Mode = "phone" | "email";
-
-const OTP_TTL = 300;
-const STEPS: { key: Step; label: string }[] = [
-  { key: "contact",  label: "Liên hệ" },
-  { key: "otp",      label: "Xác minh" },
-  { key: "profile",  label: "Hồ sơ" },
-  { key: "location", label: "Vị trí" },
-];
+type Step = "form" | "sent" | "location";
 
 export default function RegisterPage() {
   const router = useRouter();
 
-  const [step, setStep]   = useState<Step>("contact");
-  const [mode, setMode]   = useState<Mode>("phone");
+  const [step, setStep] = useState<Step>("form");
 
-  const [phone, setPhone]       = useState("");
-  const [email, setEmail]       = useState("");
-  const [otp, setOtp]           = useState("");
   const [name, setName]         = useState("");
-  const [address, setAddress]   = useState("");
+  const [email, setEmail]       = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone]       = useState("");
+  const [showPw, setShowPw]     = useState(false);
+
   const [loading, setLoading]   = useState(false);
+  const [oauthLoading, setOauthLoading] = useState<"google" | "facebook" | null>(null);
   const [error, setError]       = useState("");
-  const [timer, setTimer]       = useState(OTP_TTL);
 
-  useEffect(() => {
-    if (step !== "otp") return;
-    setTimer(OTP_TTL);
-    const id = setInterval(() => setTimer((t) => (t > 0 ? t - 1 : 0)), 1000);
-    return () => clearInterval(id);
-  }, [step]);
-
-  const timerLabel = `${String(Math.floor(timer / 60)).padStart(2, "0")}:${String(timer % 60).padStart(2, "0")}`;
-  const maskedContact = mode === "phone"
-    ? `+84 ${phone.slice(0, 3)}***${phone.slice(-2)}`
-    : email.replace(/^(.{3}).*(@.*)$/, "$1***$2");
-
-  const curIdx = STEPS.findIndex((s) => s.key === step);
-
-  async function sendOtp() {
+  async function signInWithOAuth(provider: "google" | "facebook") {
     setError("");
-    if (mode === "phone" && phone.replace(/\D/g, "").length < 9) { setError("Số điện thoại chưa hợp lệ"); return; }
-    if (mode === "email" && !email.includes("@")) { setError("Email chưa hợp lệ"); return; }
-
-    // Kiểm tra trùng trước khi gửi OTP
-    const param = mode === "phone"
-      ? `phone=84${phone.replace(/\D/g, "")}`
-      : `email=${encodeURIComponent(email)}`;
-    try {
-      const res = await fetch(`/api/auth/check?${param}`);
-      const data = await res.json();
-      if (data.exists) {
-        setError(data.role === "BUSINESS"
-          ? "Số/email này đã là tài khoản cửa hàng. Vui lòng đăng nhập ở phần dành cho cửa hàng."
-          : "Số/email này đã có tài khoản khách hàng. Vui lòng đăng nhập.");
-        return;
-      }
-    } catch {
-      // Network error — let it proceed, server will catch duplicates
-    }
-
-    setLoading(true);
+    setOauthLoading(provider);
     const supabase = createClient();
-    let err;
-    if (mode === "phone") {
-      const digits = phone.replace(/\D/g, "");
-      const e164 = `+84${digits.startsWith("0") ? digits.slice(1) : digits}`;
-      ({ error: err } = await supabase.auth.signInWithOtp({
-        phone: e164,
-        options: { data: { role: "CUSTOMER" } },
-      }));
-    } else {
-      ({ error: err } = await supabase.auth.signInWithOtp({
-        email,
-        options: { shouldCreateUser: true, data: { role: "CUSTOMER" } },
-      }));
+    const { error: err } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    });
+    if (err) {
+      setError(err.message);
+      setOauthLoading(null);
     }
-    setLoading(false);
-    if (err) { setError(err.message); return; }
-    setStep("otp");
   }
 
-  async function verifyOtp() {
-    if (otp.length < 6) return;
-    setError("");
-    setLoading(true);
-    const supabase = createClient();
-    let result;
-    if (mode === "phone") {
-      const digits = phone.replace(/\D/g, "");
-      const e164 = `+84${digits.startsWith("0") ? digits.slice(1) : digits}`;
-      result = await supabase.auth.verifyOtp({ phone: e164, token: otp, type: "sms" });
-    } else {
-      result = await supabase.auth.verifyOtp({ email, token: otp, type: "email" });
-    }
-    setLoading(false);
-    if (result.error) { setError(result.error.message); return; }
-
-    // Sync user vào DB sau khi xác minh thành công
-    if (result.data.user) {
-      const u = result.data.user;
-      const digits = phone.replace(/\D/g, "");
-      await fetch("/api/auth/actions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "sync-user",
-          id: u.id,
-          email: u.email || null,
-          phone: mode === "phone" ? `+84${digits.startsWith("0") ? digits.slice(1) : digits}` : null,
-          name,
-        }),
-      });
-    }
-    setStep("profile");
-  }
-
-  async function saveProfile() {
+  async function register() {
     setError("");
     if (!name.trim()) { setError("Vui lòng nhập tên của bạn"); return; }
+    if (!email.includes("@")) { setError("Email không hợp lệ"); return; }
+    if (password.length < 6) { setError("Mật khẩu phải có ít nhất 6 ký tự"); return; }
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length < 9) { setError("Số điện thoại không hợp lệ"); return; }
+
+    const normalizedPhone = `+84${digits.startsWith("0") ? digits.slice(1) : digits}`;
+
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
+    const res = await fetch("/api/auth/actions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "register",
+        name: name.trim(),
+        email,
+        password,
+        phone: normalizedPhone,
+      }),
+    });
+    const data = await res.json();
     setLoading(false);
-    setStep("location");
+
+    if (data.error) { setError(data.error); return; }
+
+    if (data.needsConfirm) {
+      setStep("sent");
+    } else {
+      setStep("location");
+    }
   }
 
   function requestLocation() {
@@ -143,17 +82,13 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-layout" style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "42% 1fr" }}>
-      <BrandPanel currentStep={curIdx} />
+      <BrandPanel />
 
-      {/* RIGHT FORM */}
       <div style={{ background: "white", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 40px" }}>
-        <div style={{ width: "100%", maxWidth: 400 }}>
+        <div style={{ width: "100%", maxWidth: 420 }}>
 
-          {/* Progress bar */}
-          <StepBar current={curIdx} steps={STEPS} />
-
-          {/* ── STEP 1: CONTACT ── */}
-          {step === "contact" && (
+          {/* ── STEP: FORM ── */}
+          {step === "form" && (
             <>
               <h1 style={{ fontSize: 26, fontWeight: 900, marginBottom: 6 }}>Tạo tài khoản</h1>
               <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 28 }}>
@@ -161,24 +96,62 @@ export default function RegisterPage() {
                 <Link href="/login" style={{ color: "var(--primary)", fontWeight: 700 }}>Đăng nhập</Link>
               </p>
 
-              {/* Mode toggle */}
-              <div style={{ display: "flex", background: "var(--cream)", borderRadius: 12, padding: 4, marginBottom: 22, gap: 4 }}>
-                {(["phone", "email"] as Mode[]).map((m) => (
-                  <button key={m} onClick={() => { setMode(m); setError(""); }}
-                    style={{ flex: 1, padding: "9px 0", borderRadius: 10, fontSize: 13, fontWeight: 700,
-                      background: mode === m ? "white" : "transparent",
-                      color: mode === m ? "var(--text)" : "var(--text-muted)",
-                      boxShadow: mode === m ? "var(--shadow-sm)" : "none", transition: "all 0.15s" }}>
-                    {m === "phone" ? "Số điện thoại" : "Email"}
-                  </button>
-                ))}
+              {/* OAuth */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
+                <OAuthBtn
+                  icon={<GoogleIcon />} label="Đăng ký với Google"
+                  loading={oauthLoading === "google"} primary
+                  onClick={() => signInWithOAuth("google")}
+                />
+                <OAuthBtn
+                  icon={<FacebookIcon />} label="Đăng ký với Facebook"
+                  loading={oauthLoading === "facebook"}
+                  onClick={() => signInWithOAuth("facebook")}
+                />
               </div>
 
-              {mode === "phone" ? (
+              <Divider label="hoặc đăng ký bằng email" />
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {/* Name */}
+                <div>
+                  <label style={lbl}>Họ và tên <Req /></label>
+                  <input type="text" value={name} placeholder="Nguyễn Văn A"
+                    onChange={(e) => setName(e.target.value)} style={inp}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
+                    onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label style={lbl}>Email <Req /></label>
+                  <input type="email" value={email} placeholder="ban@email.com"
+                    onChange={(e) => setEmail(e.target.value)} style={inp}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
+                    onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label style={lbl}>Mật khẩu <Req /></label>
+                  <div style={{ position: "relative" }}>
+                    <input type={showPw ? "text" : "password"} value={password} placeholder="Ít nhất 6 ký tự"
+                      onChange={(e) => setPassword(e.target.value)}
+                      style={{ ...inp, paddingRight: 52 }}
+                      onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
+                      onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
+                    <button type="button" onClick={() => setShowPw((v) => !v)}
+                      style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                      {showPw ? "ẩn" : "hiện"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Phone */}
                 <div>
                   <label style={lbl}>Số điện thoại <Req /></label>
                   <div style={{ display: "flex", gap: 8 }}>
-                    <div style={{ padding: "13px 14px", borderRadius: 12, border: "1.5px solid var(--border)", background: "var(--cream)", fontSize: 14, fontWeight: 700, whiteSpace: "nowrap" }}>
+                    <div style={{ padding: "13px 14px", borderRadius: 12, border: "1.5px solid var(--border)", background: "var(--cream)", fontSize: 14, fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0 }}>
                       🇻🇳 +84
                     </div>
                     <input type="tel" value={phone} placeholder="901 234 567"
@@ -186,211 +159,115 @@ export default function RegisterPage() {
                       style={{ ...inp, flex: 1 }}
                       onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
                       onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                      onKeyDown={(e) => e.key === "Enter" && sendOtp()} />
+                      onKeyDown={(e) => e.key === "Enter" && register()} />
                   </div>
-                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Chúng tôi sẽ gửi OTP 6 số đến số này</p>
+                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Dùng để liên hệ khi có vấn đề với đơn hàng</p>
                 </div>
-              ) : (
-                <div>
-                  <label style={lbl}>Email <Req /></label>
-                  <input type="email" value={email} placeholder="ban@email.com"
-                    onChange={(e) => setEmail(e.target.value)} style={inp}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                    onKeyDown={(e) => e.key === "Enter" && sendOtp()} />
-                </div>
-              )}
+              </div>
 
               {error && <ErrBox msg={error} />}
 
-              <button onClick={sendOtp} disabled={loading} style={{ ...btn, marginTop: 20 }}>
-                {loading ? "Đang gửi OTP..." : "Tiếp tục →"}
+              <button onClick={register} disabled={loading}
+                style={{ ...btn, marginTop: 24, opacity: loading ? 0.7 : 1 }}>
+                {loading ? "Đang tạo tài khoản..." : "Đăng ký →"}
               </button>
 
-              <Divider />
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <OAuthBtn icon="G" label="Đăng ký với Google"   color="#4285F4" />
-                <OAuthBtn icon="f" label="Đăng ký với Facebook" color="#1877F2" />
-              </div>
-
-              <p style={{ marginTop: 20, textAlign: "center", fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6 }}>
-                Bằng cách tiếp tục, bạn đồng ý với{" "}
+              <p style={{ marginTop: 16, textAlign: "center", fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6 }}>
+                Bằng cách đăng ký, bạn đồng ý với{" "}
                 <Link href="/terms" style={{ color: "var(--primary)" }}>Điều khoản dịch vụ</Link>
                 {" "}và{" "}
-                <Link href="/about#privacy" style={{ color: "var(--primary)" }}>Chính sách bảo mật</Link>
+                <Link href="/about#faq" style={{ color: "var(--primary)" }}>Chính sách bảo mật</Link>
               </p>
             </>
           )}
 
-          {/* ── STEP 2: OTP ── */}
-          {step === "otp" && (
-            <>
-              <BackBtn onClick={() => { setStep("contact"); setOtp(""); setError(""); }} />
-
-              <div style={{ textAlign: "center", marginBottom: 4 }}>
-                <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 6 }}>Nhập mã xác minh</h1>
-                <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 4 }}>Mã OTP đã được gửi đến</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 28 }}>{maskedContact}</p>
-
-                <OtpInput value={otp} onChange={setOtp} autoFocus />
-
-                {error && <ErrBox msg={error} />}
-
-                <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 18, marginBottom: 4 }}>
-                  {timer > 0 ? (
-                    <>Hết hạn sau <strong style={{ color: "var(--primary)" }}>{timerLabel}</strong></>
-                  ) : (
-                    <button onClick={sendOtp} style={{ color: "var(--primary)", fontWeight: 700, fontSize: 13, background: "none", border: "none", cursor: "pointer" }}>
-                      Gửi lại OTP
-                    </button>
-                  )}
-                </p>
-
-                <button onClick={verifyOtp} disabled={otp.length < 6 || loading}
-                  style={{ ...btn, marginTop: 24, opacity: otp.length < 6 ? 0.45 : 1 }}>
-                  {loading ? "Đang xác minh..." : "Xác nhận"}
-                </button>
+          {/* ── STEP: EMAIL SENT ── */}
+          {step === "sent" && (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ width: 72, height: 72, borderRadius: 20, background: "var(--primary-soft)", display: "grid", placeItems: "center", fontSize: 36, margin: "0 auto 24px" }}>
+                ✉️
               </div>
-            </>
-          )}
-
-          {/* ── STEP 3: PROFILE ── */}
-          {step === "profile" && (
-            <>
-              <h1 style={{ fontSize: 26, fontWeight: 900, marginBottom: 6 }}>Tạo hồ sơ</h1>
-              <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 28 }}>Chỉ mất dưới 30 giây</p>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-                <div>
-                  <label style={lbl}>Tên của bạn <Req /></label>
-                  <input type="text" value={name} placeholder="Nguyễn Văn A"
-                    onChange={(e) => setName(e.target.value)} style={inp}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
-                </div>
-
-                <div>
-                  <label style={lbl}>Địa chỉ nhận hàng <span style={{ fontSize: 11, fontWeight: 500, color: "var(--text-muted)" }}>(tuỳ chọn)</span></label>
-                  <input type="text" value={address} placeholder="123 Đường ABC, Quận 1, TP.HCM"
-                    onChange={(e) => setAddress(e.target.value)} style={inp}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
-                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Dùng để tính khoảng cách & gợi ý box gần bạn</p>
-                </div>
-              </div>
-
-              {error && <ErrBox msg={error} />}
-
-              <button onClick={saveProfile} disabled={loading} style={{ ...btn, marginTop: 24 }}>
-                {loading ? "Đang lưu..." : "Tiếp tục →"}
-              </button>
-
-              <p style={{ textAlign: "center", marginTop: 12 }}>
-                <button onClick={() => setStep("location")} style={{ fontSize: 12, color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer" }}>
-                  Bỏ qua, điền sau
-                </button>
+              <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 12 }}>Kiểm tra email của bạn</h1>
+              <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 8 }}>
+                Chúng tôi đã gửi link xác nhận đến
               </p>
-            </>
+              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 28 }}>{email}</p>
+              <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 32 }}>
+                Nhấn vào link trong email để kích hoạt tài khoản. Kiểm tra cả thư mục <strong>Spam</strong> nếu không thấy.
+              </p>
+              <Link href="/login"
+                style={{ display: "block", width: "100%", padding: "14px", fontSize: 15, fontWeight: 700, borderRadius: 12, background: "var(--text)", color: "white", textDecoration: "none", textAlign: "center" }}>
+                Về trang đăng nhập
+              </Link>
+            </div>
           )}
 
-          {/* ── STEP 4: LOCATION ── */}
+          {/* ── STEP: LOCATION ── */}
           {step === "location" && (
-            <>
-              <div style={{ textAlign: "center" }}>
-                <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 10 }}>Cho phép vị trí?</h1>
-                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 32, maxWidth: 320, margin: "0 auto 32px" }}>
-                  Chúng tôi sẽ hiện các Surprise Box gần bạn nhất — tươi, nhanh, đúng tầm tay.
-                </p>
-
-                <div style={{ background: "var(--cream)", borderRadius: 16, padding: "16px 20px", marginBottom: 28, textAlign: "left" }}>
-                  {[
-                    "Box từ các tiệm gần nhà",
-                    "Thời gian nhận hàng ngắn nhất",
-                    "Vị trí chỉ dùng trong app, không chia sẻ",
-                  ].map((t) => (
-                    <div key={t} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", fontSize: 13, fontWeight: 500 }}>
-                      <div style={{ width: 5, height: 5, borderRadius: 999, background: "var(--primary)", flexShrink: 0 }} />
-                      <span>{t}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <button onClick={requestLocation} style={{ ...btn, marginBottom: 12 }}>
-                  Cho phép vị trí
-                </button>
-
-                <button onClick={() => router.push("/discover")}
-                  style={{ width: "100%", padding: "13px", fontSize: 14, fontWeight: 600, borderRadius: 12, background: "transparent", color: "var(--text-muted)", border: "1.5px solid var(--border)", cursor: "pointer" }}>
-                  Bỏ qua
-                </button>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ width: 72, height: 72, borderRadius: 20, background: "var(--accent-soft)", display: "grid", placeItems: "center", fontSize: 36, margin: "0 auto 24px" }}>
+                📍
               </div>
-            </>
+              <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 10 }}>Cho phép vị trí?</h1>
+              <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto 28px" }}>
+                Chúng tôi sẽ hiện các Surprise Box gần bạn nhất — tươi, nhanh, đúng tầm tay.
+              </p>
+
+              <div style={{ background: "var(--cream)", borderRadius: 16, padding: "16px 20px", marginBottom: 28, textAlign: "left" }}>
+                {[
+                  "Box từ các tiệm gần nhà",
+                  "Thời gian nhận hàng ngắn nhất",
+                  "Vị trí chỉ dùng trong app, không chia sẻ",
+                ].map((t) => (
+                  <div key={t} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", fontSize: 13, fontWeight: 500 }}>
+                    <div style={{ width: 5, height: 5, borderRadius: 999, background: "var(--primary)", flexShrink: 0 }} />
+                    <span>{t}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={requestLocation} style={{ ...btn, marginBottom: 12 }}>
+                Cho phép vị trí
+              </button>
+              <button onClick={() => router.push("/discover")}
+                style={{ width: "100%", padding: "13px", fontSize: 14, fontWeight: 600, borderRadius: 12, background: "transparent", color: "var(--text-muted)", border: "1.5px solid var(--border)", cursor: "pointer" }}>
+                Bỏ qua
+              </button>
+            </div>
           )}
+
         </div>
       </div>
     </div>
   );
 }
 
-/* ── Brand panel with step indicator ── */
-function BrandPanel({ currentStep }: { currentStep: number }) {
+function BrandPanel() {
   return (
     <div className="auth-brand-panel" style={{ background: "var(--text)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 40px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -80, left: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(232,119,34,0.12)" }} />
       <div style={{ position: "absolute", bottom: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(76,140,74,0.10)" }} />
-
       <div style={{ position: "relative", textAlign: "center" }}>
-        <div style={{ width: 80, height: 80, borderRadius: 24, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 40, margin: "0 auto 22px", boxShadow: "0 8px 32px rgba(232,119,34,0.4)" }}>🥐</div>
+        <div style={{ width: 80, height: 80, borderRadius: 24, overflow: "hidden", margin: "0 auto 22px", boxShadow: "0 8px 32px rgba(232,119,34,0.4)" }}>
+            <img src="/crumbup-logo-tabweb.jpg" alt="CrumbUp" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
         <div style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 900, color: "white", letterSpacing: "-0.03em", marginBottom: 8 }}>CrumbUp</div>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 40 }}>Save Every Crumb</div>
-
-        {/* Step list */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, textAlign: "left" }}>
-          {STEPS.map((s, i) => {
-            const done    = i < currentStep;
-            const active  = i === currentStep;
-            return (
-              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{
-                  width: 32, height: 32, borderRadius: "50%",
-                  background: done ? "var(--accent)" : active ? "var(--primary)" : "rgba(255,255,255,0.12)",
-                  display: "grid", placeItems: "center",
-                  fontSize: 13, fontWeight: 800, color: "white",
-                  flexShrink: 0, transition: "background 0.3s",
-                }}>
-                  {done ? "✓" : i + 1}
-                </div>
-                <span style={{ fontSize: 14, fontWeight: active ? 700 : 500, color: active ? "white" : done ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.35)" }}>
-                  {s.label}
-                </span>
-              </div>
-            );
-          })}
+        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 36 }}>Save Every Crumb</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, textAlign: "left" }}>
+          {[
+            { icon: "🛍️", text: "Mua box bánh ngon giá ưu đãi 50–70%" },
+            { icon: "♻️", text: "Góp phần giảm lãng phí thực phẩm" },
+            { icon: "📍", text: "Tìm tiệm bánh gần bạn theo thời gian thực" },
+          ].map((item) => (
+            <div key={item.text} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
+              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>{item.text}</span>
+            </div>
+          ))}
         </div>
       </div>
-
       <p style={{ position: "absolute", bottom: 28, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>© 2026 CrumbUp</p>
     </div>
-  );
-}
-
-/* ── Micro components ── */
-function StepBar({ current, steps }: { current: number; steps: typeof STEPS }) {
-  return (
-    <div style={{ display: "flex", gap: 6, marginBottom: 28 }}>
-      {steps.map((_, i) => (
-        <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= current ? "var(--primary)" : "var(--border)", transition: "background 0.3s" }} />
-      ))}
-    </div>
-  );
-}
-
-function BackBtn({ onClick }: { onClick: () => void }) {
-  return (
-    <button onClick={onClick} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-muted)", marginBottom: 24, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
-      ← Quay lại
-    </button>
   );
 }
 
@@ -400,27 +277,57 @@ function ErrBox({ msg }: { msg: string }) {
   return <div style={{ marginTop: 14, padding: "11px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>{msg}</div>;
 }
 
-function Divider() {
+function Divider({ label }: { label: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "22px 0" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "0 0 24px" }}>
       <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>hoặc</span>
+      <span style={{ fontSize: 12, color: "var(--text-muted)", whiteSpace: "nowrap" }}>{label}</span>
       <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
     </div>
   );
 }
 
-function OAuthBtn({ icon, label, color }: { icon: string; label: string; color: string }) {
+function OAuthBtn({ icon, label, loading, primary = false, onClick }: {
+  icon: React.ReactNode; label: string; loading: boolean; primary?: boolean; onClick: () => void;
+}) {
   return (
-    <button style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1.5px solid var(--border)", background: "white", display: "flex", alignItems: "center", gap: 12, fontSize: 14, fontWeight: 600, cursor: "pointer" }}
-      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cream)")}
-      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "white")}>
-      <span style={{ width: 26, height: 26, borderRadius: 6, background: color, color: "white", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 900, flexShrink: 0 }}>{icon}</span>
-      <span style={{ flex: 1, textAlign: "center" }}>{label}</span>
+    <button onClick={onClick} disabled={loading} style={{
+      width: "100%", padding: "13px 16px", borderRadius: 12,
+      border: primary ? "none" : "1.5px solid var(--border)",
+      background: primary ? "var(--text)" : "white",
+      display: "flex", alignItems: "center", gap: 12,
+      fontSize: 14, fontWeight: 700,
+      color: primary ? "white" : "var(--text)",
+      cursor: loading ? "not-allowed" : "pointer",
+      opacity: loading ? 0.7 : 1,
+      transition: "opacity 0.15s",
+      boxShadow: primary ? "0 2px 12px rgba(0,0,0,0.15)" : "none",
+    }}>
+      <span style={{ width: 24, height: 24, flexShrink: 0, display: "grid", placeItems: "center" }}>{icon}</span>
+      <span style={{ flex: 1, textAlign: "center" }}>{loading ? "Đang chuyển..." : label}</span>
     </button>
   );
 }
 
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
+      <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.532-4.697 1.313 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+    </svg>
+  );
+}
+
 const lbl: React.CSSProperties = { display: "block", fontSize: 13, fontWeight: 700, marginBottom: 8 };
-const inp: React.CSSProperties = { width: "100%", padding: "13px 16px", borderRadius: 12, border: "1.5px solid var(--border)", fontSize: 14, outline: "none", background: "var(--ivory)", transition: "border-color 0.2s" };
+const inp: React.CSSProperties = { width: "100%", padding: "13px 16px", borderRadius: 12, border: "1.5px solid var(--border)", fontSize: 14, outline: "none", background: "var(--ivory)", transition: "border-color 0.2s", boxSizing: "border-box" };
 const btn: React.CSSProperties = { width: "100%", padding: "14px", fontSize: 15, fontWeight: 700, borderRadius: 12, background: "var(--text)", color: "white", border: "none", cursor: "pointer" };

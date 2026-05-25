@@ -11,20 +11,21 @@ export async function GET(request: Request) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
-      // Sync user vào bảng User nếu chưa có
-      const roleFromMeta = data.user.user_metadata?.role === "BUSINESS" ? "BUSINESS" : "CUSTOMER";
+      const meta = data.user.user_metadata ?? {};
+      const roleFromMeta = meta.role === "BUSINESS" ? "BUSINESS" : "CUSTOMER";
       await prisma.user.upsert({
         where: { id: data.user.id },
         update: {},
         create: {
           id:    data.user.id,
           email: data.user.email!,
-          name:  data.user.user_metadata?.name ?? data.user.email!.split("@")[0],
+          name:  meta.name ?? meta.full_name ?? data.user.email!.split("@")[0],
+          phone: meta.phone ?? null,
           role:  roleFromMeta as "CUSTOMER" | "BUSINESS",
         },
       });
 
-      return NextResponse.redirect(`${origin}/`);
+      return NextResponse.redirect(`${origin}/discover`);
     }
   }
 

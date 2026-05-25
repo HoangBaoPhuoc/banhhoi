@@ -1,94 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import OtpInput from "@/components/OtpInput";
 import { createClient } from "@/lib/supabase/client";
-
-type Mode = "phone" | "email";
-type Step = "contact" | "otp" | "password";
-
-const OTP_TTL = 300; // 5 phút
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const [mode, setMode] = useState<Mode>("phone");
-  const [step, setStep] = useState<Step>("contact");
-
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [showPw, setShowPw]     = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(true);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [timer, setTimer] = useState(OTP_TTL);
+  const [loading, setLoading]       = useState(false);
+  const [oauthLoading, setOauthLoading] = useState<"google" | "facebook" | null>(null);
+  const [error, setError]           = useState("");
 
-  // countdown timer
-  useEffect(() => {
-    if (step !== "otp") return;
-    setTimer(OTP_TTL);
-    const id = setInterval(() => setTimer((t) => (t > 0 ? t - 1 : 0)), 1000);
-    return () => clearInterval(id);
-  }, [step]);
-
-  const timerLabel = `${String(Math.floor(timer / 60)).padStart(2, "0")}:${String(timer % 60).padStart(2, "0")}`;
-  const maskedContact = mode === "phone"
-    ? `+84 ${phone.slice(0, 3)}*** ${phone.slice(-3)}`
-    : email.replace(/^(.{3}).*(@.*)$/, "$1***$2");
-
-  async function sendOtp() {
+  async function signInWithOAuth(provider: "google" | "facebook") {
     setError("");
-    if (mode === "phone" && phone.replace(/\D/g, "").length < 9) {
-      setError("Vui lòng nhập số điện thoại hợp lệ");
-      return;
-    }
-    if (mode === "email" && !email.includes("@")) {
-      setError("Vui lòng nhập email hợp lệ");
-      return;
-    }
-    setLoading(true);
+    setOauthLoading(provider);
     const supabase = createClient();
-    let err;
-    if (mode === "phone") {
-      const digits = phone.replace(/\D/g, "");
-      const e164 = `+84${digits.startsWith("0") ? digits.slice(1) : digits}`;
-      ({ error: err } = await supabase.auth.signInWithOtp({ phone: e164 }));
-    } else {
-      ({ error: err } = await supabase.auth.signInWithOtp({
-        email,
-        options: { shouldCreateUser: false },
-      }));
-    }
-    setLoading(false);
-    if (err) { setError(err.message); return; }
-    setStep("otp");
-  }
-
-  async function verifyOtp() {
-    if (otp.length < 6) return;
-    setError("");
-    setLoading(true);
-    const supabase = createClient();
-    let result;
-    if (mode === "phone") {
-      const digits = phone.replace(/\D/g, "");
-      const e164 = `+84${digits.startsWith("0") ? digits.slice(1) : digits}`;
-      result = await supabase.auth.verifyOtp({ phone: e164, token: otp, type: "sms" });
-    } else {
-      result = await supabase.auth.verifyOtp({ email, token: otp, type: "email" });
-    }
-    setLoading(false);
-    if (result.error) { setError(result.error.message); return; }
-    router.push("/");
-    router.refresh();
+    const { error: err } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
+    });
+    if (err) { setError(err.message); setOauthLoading(null); }
   }
 
   async function loginPassword() {
     setError("");
+    if (!email.includes("@")) { setError("Email không hợp lệ"); return; }
+    if (!password) { setError("Vui lòng nhập mật khẩu"); return; }
     setLoading(true);
     const res = await fetch("/api/auth/actions", {
       method: "POST",
@@ -98,7 +41,7 @@ export default function LoginPage() {
     const data = await res.json();
     setLoading(false);
     if (data.error) { setError("Email hoặc mật khẩu không đúng"); return; }
-    router.push("/");
+    router.push(data.role === "BUSINESS" ? "/partner" : "/discover");
     router.refresh();
   }
 
@@ -106,181 +49,97 @@ export default function LoginPage() {
     <div className="auth-layout" style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "42% 1fr" }}>
       <BrandPanel />
 
-      {/* RIGHT */}
       <div style={{ background: "white", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 40px" }}>
-        <div style={{ width: "100%", maxWidth: 400 }}>
+        <div style={{ width: "100%", maxWidth: 380 }}>
 
-          {/* ── STEP: CONTACT ── */}
-          {step === "contact" && (
-            <>
-              <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 8 }}>Đăng nhập</h1>
-              <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 32 }}>
-                Chưa có tài khoản?{" "}
-                <Link href="/register" style={{ color: "var(--primary)", fontWeight: 700 }}>Đăng ký ngay</Link>
-              </p>
+          <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 8 }}>Đăng nhập</h1>
+          <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 36 }}>
+            Chưa có tài khoản?{" "}
+            <Link href="/register" style={{ color: "var(--primary)", fontWeight: 700 }}>Đăng ký ngay</Link>
+          </p>
 
-              {/* Mode toggle */}
-              <div style={{ display: "flex", background: "var(--cream)", borderRadius: 12, padding: 4, marginBottom: 24, gap: 4 }}>
-                {(["phone", "email"] as Mode[]).map((m) => (
-                  <button key={m} onClick={() => { setMode(m); setError(""); }}
-                    style={{ flex: 1, padding: "9px 0", borderRadius: 10, fontSize: 13, fontWeight: 700,
-                      background: mode === m ? "white" : "transparent",
-                      color: mode === m ? "var(--text)" : "var(--text-muted)",
-                      boxShadow: mode === m ? "var(--shadow-sm)" : "none",
-                      transition: "all 0.15s" }}>
-                    {m === "phone" ? "Số điện thoại" : "Email"}
-                  </button>
-                ))}
+          {/* Primary OAuth */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <OAuthBtn
+              icon={<GoogleIcon />}
+              label="Tiếp tục với Google"
+              loading={oauthLoading === "google"}
+              primary
+              onClick={() => signInWithOAuth("google")}
+            />
+            <OAuthBtn
+              icon={<FacebookIcon />}
+              label="Tiếp tục với Facebook"
+              loading={oauthLoading === "facebook"}
+              onClick={() => signInWithOAuth("facebook")}
+            />
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "28px 0" }}>
+            <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            <span style={{ fontSize: 12, color: "var(--text-muted)", whiteSpace: "nowrap" }}>hoặc đăng nhập bằng email</span>
+            <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+          </div>
+
+          {/* Email + Password (collapsed by default) */}
+          {showEmailForm && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <label style={lbl}>Email</label>
+                <input type="email" value={email} placeholder="ban@email.com"
+                  onChange={(e) => setEmail(e.target.value)} style={inp}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
+                  onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
+                  onKeyDown={(e) => e.key === "Enter" && loginPassword()} />
               </div>
 
-              {mode === "phone" ? (
-                <div>
-                  <label style={labelStyle}>Số điện thoại <Req /></label>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <div style={{ padding: "13px 14px", borderRadius: 12, border: "1.5px solid var(--border)", background: "var(--cream)", fontSize: 14, fontWeight: 700, whiteSpace: "nowrap" }}>
-                      🇻🇳 +84
-                    </div>
-                    <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                      placeholder="901 234 567" style={{ ...inputSt, flex: 1 }}
-                      onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                      onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                      onKeyDown={(e) => e.key === "Enter" && sendOtp()} />
-                  </div>
-                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6 }}>Chúng tôi sẽ gửi mã OTP 6 số đến số này</p>
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <label style={lbl}>Mật khẩu</label>
+                  <Link href="/forgot-password" style={{ fontSize: 12, color: "var(--primary)", fontWeight: 600 }}>
+                    Quên mật khẩu?
+                  </Link>
                 </div>
-              ) : (
-                <div>
-                  <label style={labelStyle}>Email <Req /></label>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                    placeholder="ban@email.com" style={inputSt}
+                <div style={{ position: "relative" }}>
+                  <input type={showPw ? "text" : "password"} value={password} placeholder="••••••••"
+                    onChange={(e) => setPassword(e.target.value)}
+                    style={{ ...inp, paddingRight: 52 }}
                     onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
                     onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                    onKeyDown={(e) => e.key === "Enter" && sendOtp()} />
-                </div>
-              )}
-
-              {error && <ErrorBox msg={error} />}
-
-              <button onClick={sendOtp} disabled={loading} style={{ ...primaryBtn, marginTop: 20 }}>
-                {loading ? "Đang gửi..." : "Gửi mã OTP →"}
-              </button>
-
-              {/* Divider */}
-              <Divider label="hoặc đăng nhập với" />
-
-              {/* OAuth */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <OAuthBtn icon="G" label="Tiếp tục với Google" color="#4285F4" onClick={() => {}} />
-                <OAuthBtn icon="f" label="Tiếp tục với Facebook" color="#1877F2" onClick={() => {}} />
-              </div>
-
-              <p style={{ marginTop: 20, textAlign: "center", fontSize: 12, color: "var(--text-muted)" }}>
-                Đăng nhập bằng mật khẩu?{" "}
-                <button onClick={() => setStep("password")} style={{ color: "var(--primary)", fontWeight: 700, fontSize: 12, background: "none", border: "none", cursor: "pointer" }}>
-                  Nhấn vào đây
-                </button>
-              </p>
-            </>
-          )}
-
-          {/* ── STEP: OTP ── */}
-          {step === "otp" && (
-            <>
-              <button onClick={() => { setStep("contact"); setOtp(""); setError(""); }}
-                style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-muted)", marginBottom: 28, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
-                ← Quay lại
-              </button>
-
-              <div style={{ textAlign: "center" }}>
-                <h1 style={{ fontSize: 26, fontWeight: 900, marginBottom: 8 }}>Nhập mã xác minh</h1>
-                <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 8 }}>
-                  Mã OTP đã được gửi đến
-                </p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 32 }}>
-                  {maskedContact}
-                </p>
-
-                <OtpInput value={otp} onChange={setOtp} autoFocus />
-
-                {error && <ErrorBox msg={error} />}
-
-                {/* Timer */}
-                <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 20, marginBottom: 4 }}>
-                  {timer > 0 ? (
-                    <>Mã hết hạn sau <strong style={{ color: "var(--primary)" }}>{timerLabel}</strong></>
-                  ) : (
-                    <button onClick={sendOtp} style={{ color: "var(--primary)", fontWeight: 700, fontSize: 13, background: "none", border: "none", cursor: "pointer" }}>
-                      Gửi lại mã OTP
-                    </button>
-                  )}
-                </p>
-
-                <button onClick={verifyOtp} disabled={otp.length < 6 || loading}
-                  style={{ ...primaryBtn, marginTop: 24, opacity: otp.length < 6 ? 0.5 : 1 }}>
-                  {loading ? "Đang xác minh..." : "Xác nhận đăng nhập"}
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* ── STEP: PASSWORD (email fallback) ── */}
-          {step === "password" && (
-            <>
-              <button onClick={() => { setStep("contact"); setError(""); }}
-                style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-muted)", marginBottom: 28, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
-                ← Quay lại
-              </button>
-
-              <h1 style={{ fontSize: 26, fontWeight: 900, marginBottom: 28 }}>Đăng nhập bằng mật khẩu</h1>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-                <div>
-                  <label style={labelStyle}>Email <Req /></label>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                    placeholder="ban@email.com" style={inputSt}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--border)")} />
-                </div>
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                    <label style={labelStyle}>Mật khẩu <Req /></label>
-                    <Link href="/forgot-password" style={{ fontSize: 12, color: "var(--primary)", fontWeight: 600 }}>Quên mật khẩu?</Link>
-                  </div>
-                  <div style={{ position: "relative" }}>
-                    <input type={showPw ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••" style={{ ...inputSt, paddingRight: 48 }}
-                      onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
-                      onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                      onKeyDown={(e) => e.key === "Enter" && loginPassword()} />
-                    <button type="button" onClick={() => setShowPw((v) => !v)}
-                      style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 15, color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer" }}>
-                      {showPw ? "ẩn" : "hiện"}
-                    </button>
-                  </div>
+                    onKeyDown={(e) => e.key === "Enter" && loginPassword()} />
+                  <button type="button" onClick={() => setShowPw((v) => !v)}
+                    style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                    {showPw ? "ẩn" : "hiện"}
+                  </button>
                 </div>
               </div>
 
-              {error && <ErrorBox msg={error} />}
+              {error && <ErrBox msg={error} />}
 
-              <button onClick={loginPassword} disabled={loading} style={{ ...primaryBtn, marginTop: 24 }}>
-                {loading ? "Đang đăng nhập..." : "ĐĂNG NHẬP"}
+              <button onClick={loginPassword} disabled={loading}
+                style={{ width: "100%", padding: "13px", fontSize: 15, fontWeight: 700, borderRadius: 12, background: "var(--text)", color: "white", border: "none", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
+                {loading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
-            </>
+            </div>
           )}
+
+
         </div>
       </div>
     </div>
   );
 }
 
-/* ── Shared brand panel ── */
+/* ── Brand Panel ── */
 function BrandPanel() {
   return (
     <div className="auth-brand-panel" style={{ background: "var(--text)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 40px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -80, left: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(232,119,34,0.12)" }} />
       <div style={{ position: "absolute", bottom: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(76,140,74,0.10)" }} />
       <div style={{ position: "relative", textAlign: "center" }}>
-        <div style={{ width: 96, height: 96, borderRadius: 28, background: "var(--primary)", display: "grid", placeItems: "center", fontSize: 48, margin: "0 auto 28px", boxShadow: "0 8px 32px rgba(232,119,34,0.4)" }}>🥐</div>
+        <div style={{ width: 96, height: 96, borderRadius: 28, overflow: "hidden", margin: "0 auto 28px", boxShadow: "0 8px 32px rgba(232,119,34,0.4)" }}>
+            <img src="/crumbup-logo-tabweb.jpg" alt="CrumbUp" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
         <div style={{ fontFamily: "var(--font-display)", fontSize: 48, fontWeight: 900, color: "white", letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 14 }}>CrumbUp</div>
         <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 32 }}>Save Every Crumb</div>
         <p style={{ fontSize: 18, fontWeight: 700, color: "white", lineHeight: 1.4, maxWidth: 280, opacity: 0.9 }}>
@@ -293,39 +152,57 @@ function BrandPanel() {
   );
 }
 
-/* ── Micro components ── */
-function Req() { return <span style={{ color: "var(--danger)" }}>*</span>; }
-
-function ErrorBox({ msg }: { msg: string }) {
+/* ── OAuth Button ── */
+function OAuthBtn({ icon, label, loading, primary = false, onClick }: {
+  icon: React.ReactNode; label: string; loading: boolean; primary?: boolean; onClick: () => void;
+}) {
   return (
-    <div style={{ marginTop: 14, padding: "11px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>
+    <button onClick={onClick} disabled={loading} style={{
+      width: "100%", padding: "13px 16px", borderRadius: 12,
+      border: primary ? "none" : "1.5px solid var(--border)",
+      background: primary ? "var(--text)" : "white",
+      display: "flex", alignItems: "center", gap: 12,
+      fontSize: 14, fontWeight: 700,
+      color: primary ? "white" : "var(--text)",
+      cursor: loading ? "not-allowed" : "pointer",
+      opacity: loading ? 0.7 : 1,
+      transition: "opacity 0.15s",
+      boxShadow: primary ? "0 2px 12px rgba(0,0,0,0.15)" : "none",
+    }}>
+      <span style={{ width: 24, height: 24, flexShrink: 0, display: "grid", placeItems: "center" }}>{icon}</span>
+      <span style={{ flex: 1, textAlign: "center" }}>{loading ? "Đang chuyển..." : label}</span>
+    </button>
+  );
+}
+
+/* ── SVG Icons ── */
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
+      <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.532-4.697 1.313 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+    </svg>
+  );
+}
+
+/* ── Micro ── */
+function ErrBox({ msg }: { msg: string }) {
+  return (
+    <div style={{ padding: "11px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>
       {msg}
     </div>
   );
 }
 
-function Divider({ label }: { label: string }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
-      <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{label}</span>
-      <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-    </div>
-  );
-}
-
-function OAuthBtn({ icon, label, color, onClick }: { icon: string; label: string; color: string; onClick: () => void }) {
-  return (
-    <button onClick={onClick} style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1.5px solid var(--border)", background: "white", display: "flex", alignItems: "center", gap: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "background 0.15s" }}
-      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cream)")}
-      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "white")}>
-      <span style={{ width: 26, height: 26, borderRadius: 6, background: color, color: "white", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 900, flexShrink: 0 }}>{icon}</span>
-      <span style={{ flex: 1, textAlign: "center" }}>{label}</span>
-    </button>
-  );
-}
-
-/* ── Shared styles ── */
-const labelStyle: React.CSSProperties = { display: "block", fontSize: 13, fontWeight: 700, marginBottom: 8 };
-const inputSt: React.CSSProperties = { width: "100%", padding: "13px 16px", borderRadius: 12, border: "1.5px solid var(--border)", fontSize: 14, outline: "none", background: "var(--ivory)", transition: "border-color 0.2s" };
-const primaryBtn: React.CSSProperties = { width: "100%", padding: "14px", fontSize: 15, fontWeight: 700, borderRadius: 12, background: "var(--text)", color: "white", border: "none", cursor: "pointer", transition: "opacity 0.15s" };
+const lbl: React.CSSProperties = { display: "block", fontSize: 13, fontWeight: 700, marginBottom: 8 };
+const inp: React.CSSProperties = { width: "100%", padding: "13px 16px", borderRadius: 12, border: "1.5px solid var(--border)", fontSize: 14, outline: "none", background: "var(--ivory)", transition: "border-color 0.2s", boxSizing: "border-box" };
