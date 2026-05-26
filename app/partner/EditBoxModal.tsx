@@ -20,7 +20,7 @@ type BoxData = {
   priceOriginal: number; priceSale: number;
   quantityTotal: number; quantityLeft: number;
   pickupStart: string; pickupEnd: string;
-  date: string;
+  date: Date | string;
 };
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {

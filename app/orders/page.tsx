@@ -98,7 +98,7 @@ export default async function OrdersPage() {
 }
 
 export type OrderWithRelations = Awaited<ReturnType<typeof prisma.order.findMany>>[number] & {
-  store: { id: string; name: string; address: string; phone: string | null; logo: string | null; owner: { email: string } };
+  store: { id: string; name: string; address: string; phone: string | null; logo: string | null; owner: { email: string | null } };
   items: Array<{
     id: string; quantity: number; priceAtTime: number;
     box: { name: string; pickupStart: string; pickupEnd: string; image: string | null; date: Date };

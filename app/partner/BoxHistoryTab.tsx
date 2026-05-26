@@ -8,7 +8,7 @@ type Box = {
   priceOriginal: number; priceSale: number;
   quantityTotal: number; quantityLeft: number;
   pickupStart: string; pickupEnd: string; active: boolean;
-  date: string;
+  date: Date | string;
 };
 
 const th: React.CSSProperties = {
