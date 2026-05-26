@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { prisma } from "@/lib/prisma";
-import { formatPrice, discountPercent, getVietnamToday } from "@/lib/utils";
+import { formatPrice, discountPercent, getVietnamToday, formatVNDate } from "@/lib/utils";
 import MapView from "@/components/MapView";
 import type { StorePin } from "@/components/MapView";
 import PickupCountdown from "./PickupCountdown";
@@ -15,12 +15,13 @@ const EMOJIS = ["🥐", "☕", "🥖", "🧁", "🥪", "🎁"];
 
 async function getStorePins(): Promise<StorePin[]> {
   const { from, to } = getVietnamToday();
+  const nowHHMM = vnTimeHHMM(0);
   const stores = await prisma.store.findMany({
     where: { lat: { not: null }, lng: { not: null } },
     select: {
       id: true, name: true, lat: true, lng: true,
       boxes: {
-        where: { active: true, quantityLeft: { gt: 0 }, date: { gte: from, lt: to } },
+        where: { active: true, quantityLeft: { gt: 0 }, date: { gte: from, lt: to }, pickupEnd: { gte: nowHHMM } },
         select: { id: true },
       },
     },
@@ -49,7 +50,7 @@ async function getBoxes(sort: string, prices: string[], pickups: string[], q: st
     .map((p) => ({ priceSale: PRICE_RANGES[p] }));
 
   const hasSoon      = pickups.includes("soon");
-  const nowHHMM      = hasSoon ? vnTimeHHMM(0)   : "";
+  const nowHHMM      = vnTimeHHMM(0);
   const twoHoursHHMM = hasSoon ? vnTimeHHMM(120) : "";
 
   const textFilter = q.trim().length >= 1 ? {
@@ -110,6 +111,7 @@ function BoxSkeleton() {
 
 async function BoxList({ sort, prices, pickups, q }: { sort: string; prices: string[]; pickups: string[]; q: string }) {
   const boxes = await getBoxes(sort, prices, pickups, q);
+  const nowHHMM = vnTimeHHMM(0);
 
   if (boxes.length === 0) {
     return (
@@ -123,14 +125,15 @@ async function BoxList({ sort, prices, pickups, q }: { sort: string; prices: str
   return (
     <>
       {boxes.map((box, i) => {
-        const disc = discountPercent(box.priceOriginal, box.priceSale);
-        const emoji = EMOJIS[i % EMOJIS.length];
-        const isLow = box.quantityLeft <= 2;
-        const tone = i % 2 === 0 ? "warm" : "cream";
+        const disc      = discountPercent(box.priceOriginal, box.priceSale);
+        const emoji     = EMOJIS[i % EMOJIS.length];
+        const isLow     = box.quantityLeft <= 2;
+        const isExpired = box.pickupEnd < nowHHMM;
+        const tone      = i % 2 === 0 ? "warm" : "cream";
 
-        return (
-          <Link key={box.id} href={`/box/${box.id}`}
-            className="card-hover card-hover-warm box-card-row"
+        const card = (
+          <div
+            className="card-hover card-hover-warm"
             style={{
               background: "white",
               borderRadius: 18,
@@ -140,6 +143,8 @@ async function BoxList({ sort, prices, pickups, q }: { sort: string; prices: str
               gridTemplateColumns: "140px 1fr auto",
               gap: 18,
               alignItems: "center",
+              opacity: isExpired ? 0.55 : 1,
+              filter: isExpired ? "grayscale(0.85)" : "none",
             }}>
             <div className="box-card-img" style={{
               width: 140, height: 140, borderRadius: 14, fontSize: 56, flexShrink: 0,
@@ -155,8 +160,11 @@ async function BoxList({ sort, prices, pickups, q }: { sort: string; prices: str
 
             <div>
               <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-                <span className="badge badge-primary">−{disc}%</span>
-                {isLow && <span className="badge badge-warm">Sắp hết</span>}
+                {isExpired
+                  ? <span className="badge" style={{ background: "#e5e7eb", color: "#6b7280" }}>Đã hết giờ</span>
+                  : <span className="badge badge-primary">−{disc}%</span>
+                }
+                {!isExpired && isLow && <span className="badge badge-warm">Sắp hết</span>}
               </div>
               <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
                 {box.store.name}
@@ -166,23 +174,40 @@ async function BoxList({ sort, prices, pickups, q }: { sort: string; prices: str
                 <span style={{ fontSize: 12, color: "var(--text-muted)", textDecoration: "line-through" }}>
                   {formatPrice(box.priceOriginal)}
                 </span>
-                <span style={{ fontSize: 22, fontWeight: 800, color: "var(--primary)" }}>
+                <span style={{ fontSize: 22, fontWeight: 800, color: isExpired ? "var(--text-muted)" : "var(--primary)" }}>
                   {formatPrice(box.priceSale)}
                 </span>
               </div>
               <div style={{ display: "flex", gap: 16, fontSize: 11, color: "var(--text-muted)", flexWrap: "wrap" }}>
                 <span>{box.pickupStart} – {box.pickupEnd}</span>
                 <span>{box.store.address.split(",")[0]}</span>
-                <span style={{ color: isLow ? "var(--danger)" : "var(--accent)", fontWeight: 600 }}>
-                  Còn {box.quantityLeft} box
-                </span>
+                {!isExpired && (
+                  <span style={{ color: isLow ? "var(--danger)" : "var(--accent)", fontWeight: 600 }}>
+                    Còn {box.quantityLeft} box
+                  </span>
+                )}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>
+                {formatVNDate(box.date)}
               </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-end" }}>
-              <PickupCountdown pickupStart={box.pickupStart} pickupEnd={box.pickupEnd} />
-              <span className="btn btn-primary">Xem Box</span>
+              {isExpired ? (
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#9ca3af", whiteSpace: "nowrap" }}>Đã hết giờ</span>
+              ) : (
+                <>
+                  <PickupCountdown pickupStart={box.pickupStart} pickupEnd={box.pickupEnd} />
+                  <span className="btn btn-primary">Xem Box</span>
+                </>
+              )}
             </div>
+          </div>
+        );
+
+        return (
+          <Link key={box.id} href={`/box/${box.id}`} className="box-card-row" style={{ textDecoration: "none" }}>
+            {card}
           </Link>
         );
       })}

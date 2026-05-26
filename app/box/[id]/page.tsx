@@ -4,7 +4,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { formatPrice, discountPercent } from "@/lib/utils";
+import { formatPrice, discountPercent, formatVNDate } from "@/lib/utils";
 import BoxCountdown from "./BoxCountdown";
 import StoreMapClient from "./StoreMapClient";
 import OrderButton from "./OrderButton";
@@ -43,6 +43,10 @@ export default async function BoxDetailPage({ params }: { params: Promise<{ id: 
   });
 
   if (!box) notFound();
+
+  const nowVN   = new Date(Date.now() + 7 * 60 * 60_000);
+  const nowHHMM = `${String(nowVN.getUTCHours()).padStart(2, "0")}:${String(nowVN.getUTCMinutes()).padStart(2, "0")}`;
+  const isExpired = box.pickupEnd < nowHHMM;
 
   const { store } = box;
   const reviews = store.reviews;
@@ -185,6 +189,7 @@ export default async function BoxDetailPage({ params }: { params: Promise<{ id: 
               <div style={{ background: "var(--cream)", borderRadius: 14, padding: 16, marginTop: 4, display: "flex", flexDirection: "column", gap: 12 }}>
                 {[
                   { ic: "🕒", lbl: "Giờ nhận",  val: `${box.pickupStart} – ${box.pickupEnd}` },
+                  { ic: "📅", lbl: "Ngày",       val: formatVNDate(box.date) },
                   { ic: "📦", lbl: "Còn lại",   val: `${box.quantityLeft} box` },
                   { ic: "🏪", lbl: "Hình thức", val: "Nhận tại cửa hàng" },
                 ].map((row) => (
@@ -201,9 +206,10 @@ export default async function BoxDetailPage({ params }: { params: Promise<{ id: 
               </div>
 
               <OrderButton
-                box={{ id: box.id, name: box.name, priceSale: box.priceSale, pickupStart: box.pickupStart, pickupEnd: box.pickupEnd }}
+                box={{ id: box.id, name: box.name, priceSale: box.priceSale, pickupStart: box.pickupStart, pickupEnd: box.pickupEnd, quantityLeft: box.quantityLeft }}
                 store={{ name: store.name, phone: store.phone ?? null, address: store.address, email: store.owner.email ?? null }}
                 isLoggedIn={isLoggedIn}
+                isExpired={isExpired}
               />
             </div>
 

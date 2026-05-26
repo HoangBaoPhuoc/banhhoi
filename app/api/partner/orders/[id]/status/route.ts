@@ -27,6 +27,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: `Không thể chuyển từ ${order.status} → ${newStatus}` }, { status: 400 });
   }
 
-  await prisma.order.update({ where: { id }, data: { status: newStatus } });
+  await prisma.order.update({
+    where: { id },
+    data: {
+      status: newStatus,
+      ...(newStatus === "PICKED_UP" ? { pickedUpAt: new Date() } : {}),
+    },
+  });
   return NextResponse.json({ ok: true });
 }

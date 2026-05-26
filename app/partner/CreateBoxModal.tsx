@@ -4,8 +4,16 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-const today = new Date().toISOString().slice(0, 10);
 const BUCKET = "box-images";
+
+function vnToday() {
+  const d = new Date(Date.now() + 7 * 60 * 60_000);
+  return d.toISOString().slice(0, 10);
+}
+function vnNowHHMM() {
+  const d = new Date(Date.now() + 7 * 60 * 60_000);
+  return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
+}
 
 export default function CreateBoxModal({ storeAddress }: { storeAddress: string }) {
   const router    = useRouter();
@@ -19,7 +27,7 @@ export default function CreateBoxModal({ storeAddress }: { storeAddress: string 
     priceOriginal: "", priceSale: "",
     quantityTotal: "5",
     pickupStart: "17:00", pickupEnd: "20:00",
-    date: today,
+    date: vnToday(),
   });
 
   function set(k: string, v: string) { setForm((f) => ({ ...f, [k]: v })); }
@@ -55,6 +63,10 @@ export default function CreateBoxModal({ storeAddress }: { storeAddress: string 
     if (!form.priceOriginal || !form.priceSale) { setError("Vui lòng nhập giá"); return; }
     if (Number(form.priceSale) >= Number(form.priceOriginal)) { setError("Giá bán phải nhỏ hơn giá gốc"); return; }
     if (!form.quantityTotal || Number(form.quantityTotal) < 1) { setError("Số lượng phải ít nhất 1"); return; }
+    if (form.pickupEnd <= form.pickupStart) { setError("Giờ kết thúc phải sau giờ bắt đầu"); return; }
+    if (form.date === vnToday() && form.pickupEnd <= vnNowHHMM()) {
+      setError("Giờ kết thúc nhận hàng đã qua — vui lòng cập nhật giờ"); return;
+    }
 
     setLoading(true);
     const res = await fetch("/api/partner/boxes", {
@@ -71,7 +83,7 @@ export default function CreateBoxModal({ storeAddress }: { storeAddress: string 
     setLoading(false);
     if (!res.ok) { setError(data.error ?? "Lỗi tạo box"); return; }
     setOpen(false);
-    setForm({ name: "", description: "", image: "", priceOriginal: "", priceSale: "", quantityTotal: "5", pickupStart: "17:00", pickupEnd: "20:00", date: today });
+    setForm({ name: "", description: "", image: "", priceOriginal: "", priceSale: "", quantityTotal: "5", pickupStart: "17:00", pickupEnd: "20:00", date: vnToday() });
     if (fileRef.current) fileRef.current.value = "";
     router.refresh();
   }
@@ -169,7 +181,7 @@ export default function CreateBoxModal({ storeAddress }: { storeAddress: string 
               </div>
 
               <Field label="Ngày bán" required>
-                <input type="date" value={form.date} onChange={(e) => set("date", e.target.value)} min={today} style={inp} />
+                <input type="date" value={form.date} onChange={(e) => set("date", e.target.value)} min={vnToday()} style={inp} />
               </Field>
             </div>
 

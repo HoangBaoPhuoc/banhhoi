@@ -78,6 +78,7 @@ model Order {
   paymentMethod String      @default("cash")
   pickupCode    String      @unique @default(cuid())
   createdAt     DateTime    @default(now())
+  pickedUpAt    DateTime?
 
   user  User        @relation(fields: [userId], references: [id])
   store Store       @relation(fields: [storeId], references: [id])
