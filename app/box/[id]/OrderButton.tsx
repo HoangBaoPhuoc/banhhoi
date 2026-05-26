@@ -8,7 +8,7 @@ import { formatPrice } from "@/lib/utils";
 const BANK = { name: "MB Bank", number: "0987654321", owner: "CONG TY CO PHAN CRUMBUP" };
 
 const PICKUP_GUIDE = [
-  "Sau khi cửa hàng xác nhận chuyển khoản, mã đơn hàng của bạn sẽ được kích hoạt trong tab "Đơn hàng của tôi".",
+  'Sau khi cửa hàng xác nhận chuyển khoản, mã đơn hàng của bạn sẽ được kích hoạt trong tab "Đơn hàng của tôi".',
   "Đến cửa hàng trong khung giờ đã đặt, xuất trình mã đơn hàng cho nhân viên để nhận Surprise Box.",
   "Điều tuyệt nhất là bạn sẽ không biết chính xác bên trong có gì cho đến khi mở hộp!",
 ];
