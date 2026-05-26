@@ -3,73 +3,108 @@ import SiteFooter from "@/components/SiteFooter";
 
 const coreValues = [
   {
+    emoji: "🤝",
     title: "We Win Together",
     subtitle: "Hệ sinh thái cùng thắng",
-    desc: "Tối ưu hóa lợi ích tổng thể thay vì lợi nhuận cá nhân. Giúp chủ tiệm thu hồi vốn biên, giúp sinh viên tiết kiệm và giúp môi trường giảm rác thải.",
-    color: "var(--primary)",
+    desc: "Tối ưu lợi ích tổng thể thay vì lợi nhuận cá nhân — giúp chủ tiệm thu hồi vốn, khách tiết kiệm, môi trường giảm rác.",
+    bg: "white",
+    border: "var(--border)",
+    labelColor: "var(--primary)",
+    labelBg: "#fef3e8",
   },
   {
+    emoji: "✨",
     title: "We Keep It Simple",
     subtitle: "Tối giản vận hành",
-    desc: "Ứng dụng công nghệ tinh gọn, mô hình tự đến nhận (Self-pickup) giúp triệt tiêu hoàn toàn chi phí logistics, kho bãi và rủi ro bom hàng.",
-    color: "var(--accent)",
+    desc: "Công nghệ tinh gọn, mô hình tự đến nhận (Self-pickup) triệt tiêu hoàn toàn chi phí logistics và rủi ro bom hàng.",
+    bg: "#fdfaf6",
+    border: "var(--border)",
+    labelColor: "#784d2e",
+    labelBg: "#fef3e8",
   },
   {
+    emoji: "🏆",
     title: "We Raise The Bar",
     subtitle: "Không ngừng nâng chuẩn",
-    desc: "Chuẩn hóa quy trình kiểm định thực phẩm giờ chót. Hộp Surprise Box trao đi phải đảm bảo tuyệt đối an toàn vệ sinh và trọn vẹn vị ngon.",
-    color: "#d4a574",
+    desc: "Mỗi Surprise Box trao đi phải đảm bảo tuyệt đối an toàn vệ sinh và trọn vẹn vị ngon — không thỏa hiệp.",
+    bg: "#eef6ef",
+    border: "#c8e0ca",
+    labelColor: "#2d6a31",
+    labelBg: "#d4edda",
   },
   {
+    emoji: "💚",
     title: "We Care",
     subtitle: "Lan tỏa sự tử tế",
-    desc: "Thấu hiểu từng khoản tổn thất của chủ tiệm và áp lực chi tiêu của sinh viên. Chuyển hóa hành vi của giới trẻ sang tiêu dùng có trách nhiệm.",
-    color: "#b8956a",
+    desc: "Thấu hiểu từng khoản tổn thất của chủ tiệm và áp lực chi tiêu của người trẻ. Tiêu dùng có trách nhiệm bắt đầu từ sự thấu cảm.",
+    bg: "linear-gradient(135deg, #fdf5e6 0%, #fde6d4 100%)",
+    border: "#e8cdb0",
+    labelColor: "var(--primary)",
+    labelBg: "var(--badge)",
   },
   {
+    emoji: "🌱",
     title: "We Build a Legacy",
     subtitle: "Kiến tạo tương lai xanh",
-    desc: "Không dừng lại ở một ứng dụng thương mại, CrumbUp đồng hành cùng lộ trình dịch chuyển Đà Nẵng thành đô thị sinh thái không rác thải.",
-    color: "var(--badge)",
+    desc: "CrumbUp đồng hành cùng lộ trình đưa Đà Nẵng trở thành đô thị sinh thái không rác thải thực phẩm.",
+    bg: "white",
+    border: "var(--border)",
+    labelColor: "#2d6a31",
+    labelBg: "#d4edda",
   },
 ];
 
 const esgPillars = [
   {
+    emoji: "🌍",
     initial: "E",
-    title: "Môi trường (Environmental)",
-    desc: "CrumbUp trực tiếp giảm thiểu áp lực lên hệ thống hạ tầng đô thị Đà Nẵng bằng mục tiêu giải cứu hơn 15.000 phần bánh dôi dư hằng năm, triệt tiêu lượng rác thải hữu cơ và cắt giảm lượng khí nhà kính độc hại phát sinh từ quá trình phân hủy thực phẩm.",
+    title: "Môi trường",
+    desc: "Mục tiêu giải cứu hơn 15.000 phần bánh dôi dư mỗi năm, cắt giảm rác thải hữu cơ và khí nhà kính phát sinh từ quá trình phân hủy thực phẩm tại đô thị.",
     color: "var(--accent)",
+    bg: "#eef6ef",
   },
   {
+    emoji: "🤲",
     initial: "S",
-    title: "Xã hội (Social)",
-    desc: "Chúng tôi xây dựng một cộng đồng tiêu dùng có trách nhiệm bằng cách kết nối lợi ích kinh tế với giá trị nhân văn. CrumbUp giúp học sinh, sinh viên tiết kiệm 50%–70% chi phí khi tiếp cận thực phẩm chất lượng cao, đồng thời hỗ trợ các chủ tiệm bánh địa phương thu hồi chi phí biến đổi biên để tái đầu tư vào dòng vốn lưu động.",
+    title: "Xã hội",
+    desc: "Giúp người trẻ tiết kiệm 50–70% chi phí thực phẩm, đồng thời hỗ trợ các tiệm bánh địa phương thu hồi chi phí biến đổi biên để tái đầu tư.",
     color: "var(--primary)",
+    bg: "white",
   },
   {
+    emoji: "🔒",
     initial: "G",
-    title: "Quản trị (Governance)",
-    desc: "Nền tảng cam kết tính minh bạch và an toàn tuyệt đối trong quản trị thông qua hệ thống số hóa dữ liệu thời gian thực. Bằng tính năng bắt buộc thanh toán trước 100%, CrumbUp thiết lập cơ chế bảo hiểm rủi ro 'bom hàng' hoàn hảo để bảo vệ quyền lợi cho đối tác, kết hợp với bộ quy chuẩn kiểm định nghiêm ngặt giúp kiểm soát chất lượng bánh giờ chót.",
-    color: "var(--badge)",
+    title: "Quản trị",
+    desc: "Thanh toán trước 100% bảo vệ quyền lợi đối tác, số hóa dữ liệu thời gian thực, và bộ quy chuẩn kiểm định chất lượng bánh giờ chót nghiêm ngặt.",
+    color: "#b8960a",
+    bg: "#fef9e7",
   },
 ];
 
 const faqs = [
   {
     q: "Surprise Box là gì, có biết trước món không?",
-    a: "Surprise Box là hộp 'bí ẩn' gồm các sản phẩm cuối ngày được cửa hàng tự chọn (bánh, đồ uống, đồ ăn nhẹ...). Bạn sẽ không biết chính xác món gì cho đến khi nhận, nhưng giá trị luôn cao hơn số tiền bạn trả 2–3 lần.",
+    a: "Là hộp 'bí ẩn' gồm sản phẩm cuối ngày do cửa hàng tự chọn. Bạn không biết chính xác nhưng giá trị luôn cao hơn số tiền trả 2–3 lần.",
   },
-  { q: "Tôi hoàn tiền thế nào, ai giải quyết khi có vấn đề?", a: "Hoàn tiền tự động vào tài khoản trong 3–5 ngày làm việc nếu cửa hàng hết box hoặc lỗi từ phía họ. Đội ngũ CrumbUp sẽ trực tiếp xử lý — bạn không cần làm việc với cửa hàng." },
-  { q: "Hình thức tự đến lấy hoạt động như nào?", a: "Sau khi thanh toán, bạn nhận mã QR riêng. Đến cửa hàng trong khung giờ đã đặt, đưa QR cho nhân viên quét — xong!" },
-  { q: "Nếu đến cửa hàng hết box, hoặc sản phẩm không đúng chất lượng?", a: "Trong trường hợp hiếm gặp này, bạn được hoàn 100% tiền hoặc đổi box tương đương. Đối với lỗi chất lượng, vui lòng phản ánh kèm hình ảnh trong 24h để được hỗ trợ." },
-  { q: "Tôi có thể hủy đơn hàng sau khi đã thanh toán không?", a: "Bạn có thể hủy đơn miễn phí trước khung giờ nhận ít nhất 2 tiếng. Sau thời điểm đó, đơn không thể hủy để đảm bảo cửa hàng đã chuẩn bị Box." },
-  { q: "CrumbUp có an toàn thực phẩm không khi là hàng cuối ngày?", a: "Có. Tất cả sản phẩm đều là hàng mới làm trong ngày, chỉ là chưa bán hết trước giờ đóng cửa. Cửa hàng có nghĩa vụ kiểm tra chất lượng trước khi đóng Box." },
+  {
+    q: "Hình thức tự đến lấy hoạt động như nào?",
+    a: "Sau khi cửa hàng xác nhận chuyển khoản, bạn nhận mã đơn hàng riêng. Đến trong khung giờ đã đặt, xuất trình mã cho nhân viên — xong!",
+  },
+  {
+    q: "Tôi có thể hủy đơn sau khi đã thanh toán không?",
+    a: "Có thể hủy miễn phí trước khung giờ nhận ít nhất 2 tiếng. Sau thời điểm đó, đơn không thể hủy vì cửa hàng đã chuẩn bị Box.",
+  },
+  {
+    q: "Cửa hàng hết box hoặc sản phẩm không đạt chất lượng?",
+    a: "Bạn được hoàn 100% tiền hoặc đổi box tương đương. Với lỗi chất lượng, phản ánh kèm ảnh trong 24h để được hỗ trợ.",
+  },
+  {
+    q: "CrumbUp có an toàn thực phẩm không?",
+    a: "Có. Tất cả sản phẩm đều mới làm trong ngày, chưa bán hết trước giờ đóng cửa. Cửa hàng có nghĩa vụ kiểm tra chất lượng trước khi đóng Box.",
+  },
 ];
 
-const sectionStyle: React.CSSProperties = {
-  scrollMarginTop: 100,
-};
+const sectionStyle: React.CSSProperties = { scrollMarginTop: 100 };
 
 export default function AboutPage() {
   return (
@@ -90,108 +125,120 @@ export default function AboutPage() {
         display: "flex",
         alignItems: "center",
       }}>
-        <div className="container" style={{ position: "relative", textAlign: "center", maxWidth: 900, width: "100%" }}>
-          <div className="rise rise-1" style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20 }}>
+        {/* Floating stickers */}
+        <div style={{ position: "absolute", top: 130, left: "6%", fontSize: 60, opacity: 0.15, transform: "rotate(-12deg)", userSelect: "none" }}>🥐</div>
+        <div style={{ position: "absolute", top: 200, right: "6%", fontSize: 52, opacity: 0.13, transform: "rotate(10deg)", userSelect: "none" }}>🌿</div>
+        <div style={{ position: "absolute", bottom: 48, left: "18%", fontSize: 44, opacity: 0.11, transform: "rotate(5deg)", userSelect: "none" }}>🧁</div>
+
+        <div className="container" style={{ position: "relative", textAlign: "center", maxWidth: 860, width: "100%" }}>
+          <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20 }}>
             Câu chuyện của chúng tôi
           </div>
-          <h1 className="rise rise-2" style={{ fontSize: 60, marginBottom: 28, lineHeight: 1.1 }}>
+          <h1 className="rise rise-2 about-hero-title" style={{ fontSize: 60, marginBottom: 28, lineHeight: 1.1 }}>
             Save Every Crumb,<br />Share Every Value
           </h1>
-          <p className="rise rise-3" style={{ fontSize: 18, color: "var(--text-muted)", lineHeight: 1.8, maxWidth: 680, margin: "0 auto" }}>
+          <p className="rise rise-3" style={{ fontSize: 17, color: "var(--text-muted)", lineHeight: 1.8, maxWidth: 620, margin: "0 auto" }}>
             "Một mẩu bánh vụn không làm nên bữa ăn, nhưng triệu cánh tay gom nhặt sẽ thay đổi cả một số phận."
           </p>
         </div>
       </section>
 
-      {/* ── GIỚI THIỆU CHUNG ── */}
+      {/* GIỚI THIỆU + MISSION / VISION */}
       <section id="about" style={{ ...sectionStyle, padding: "96px 0", background: "white" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Our Identity
             </div>
-            <h2 style={{ fontSize: 48, marginBottom: 24, lineHeight: 1.15 }}>Giới thiệu chung</h2>
-            <p style={{ fontSize: 17, color: "var(--text-muted)", maxWidth: 760, margin: "0 auto", lineHeight: 1.8 }}>
-              CrumbUp là nền tảng công nghệ tác động xã hội (Social Impact Platform) tiên phong tại miền Trung Việt Nam, ra đời với sứ mệnh kết nối và truyền cảm hứng cho cộng đồng cùng hành động chống lại nạn lãng phí thực phẩm. Chúng tôi tin rằng mỗi chiếc bánh, mỗi phần ăn dôi dư vào cuối ngày đều xứng đáng có một cơ hội thứ hai để mang lại giá trị kinh tế và niềm vui cho người tiêu dùng.
+            <h2 style={{ fontSize: 44, marginBottom: 16 }}>Giới thiệu chung</h2>
+            <p style={{ fontSize: 16, color: "var(--text-muted)", maxWidth: 680, margin: "0 auto", lineHeight: 1.8 }}>
+              CrumbUp là nền tảng công nghệ tác động xã hội tiên phong tại miền Trung Việt Nam, kết nối tiệm bánh với người tiêu dùng để giải cứu thực phẩm cuối ngày — biến lãng phí thành giá trị.
             </p>
           </div>
 
-          {/* Mission + Vision */}
-          <div style={{ gap: 32, display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "stretch" }}>
-            <div data-reveal style={{
-              background: "linear-gradient(135deg, var(--primary-soft) 0%, #f9e0c4 100%)",
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            {/* Mission */}
+            <div data-reveal className="card-hover" style={{
+              background: "linear-gradient(135deg, #fef8f2 0%, #fdeede 100%)",
               borderRadius: 28,
               padding: "48px 44px",
-              height: "100%",
-              boxSizing: "border-box",
+              position: "relative",
+              overflow: "hidden",
             }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
-                Sứ mệnh
-              </div>
-              <h3 style={{ fontSize: 32, marginBottom: 20, lineHeight: 1.2 }}>Our Mission</h3>
-              <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.8 }}>
-                Kiến tạo một giải pháp công nghệ thời gian thực (Real-time) tinh gọn, giúp các đối tác ngành F&B (Bakery & Café, Nhà hàng) tối ưu hóa nguồn cung dôi dư giờ chót, đồng thời giúp thế hệ trẻ tiếp cận thực phẩm chất lượng với chi phí tiết kiệm.
+              <div style={{ position: "absolute", bottom: -12, right: 8, fontSize: 96, opacity: 0.1, lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>🎯</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>Sứ mệnh</div>
+              <h3 style={{ fontSize: 30, marginBottom: 16, lineHeight: 1.2 }}>Our Mission</h3>
+              <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, position: "relative" }}>
+                Giải pháp công nghệ tinh gọn giúp đối tác F&B tối ưu nguồn cung dôi dư giờ chót, đồng thời giúp người trẻ tiếp cận thực phẩm chất lượng với chi phí tiết kiệm.
               </p>
             </div>
 
-            <div data-reveal style={{
-              background: "linear-gradient(135deg, var(--accent-soft) 0%, #c5dcbf 100%)",
+            {/* Vision */}
+            <div data-reveal className="card-hover" style={{
+              background: "linear-gradient(135deg, #f4fbf4 0%, #dff0dd 100%)",
               borderRadius: 28,
               padding: "48px 44px",
-              height: "100%",
-              boxSizing: "border-box",
+              position: "relative",
+              overflow: "hidden",
             }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
-                Tầm nhìn
-              </div>
-              <h3 style={{ fontSize: 32, marginBottom: 20, lineHeight: 1.2 }}>Our Vision</h3>
-              <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.8 }}>
-                Hướng đến một hành tinh không còn rác thải thực phẩm hữu cơ. CrumbUp đặt mục tiêu trở thành hệ sinh thái công nghệ giải cứu thực phẩm dôi dư dẫn dắt thị trường, định hình phong cách sống xanh và tiêu dùng có trách nhiệm tại các đô thị thông minh.
+              <div style={{ position: "absolute", bottom: -12, right: 8, fontSize: 96, opacity: 0.1, lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>🌱</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#2d6a31", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>Tầm nhìn</div>
+              <h3 style={{ fontSize: 30, marginBottom: 16, lineHeight: 1.2 }}>Our Vision</h3>
+              <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, position: "relative" }}>
+                Trở thành hệ sinh thái giải cứu thực phẩm dẫn dắt thị trường, định hình lối sống xanh và tiêu dùng có trách nhiệm tại các đô thị thông minh Việt Nam.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── GIÁ TRỊ CỐT LÕI ── */}
+      {/* GIÁ TRỊ CỐT LÕI */}
       <section id="values" style={{ ...sectionStyle, padding: "96px 0", background: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Our Core Values
             </div>
-            <h2 style={{ fontSize: 48 }}>Năm giá trị cốt lõi của CrumbUp</h2>
+            <h2 style={{ fontSize: 44 }}>Năm giá trị cốt lõi</h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-            {coreValues.map((v) => (
-              <div key={v.title} data-reveal style={{
-                background: "white",
-                borderRadius: 20,
-                padding: "36px 28px",
-                border: "1px solid var(--border)",
-                borderTop: `4px solid ${v.color}`,
-                transition: "all 0.3s",
-              }}
-              className="card-hover"
-              >
-                <h3 style={{ fontSize: 20, marginBottom: 6, color: v.color, fontWeight: 700 }}>{v.title}</h3>
-                <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 14, fontStyle: "italic" }}>{v.subtitle}</p>
-                <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.7 }}>{v.desc}</p>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 20 }}>
+            {coreValues.map((v, i) => (
+              <div key={v.title} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{ width: "calc(33.333% - 14px)", minWidth: 260,
+                background: v.bg,
+                borderRadius: 24,
+                padding: "32px 28px",
+                border: `1px solid ${v.border}`,
+                position: "relative",
+                overflow: "hidden",
+              }}>
+                {/* Background sticker */}
+                <div style={{ position: "absolute", bottom: -8, right: 12, fontSize: 68, opacity: 0.12, lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>
+                  {v.emoji}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+                  <span style={{ fontSize: 26, lineHeight: 1 }}>{v.emoji}</span>
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                    color: v.labelColor, background: v.labelBg, padding: "3px 9px", borderRadius: 999,
+                  }}>{v.subtitle}</span>
+                </div>
+                <h3 style={{ fontSize: 18, marginBottom: 10, fontWeight: 700, color: "var(--text)", position: "relative" }}>{v.title}</h3>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.75, position: "relative" }}>{v.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── LỊCH SỬ ── */}
+      {/* LỊCH SỬ */}
       <section id="history" style={{ ...sectionStyle, padding: "96px 0", background: "white" }}>
-        <div className="container" style={{ maxWidth: 800 }}>
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+        <div className="container" style={{ maxWidth: 900 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Our History
             </div>
-            <h2 style={{ fontSize: 48 }}>Hành trình CrumbUp</h2>
+            <h2 style={{ fontSize: 44 }}>Hành trình CrumbUp</h2>
           </div>
 
           <div data-reveal style={{ fontSize: 17, color: "var(--text)", lineHeight: 1.9 }}>
@@ -213,166 +260,159 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── ESG ── */}
+      {/* ESG */}
       <section id="esg" style={{ ...sectionStyle, padding: "96px 0", background: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Tiêu chuẩn ESG
             </div>
-            <h2 style={{ fontSize: 48 }}>Cam kết bền vững của CrumbUp</h2>
+            <h2 style={{ fontSize: 44 }}>Cam kết bền vững</h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32 }}>
-            {esgPillars.map((pillar) => (
-              <div key={pillar.initial} data-reveal style={{
-                background: "white",
-                borderRadius: 20,
-                padding: "44px 36px",
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+            {esgPillars.map((pillar, i) => (
+              <div key={pillar.initial} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
+                background: pillar.bg,
+                borderRadius: 24,
+                padding: "40px 32px",
                 border: "1px solid var(--border)",
-              }}
-              className="card-hover"
-              >
-                <div style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 16,
-                  background: pillar.color,
-                  color: "white",
-                  display: "grid",
-                  placeItems: "center",
-                  fontSize: 32,
-                  fontWeight: 800,
-                  marginBottom: 24,
-                }}>
-                  {pillar.initial}
+                position: "relative",
+                overflow: "hidden",
+              }}>
+                {/* Background sticker */}
+                <div style={{ position: "absolute", bottom: -8, right: 10, fontSize: 72, opacity: 0.1, lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>
+                  {pillar.emoji}
                 </div>
-                <h3 style={{ fontSize: 20, marginBottom: 16, fontWeight: 700 }}>{pillar.title}</h3>
-                <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.8 }}>{pillar.desc}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 14,
+                    background: pillar.color, color: "white",
+                    display: "grid", placeItems: "center",
+                    fontSize: 22, fontWeight: 900,
+                    flexShrink: 0,
+                  }}>{pillar.initial}</div>
+                  <span style={{ fontSize: 20 }}>{pillar.emoji}</span>
+                </div>
+                <h3 style={{ fontSize: 18, marginBottom: 12, fontWeight: 700, position: "relative" }}>{pillar.title}</h3>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.75, position: "relative" }}>{pillar.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── MÔ HÌNH KINH DOANH ── */}
+      {/* MÔ HÌNH KINH DOANH */}
       <section id="business" style={{ ...sectionStyle, padding: "96px 0", background: "white" }}>
         <div className="container" style={{ maxWidth: 900 }}>
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
               Business Model
             </div>
-            <h2 style={{ fontSize: 48, marginBottom: 20 }}>Mô hình Win Win Win</h2>
-            <p style={{ fontSize: 18, color: "var(--text-muted)", maxWidth: 640, margin: "0 auto" }}>
-              Vì con người, lợi nhuận và hành tinh
-            </p>
+            <h2 style={{ fontSize: 44, marginBottom: 10 }}>Mô hình Win — Win — Win</h2>
+            <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Vì con người, lợi nhuận và hành tinh</p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, marginBottom: 28 }}>
+            {[
+              { emoji: "🏪", who: "Tiệm bánh", win: "Tối ưu doanh thu từ hàng hao hụt giờ chót, không còn lỗ kép.", color: "white", border: "var(--border)" },
+              { emoji: "🧑‍🎓", who: "Khách hàng", win: "Thực phẩm chất lượng cao, giá giảm 50–70%, giao dịch minh bạch.", color: "var(--accent-soft)", border: "#e8d4b8" },
+              { emoji: "🌿", who: "Môi trường", win: "Mỗi box giải cứu là một bước nhỏ giảm rác thải hữu cơ và khí nhà kính.", color: "#eef6ef", border: "#c8e0ca" },
+            ].map((item, i) => (
+              <div key={i} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
+                background: item.color,
+                borderRadius: 20,
+                padding: "28px 24px",
+                border: `1px solid ${item.border}`,
+                textAlign: "center",
+              }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>{item.emoji}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>{item.who}</div>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7 }}>{item.win}</p>
+              </div>
+            ))}
           </div>
 
           <div data-reveal style={{
-            background: "linear-gradient(135deg, var(--primary-soft) 0%, var(--cream) 100%)",
-            borderRadius: 24,
-            padding: "52px 44px",
-            marginBottom: 32,
-          }}>
-            <p style={{ fontSize: 17, color: "var(--text)", lineHeight: 1.9, marginBottom: 24 }}>
-              CrumbUp vận hành theo triết lý cốt lõi: <strong>kết nối công nghệ để giải cứu nguồn thực phẩm dôi dư chất lượng cao</strong>. Bằng giải pháp này, chúng tôi:
-            </p>
-            <ul style={{ paddingLeft: 28, listStyleType: "disc" }}>
-              <li style={{ marginBottom: 16, fontSize: 16, color: "var(--text)" }}>Giúp các đối tác tiệm bánh <strong>tối ưu hóa doanh thu</strong> từ lượng hàng hao hụt giờ chót</li>
-              <li style={{ marginBottom: 16, fontSize: 16, color: "var(--text)" }}>Giúp người tiêu dùng trẻ <strong>trải nghiệm những miếng ngon</strong> với giá trị kinh tế tốt nhất</li>
-              <li style={{ fontSize: 16, color: "var(--text)" }}>Truyền cảm hứng cho cộng đồng <strong>cùng chung tay bảo vệ môi trường</strong></li>
-            </ul>
-          </div>
-
-          <div data-reveal style={{
-            background: "var(--ivory)",
-            borderRadius: 20,
-            padding: "40px 36px",
             borderLeft: "4px solid var(--accent)",
+            paddingLeft: 24,
+            padding: "24px 28px",
+            background: "var(--ivory)",
+            borderRadius: "0 16px 16px 0",
           }}>
-            <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.9, marginBottom: 12 }}>
-              <strong>Giảm thiểu rác thải thực phẩm</strong> chính là hành động thiết thực và mạnh mẽ nhất mà bạn có thể thực hiện để đẩy lùi cuộc khủng hoảng khí hậu, góp phần quan trọng vào mục tiêu toàn cầu nhằm giới hạn mức tăng nhiệt độ Trái Đất ở ngưỡng dưới 2°C vào năm 2100.
+            <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, marginBottom: 8 }}>
+              <strong>Giảm thiểu rác thải thực phẩm</strong> là hành động thiết thực nhất để đẩy lùi khủng hoảng khí hậu — góp phần vào mục tiêu giới hạn nhiệt độ Trái Đất dưới 2°C vào 2100.
             </p>
-            <p style={{ fontSize: 14, color: "var(--text-muted)", fontStyle: "italic" }}>
-              — Theo nghiên cứu của tổ chức uy tín toàn cầu Project Drawdown
-            </p>
+            <p style={{ fontSize: 13, color: "var(--text-muted)", fontStyle: "italic" }}>— Theo Project Drawdown</p>
           </div>
         </div>
       </section>
 
-      {/* ── FAQ ── */}
+      {/* FAQ */}
       <section id="faq" style={{ ...sectionStyle, padding: "96px 0", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover" }}>
-        <div className="container" style={{ maxWidth: 900 }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
-              FAQ
-            </div>
-            <h2 style={{ fontSize: 48 }}>Câu hỏi thường gặp</h2>
+        <div className="container" style={{ maxWidth: 800 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 48 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>FAQ</div>
+            <h2 style={{ fontSize: 44 }}>Câu hỏi thường gặp</h2>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {faqs.map((f, i) => (
-              <details key={i} className="card-hover" data-reveal style={{
+              <details key={i} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
                 background: "white",
                 borderRadius: 16,
                 border: "1px solid var(--border)",
                 overflow: "hidden",
               }}>
                 <summary style={{
-                  padding: "22px 28px",
-                  fontSize: 16,
-                  fontWeight: 700,
+                  padding: "20px 24px",
+                  fontSize: 15, fontWeight: 700,
                   cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 16,
+                  display: "flex", alignItems: "center", gap: 14,
                   listStyle: "none",
                 }}>
                   <span style={{
-                    minWidth: 36, height: 36,
-                    borderRadius: 999,
-                    background: "var(--primary-soft)",
-                    color: "var(--primary)",
-                    display: "grid",
-                    placeItems: "center",
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 800,
-                    fontSize: 14,
+                    minWidth: 30, height: 30, borderRadius: 999,
+                    background: "var(--primary)", color: "white",
+                    display: "grid", placeItems: "center",
+                    fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 12,
                   }}>{i + 1}</span>
                   <span style={{ flex: 1 }}>{f.q}</span>
-                  <span style={{ color: "var(--text-muted)", fontSize: 20 }}>+</span>
+                  <span style={{ color: "var(--text-muted)", fontSize: 20, lineHeight: 1 }}>+</span>
                 </summary>
-                <div style={{
-                  padding: "0 28px 24px 80px",
-                  fontSize: 15,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.8,
-                }}>{f.a}</div>
+                <div style={{ padding: "0 24px 20px 68px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.8 }}>{f.a}</div>
               </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section style={{ padding: "80px 0 100px", background: "white" }}>
+      {/* CTA */}
+      <section style={{ padding: "72px 0 96px", background: "white" }}>
         <div className="container">
           <div data-reveal style={{
             background: "var(--text)",
             borderRadius: 28,
             padding: "64px 48px",
-            color: "white",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
           }}>
-            <h2 style={{ color: "white", fontSize: 44, marginBottom: 20, lineHeight: 1.15 }}>
-              Sẵn sàng cứu chiếc bánh đầu tiên?
-            </h2>
-            <p style={{ fontSize: 18, opacity: 0.8, maxWidth: 480, margin: "0 auto 32px" }}>
-              Tham gia cộng đồng CrumbUp đang ăn ngon, tiết kiệm và sống xanh mỗi ngày.
-            </p>
-            <a href="/discover" className="btn btn-primary btn-lg">Khám phá Box ngay →</a>
+            <div style={{ position: "absolute", top: -10, left: "5%", fontSize: 80, opacity: 0.07, transform: "rotate(-15deg)", userSelect: "none" }}>🥐</div>
+            <div style={{ position: "absolute", bottom: -10, right: "5%", fontSize: 80, opacity: 0.07, transform: "rotate(12deg)", userSelect: "none" }}>🌿</div>
+
+            <div style={{ position: "relative" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+                Bắt đầu ngay hôm nay
+              </div>
+              <h2 style={{ color: "white", fontSize: 44, marginBottom: 16, lineHeight: 1.15 }}>
+                Sẵn sàng cứu chiếc bánh đầu tiên?
+              </h2>
+              <p style={{ fontSize: 16, color: "rgba(253,245,230,0.75)", maxWidth: 440, margin: "0 auto 28px", lineHeight: 1.7 }}>
+                Tham gia cộng đồng CrumbUp đang ăn ngon, tiết kiệm và sống xanh mỗi ngày.
+              </p>
+              <a href="/discover" className="btn btn-primary btn-lg">Khám phá Box ngay →</a>
+            </div>
           </div>
         </div>
       </section>

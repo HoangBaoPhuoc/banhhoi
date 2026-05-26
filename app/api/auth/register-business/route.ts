@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     password,
     options: {
       data: { name, role: "BUSINESS" },
-      emailRedirectTo: `${new URL(request.url).origin}/api/auth/callback`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin}/api/auth/callback`,
     },
   });
 

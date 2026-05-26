@@ -76,9 +76,16 @@ export default function UserMenu({ email, name }: Props) {
 
           {/* Menu items */}
           <div style={{ padding: "8px 0" }}>
-            <MenuItem href="/discover" label="Khám phá Box" icon="🛍️" onClick={() => setOpen(false)} />
-            <MenuItem href="/orders" label="Đơn hàng của tôi" icon="📦" onClick={() => setOpen(false)} />
-            <MenuItem href="/profile" label="Cài đặt tài khoản" icon="⚙️" onClick={() => setOpen(false)} />
+            <button disabled style={{
+              width: "100%", padding: "10px 18px",
+              display: "flex", alignItems: "center", gap: 10,
+              fontSize: 13, fontWeight: 600,
+              color: "var(--text-muted)",
+              background: "none", border: "none",
+              cursor: "not-allowed", textAlign: "left", opacity: 0.5,
+            }}>
+              <span>⚙️</span> Cài đặt <span style={{ marginLeft: "auto", fontSize: 10, background: "var(--cream)", padding: "2px 7px", borderRadius: 999, fontWeight: 700 }}>Sắp có</span>
+            </button>
           </div>
 
           {/* Logout */}

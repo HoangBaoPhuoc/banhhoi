@@ -4,53 +4,6 @@ import SiteFooter from "@/components/SiteFooter";
 import PartnerCTAButton from "@/components/PartnerCTAButton";
 import ScrollArrow from "@/components/ScrollArrow";
 
-const featuredBoxes = [
-  {
-    shop: "Tiệm Bánh Mì Nâu",
-    name: "Box Bánh Ngọt Cuối Ngày",
-    oldP: "120.000đ",
-    newP: "59.000đ",
-    discount: 50,
-    time: "18:00 - 20:00",
-    left: 3,
-    emoji: "🥐",
-    tone: "warm",
-  },
-  {
-    shop: "Café An Nhiên",
-    name: "Box Đồ Uống & Bánh",
-    oldP: "100.000đ",
-    newP: "60.000đ",
-    discount: 40,
-    time: "17:00 - 20:00",
-    left: 2,
-    emoji: "☕",
-    tone: "cream",
-  },
-  {
-    shop: "Tiệm Bánh Mây",
-    name: "Box Bánh Mặn",
-    oldP: "150.000đ",
-    newP: "60.000đ",
-    discount: 60,
-    time: "19:00 - 20:30",
-    left: 5,
-    emoji: "🥖",
-    tone: "warm",
-  },
-  {
-    shop: "Brew House Café",
-    name: "Box Pastry Mix",
-    oldP: "160.000đ",
-    newP: "58.000đ",
-    discount: 70,
-    time: "18:00 - 21:00",
-    left: 1,
-    emoji: "🧁",
-    tone: "cream",
-  },
-];
-
 export default function HomePage() {
   return (
     <>
@@ -236,89 +189,19 @@ export default function HomePage() {
         <ScrollArrow />
       </section>
 
-      {/* HOW IT WORKS */}
-      <section
-        id="how"
-        style={{ padding: "96px 0", background: "var(--ivory)" }}
-      >
+      {/* ABOUT FOOD WASTE */}
+      <section style={{ padding: "96px 0", background: "var(--ivory)" }}>
         <div className="container">
-          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: "var(--primary)",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                marginBottom: 12,
-              }}
-            >
-              Đơn giản — 4 bước
-            </div>
-            <h2 style={{ fontSize: 44 }}>Cách hoạt động</h2>
-          </div>
 
-          <div className="steps-grid" style={{ gap: 20 }}>
-            {[
-              { n: 1, title: "Tìm box", desc: "Khám phá các Surprise Box gần bạn với nhiều mức giảm hấp dẫn" },
-              { n: 2, title: "Đặt trước", desc: "Chọn thời gian nhận hàng và thanh toán dễ dàng" },
-              { n: 3, title: "Nhận hàng", desc: "Đến tiệm hoặc nhận giao tận nơi nhanh chóng" },
-              { n: 4, title: "Giảm lãng phí", desc: "Cùng cộng đồng giải cứu thực phẩm mỗi ngày" },
-            ].map((s, i) => (
-              <div
-                key={i}
-                className="card-hover"
-                data-reveal
-                data-reveal-delay={String(i + 1)}
-                style={{
-                  background: "white",
-                  padding: "40px 24px 32px",
-                  borderRadius: 20,
-                  border: "1px solid var(--border)",
-                  textAlign: "center",
-                  position: "relative",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: -16,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: 32,
-                    height: 32,
-                    borderRadius: 999,
-                    background: "var(--primary)",
-                    color: "white",
-                    display: "grid",
-                    placeItems: "center",
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 800,
-                    fontSize: 14,
-                  }}
-                >
-                  {s.n}
-                </div>
-                <h3 style={{ fontSize: 22, marginBottom: 10 }}>{s.title}</h3>
-                <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURED BOXES */}
-      <section style={{ padding: "80px 0", background: "white" }}>
-        <div className="container">
+          {/* Header row */}
           <div
             data-reveal
             style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              marginBottom: 32,
-              flexWrap: "wrap",
-              gap: 12,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 48,
+              alignItems: "center",
+              marginBottom: 56,
             }}
           >
             <div>
@@ -329,156 +212,191 @@ export default function HomePage() {
                   color: "var(--primary)",
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
-                  marginBottom: 8,
+                  marginBottom: 12,
                 }}
               >
-                Hôm nay
+                Food waste fact
               </div>
-              <h2 style={{ fontSize: 40 }}>
-                Surprise Box nổi bật
-                <br />
-                gần bạn
+              <h2 style={{ fontSize: 44, marginBottom: 20 }}>
+                Về lãng phí<br />thực phẩm
               </h2>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "var(--text-muted)" }}>
+                Một chiếc bánh chưa kịp bán hết khi cửa hàng đóng cửa không chỉ là một món ăn bị bỏ phí — đằng sau là công sức người thợ, nguyên liệu, điện nước mỗi ngày.
+              </p>
             </div>
-            <Link
-              href="/discover"
+
+            {/* Pull quote card */}
+            <div
               style={{
-                color: "var(--primary)",
-                fontWeight: 700,
-                fontSize: 14,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
+                background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)",
+                borderRadius: 24,
+                padding: "36px 40px",
+                position: "relative",
+                overflow: "hidden",
               }}
             >
-              Xem tất cả →
-            </Link>
+              <div
+                style={{
+                  position: "absolute",
+                  top: -16,
+                  right: -16,
+                  fontSize: 96,
+                  opacity: 0.12,
+                  lineHeight: 1,
+                  userSelect: "none",
+                }}
+              >
+                🥐
+              </div>
+              <div style={{ fontSize: 32, marginBottom: 16, lineHeight: 1 }}>💬</div>
+              <p
+                style={{
+                  fontStyle: "italic",
+                  fontSize: 17,
+                  lineHeight: 1.7,
+                  color: "white",
+                  fontWeight: 500,
+                  position: "relative",
+                }}
+              >
+                "Chúng tôi không giải cứu đồ hỏng. Chúng tôi kết nối lại những giá trị còn tốt."
+              </p>
+              <div
+                style={{
+                  marginTop: 16,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "rgba(255,255,255,0.6)",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                }}
+              >
+                — CrumbUp
+              </div>
+            </div>
           </div>
 
-          <div className="boxes-grid" style={{ gap: 20 }}>
-            {featuredBoxes.map((b, i) => (
-              <Link
+          {/* FAQ cards — 2×2 grid */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 20,
+            }}
+          >
+            {[
+              {
+                emoji: "🌾",
+                label: "Định nghĩa",
+                q: "Lãng phí thực phẩm là gì?",
+                p: "Theo FAO, food waste là sự suy giảm chất lượng hoặc số lượng thực phẩm ở cấp độ bán lẻ và tiêu dùng. Với CrumbUp, đó là những chiếc bánh ngon vẫn hoàn hảo trong ngày nhưng chưa gặp đúng người vào đúng lúc.",
+                bg: "var(--cream)",
+                border: "var(--border)",
+                labelColor: "var(--primary)",
+                labelBg: "var(--primary-soft)",
+              },
+              {
+                emoji: "🧁",
+                label: "Surplus food",
+                q: "Thực phẩm dư thừa là gì?",
+                p: '"Bánh dư cuối ngày" là những sản phẩm vẫn còn tốt nhưng chưa kịp bán hết trước giờ đóng cửa. Các cửa hàng đối tác đóng gói chúng thành Surprise Box — gửi đến bạn với giá ưu đãi nhất trong ngày.',
+                bg: "var(--accent-soft)",
+                border: "#e8d4b8",
+                labelColor: "#784d2e",
+                labelBg: "#f0ddc4",
+              },
+              {
+                emoji: "🌍",
+                label: "Số liệu toàn cầu",
+                q: "Lãng phí thực phẩm có đáng lo?",
+                p: "Theo UNEP 2024, thế giới lãng phí hơn 1,05 tỷ tấn thực phẩm mỗi năm — 19% tổng lượng sẵn có. Giữ lại một chiếc bánh cuối ngày là hành động nhỏ, nhưng nhân lên hàng ngàn lần mỗi ngày, tác động trở nên rất thực.",
+                bg: "#eef6ef",
+                border: "#c8e0ca",
+                labelColor: "#2d6a31",
+                labelBg: "#d4edda",
+              },
+              {
+                emoji: "♻️",
+                label: "Sứ mệnh",
+                q: "Từ Food Waste → Food Rescue",
+                p: "Thông qua Surprise Box, cửa hàng đóng gói sản phẩm cuối ngày thành những box ưu đãi, còn khách hàng có lựa chọn ngon hơn, tiết kiệm hơn và ý nghĩa hơn. Mỗi chiếc bánh được tiếp tục hành trình của mình.",
+                bg: "linear-gradient(135deg, #fdf5e6 0%, #fde6d4 100%)",
+                border: "#e8cdb0",
+                labelColor: "var(--primary)",
+                labelBg: "var(--badge)",
+              },
+            ].map((item, i) => (
+              <div
                 key={i}
-                href={`/box/${i + 1}`}
-                className="card-hover card-hover-warm"
+                className="card-hover"
                 data-reveal
                 data-reveal-delay={String(i + 1)}
                 style={{
-                  background: "white",
-                  borderRadius: 20,
-                  border: "1px solid var(--border)",
+                  background: item.bg,
+                  borderRadius: 24,
+                  border: `1px solid ${item.border}`,
+                  padding: "36px 36px 32px",
+                  position: "relative",
                   overflow: "hidden",
-                  display: "block",
                 }}
               >
+                {/* Sticker emoji (decorative background) */}
                 <div
                   style={{
-                    background:
-                      b.tone === "warm"
-                        ? "linear-gradient(135deg, #fde6d4 0%, #f5d4b3 100%)"
-                        : "linear-gradient(135deg, #fdf5e6 0%, #e8dcc6 100%)",
-                    padding: 16,
-                    height: 180,
-                    position: "relative",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
+                    position: "absolute",
+                    bottom: -8,
+                    right: 16,
+                    fontSize: 72,
+                    opacity: 0.13,
+                    lineHeight: 1,
+                    userSelect: "none",
+                    pointerEvents: "none",
                   }}
                 >
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <span className="badge badge-primary">−{b.discount}%</span>
-                    {b.left <= 2 && (
-                      <span className="badge badge-warm">Sắp hết</span>
-                    )}
-                  </div>
-                  <div
+                  {item.emoji}
+                </div>
+
+                {/* Label badge + foreground emoji */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                  <span style={{ fontSize: 28, lineHeight: 1 }}>{item.emoji}</span>
+                  <span
                     style={{
-                      fontSize: 72,
-                      textAlign: "center",
-                      filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.08))",
-                    }}
-                  >
-                    {b.emoji}
-                  </div>
-                  <button
-                    style={{
-                      position: "absolute",
-                      top: 14,
-                      right: 14,
-                      width: 32,
-                      height: 32,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: item.labelColor,
+                      background: item.labelBg,
+                      padding: "4px 10px",
                       borderRadius: 999,
-                      background: "rgba(255,255,255,0.9)",
-                      display: "grid",
-                      placeItems: "center",
-                      fontSize: 16,
-                    }}
-                  >
-                    ♡
-                  </button>
-                </div>
-                <div style={{ padding: 18 }}>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "var(--text-muted)",
+                      letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      fontWeight: 600,
-                      marginBottom: 4,
                     }}
                   >
-                    {b.shop}
-                  </div>
-                  <h3
-                    style={{ fontSize: 17, marginBottom: 12, lineHeight: 1.3 }}
-                  >
-                    {b.name}
-                  </h3>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: 8,
-                      marginBottom: 10,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 12,
-                        color: "var(--text-muted)",
-                        textDecoration: "line-through",
-                      }}
-                    >
-                      {b.oldP}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 22,
-                        fontWeight: 800,
-                        color: "var(--primary)",
-                        fontFamily: "var(--font-display)",
-                      }}
-                    >
-                      {b.newP}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "var(--text-muted)",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <span>{b.time}</span>
-                    <span style={{ color: "var(--accent)", fontWeight: 600 }}>
-                      Còn {b.left} box
-                    </span>
-                  </div>
+                    {item.label}
+                  </span>
                 </div>
-              </Link>
+
+                <h3
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    marginBottom: 14,
+                    color: "var(--text)",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {item.q}
+                </h3>
+                <p
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 1.8,
+                    color: "var(--text-muted)",
+                    position: "relative",
+                  }}
+                >
+                  {item.p}
+                </p>
+              </div>
             ))}
           </div>
         </div>

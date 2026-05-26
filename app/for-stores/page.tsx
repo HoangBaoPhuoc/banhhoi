@@ -3,52 +3,67 @@ import SiteFooter from "@/components/SiteFooter";
 
 const businessBenefits = [
   {
-    n: "1",
+    emoji: "💰",
+    label: "Dòng tiền",
+    labelColor: "#784d2e",
+    labelBg: "#f0ddc4",
+    bg: "var(--cream)",
+    border: "var(--border)",
     t: "Thu hồi chi phí, tối ưu dòng tiền",
-    d: "Thay vì chịu 'lỗ kép' (vừa mất tiền sản xuất, vừa mất công dọn rác), tiệm bánh chỉ cần đóng gói đồ chưa bán hết thành các Surprise Box với mức giá ưu đãi. Bạn sẽ bất ngờ khi thấy khoản chi phí chìm này biến thành một nguồn doanh thu ổn định mỗi tháng.",
+    d: "Thay vì chịu lỗ kép, đóng gói bánh dư thành Surprise Box biến khoản chi phí chìm thành nguồn doanh thu ổn định mỗi tháng.",
   },
   {
-    n: "2",
-    t: "Tiếp cận tệp khách hàng mới tiềm năng",
-    d: "Surprise Box là lời chào sân hoàn hảo để giới thiệu hương vị của tiệm đến mọi người xung quanh. Khách đến lấy bánh thường có tâm lý 'tiện công đôi việc'. Khi bước vào quán, họ rất dễ bị thu hút bởi tủ kính trưng bày và chủ động mua thêm một ly nước, một bịch bánh quy khô, hoặc một ổ bánh kem nguyên giá tại quầy. Đây chính là cơ hội tuyệt vời để tiệm tăng doanh thu trên mỗi lượt khách ghé thăm mà không tốn một đồng quảng cáo.",
+    emoji: "👥",
+    label: "Khách hàng mới",
+    labelColor: "var(--primary)",
+    labelBg: "var(--primary-soft)",
+    bg: "var(--accent-soft)",
+    border: "#e8d4b8",
+    t: "Tiếp cận khách hàng tiềm năng",
+    d: "Khách đến lấy box thường mua thêm đồ trong quán — tăng doanh thu mỗi lượt ghé thăm mà không tốn một đồng quảng cáo.",
   },
   {
-    n: "3",
-    t: "Thương hiệu xanh chạm đến trái tim giới trẻ",
-    d: "Hành động giảm lãng phí thực phẩm giúp tiệm của bạn ghi điểm tuyệt đối trong mắt thế hệ trẻ (Gen Z, Millennials). Khách hàng ngày nay luôn ưu tiên ủng hộ các thương hiệu nhân văn và có trách nhiệm với môi trường.",
+    emoji: "🌿",
+    label: "Thương hiệu xanh",
+    labelColor: "#2d6a31",
+    labelBg: "#d4edda",
+    bg: "#eef6ef",
+    border: "#c8e0ca",
+    t: "Thương hiệu xanh chạm đến giới trẻ",
+    d: "Gen Z và Millennials ưu tiên thương hiệu có trách nhiệm môi trường. Mỗi box giải cứu là một điểm cộng hình ảnh không mất phí.",
   },
 ];
 
 const operationSteps = [
-  { step: "1", title: "Đăng ký & Tạo hộp", desc: "Cửa hàng điền form thông tin trên hệ thống. Cuối ngày, bạn kiểm tra lượng đồ ăn còn dư (nhưng vẫn hoàn toàn đảm bảo chất lượng), set số lượng hộp trên app kèm khung giờ hẹn khách qua lấy." },
-  { step: "2", title: "Khách hàng đặt trước", desc: "Người dùng mở ứng dụng, tìm kiếm các cửa hàng xung quanh trên bản đồ và tiến hành đặt trước những Surprise box của bạn." },
-  { step: "3", title: "Trao hộp tại quầy", desc: "Nhân viên tiệm kiểm tra đơn trên app và trao Surprise Box cho người đến nhận. Quy trình vận hành linh hoạt theo lựa chọn của khách: tự đến lấy trực tiếp tại cửa hàng hoặc nhận hàng tận nơi qua đội ngũ Shipper của ứng dụng." },
-  { step: "4", title: "Theo dõi doanh thu", desc: "Toàn bộ số tiền bán được sẽ được hệ thống tổng hợp rõ ràng. Bạn có thể dễ dàng quản lý dòng tiền ngay trên ứng dụng dành cho chủ quán và nhận thanh toán chuyển khoản định kỳ hàng tháng." },
+  { step: "1", emoji: "📋", title: "Đăng ký & Tạo hộp", desc: "Điền form thông tin, xác nhận khung giờ và chuyển khoản phí đăng ký. Sau khi được duyệt, bạn sẽ nhận mã đơn hàng để bắt đầu." },
+  { step: "2", emoji: "📱", title: "Khách đặt trước", desc: "Người dùng tìm cửa hàng trên bản đồ và đặt trước Surprise Box của bạn." },
+  { step: "3", emoji: "🎁", title: "Trao box tại quầy", desc: "Xác nhận chuyển khoản thành công, kiểm tra mã đơn hàng của khách và trao Surprise Box." },
+  { step: "4", emoji: "📊", title: "Theo dõi doanh thu", desc: "Quản lý dòng tiền ngay trên app, nhận thanh toán chuyển khoản định kỳ." },
 ];
 
 const storeCategories = [
-  "Tiệm bánh mì & Bánh ngọt truyền thống (Fresh Bakery)",
-  "Tiệm bánh kem & Bánh lạnh cao cấp (Pastry & Cake Shop)",
-  "Mô hình Bakery & Café hiện đại",
-  "Tiệm bánh online & Bánh thủ công (Home-based Bakery)",
+  { emoji: "🥖", label: "Fresh Bakery", title: "Tiệm bánh mì & Bánh ngọt truyền thống" },
+  { emoji: "🎂", label: "Pastry & Cake Shop", title: "Tiệm bánh kem & Bánh lạnh cao cấp" },
+  { emoji: "☕", label: "Bakery Café", title: "Mô hình Bakery & Café hiện đại" },
+  { emoji: "🧁", label: "Home Bakery", title: "Tiệm bánh online & Bánh thủ công" },
 ];
 
 const partnerFaqs = [
   {
-    q: "Phí dịch vụ trên app được tính như thế nào?",
-    a: "Chúng tôi đồng hành cùng bạn dựa trên hiệu quả thực tế: Không thu phí khởi tạo, không phí duy trì hàng tháng. App chỉ trích một phần nhỏ chi phí dịch vụ trên mỗi chiếc Surprise Box được giải cứu thành công.",
+    q: "Phí dịch vụ tính như thế nào?",
+    a: "Không phí khởi tạo, không phí duy trì. App chỉ trích một phần nhỏ trên mỗi Surprise Box được giải cứu thành công.",
   },
   {
-    q: "Tiệm có cần đầu tư bao bì riêng cho Surprise Box không?",
-    a: "Bạn hoàn toàn có thể tận dụng ngay túi giấy hoặc hộp carton sẵn có của tiệm để tối ưu chi phí. Đặc biệt, để lan tỏa lối sống xanh đúng nghĩa, app tích hợp tính năng khuyến khích khách hàng tự mang hộp cá nhân đến đựng bánh khi chọn hình thức Tự đến lấy (Self-pickup).",
+    q: "Có cần đầu tư bao bì riêng không?",
+    a: "Bạn có thể dùng túi giấy hoặc hộp carton sẵn có. App còn khuyến khích khách tự mang hộp khi chọn hình thức tự đến lấy.",
   },
   {
-    q: "Tiệm có bị 'bom hàng' không? Nếu khách đặt rồi không đến lấy thì sao?",
-    a: "Hệ thống của chúng tôi bảo vệ quyền lợi của bạn tối đa: Khách phải thanh toán trước 100% qua ví điện tử thì đơn hàng mới hoàn tất. Nếu quá khung giờ quy định mà khách không đến nhận, đơn hàng vẫn tính là thành công.",
+    q: "Khách đặt rồi không đến lấy thì sao?",
+    a: "Khách thanh toán 100% trước, đơn mới hoàn tất. Quá giờ không đến — đơn vẫn tính thành công, tiệm không thiệt.",
   },
   {
-    q: "Tiệm có thể chủ động thay đổi số lượng Surprise Box và khung giờ mỗi ngày không?",
-    a: "Hoàn toàn chủ động. Lượng bánh dư mỗi ngày là khác nhau, có ngày nhiều, có ngày ít. Tiệm có quyền tự nhập số lượng bánh dôi dư thực tế của ngày hôm đó lên app. Khung giờ hẹn khách đến lấy cũng do tiệm tự cài đặt sao cho phù hợp nhất với giờ đóng cửa của mình.",
+    q: "Có thể thay đổi số lượng & giờ mỗi ngày không?",
+    a: "Hoàn toàn chủ động. Số lượng box và khung giờ nhận do tiệm tự cài đặt mỗi ngày theo lượng bánh dôi dư thực tế.",
   },
 ];
 
@@ -63,66 +78,110 @@ export default function ForStoresPage() {
         backgroundImage: "url('/low-opacity-cumpled-paper.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        paddingTop: 100,
-        paddingBottom: 80,
+        paddingTop: 160,
+        paddingBottom: 96,
         position: "relative",
         overflow: "hidden",
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        textAlign: "center",
       }}>
-        <div className="container" style={{ position: "relative", textAlign: "center", maxWidth: 900, width: "100%" }}>
-          <h1 style={{ fontSize: 56, marginBottom: 24, lineHeight: 1.1 }}>
+        {/* Decorative floating stickers */}
+        <div style={{ position: "absolute", top: 120, left: "8%", fontSize: 56, opacity: 0.18, transform: "rotate(-12deg)", userSelect: "none" }}>🥐</div>
+        <div style={{ position: "absolute", top: 180, right: "7%", fontSize: 48, opacity: 0.15, transform: "rotate(10deg)", userSelect: "none" }}>🧁</div>
+        <div style={{ position: "absolute", bottom: 60, left: "15%", fontSize: 40, opacity: 0.12, transform: "rotate(6deg)", userSelect: "none" }}>🥖</div>
+
+        <div className="container" style={{ position: "relative", maxWidth: 820, width: "100%" }}>
+          <div className="rise rise-1" style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+            Dành cho cửa hàng
+          </div>
+          <h1 className="rise rise-2" style={{ fontSize: 56, marginBottom: 24, lineHeight: 1.1 }}>
             Biến bánh dư cuối ngày<br />
             <em style={{ color: "var(--primary)", fontStyle: "italic", fontWeight: 800 }}>thành doanh thu</em>
           </h1>
-          <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.8, maxWidth: 700, margin: "0 auto 32px" }}>
-            Bạn có biết cảm giác xót xa khi nhìn những ổ bánh mì tươi ngon, những chiếc bánh ngọt tâm huyết phải huỷ bỏ vào cuối ngày? Toàn bộ chi phí nguyên liệu, tiền điện chạy lò và công sức nhào bột của thợ bánh coi như biến mất.
+          <p className="rise rise-3" style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.8, maxWidth: 620, margin: "0 auto 36px" }}>
+            Những mẻ bánh tươi ngon chưa kịp tìm được chủ nhân không cần phải bị hủy bỏ — hãy để CrumbUp kết nối chúng với hàng ngàn khách hàng xung quanh bạn.
           </p>
-          <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.8, maxWidth: 700, margin: "0 auto 32px" }}>
-            Ứng dụng này giúp tiệm bánh của bạn "giải phóng" lượng bánh tồn dư trong ngày qua các Surprise Box. Kết nối nhanh chóng với hàng ngàn khách hàng xung quanh, tối ưu chi phí nguyên liệu và biến mọi mẻ bánh thành doanh thu thực tế.
-          </p>
-          <a href="/register/business" className="btn btn-primary btn-lg">Đăng ký đối tác ngay →</a>
+          <a href="/register/business" className="btn btn-primary btn-lg rise rise-3">Đăng ký đối tác ngay →</a>
         </div>
       </section>
 
       {/* SURPRISE BOX LÀ GÌ */}
       <section style={{ padding: "80px 0", background: "white" }}>
-        <div className="container" style={{ maxWidth: 800 }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }} data-reveal>
-            <h2 style={{ fontSize: 44 }}>Surprise Box là gì?</h2>
+        <div className="container">
+          <div data-reveal className="right-auto-grid" style={{
+            background: "linear-gradient(120deg, var(--badge) 0%, #f7d27a 100%)",
+            borderRadius: 28,
+            padding: "52px 56px",
+            gap: 48,
+            position: "relative",
+            overflow: "hidden",
+          }}>
+            {/* Background sticker */}
+            <div style={{ position: "absolute", right: -20, bottom: -20, fontSize: 160, opacity: 0.1, lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>📦</div>
+
+            <div style={{ position: "relative" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
+                Surprise Box là gì?
+              </div>
+              <h2 style={{ fontSize: 36, marginBottom: 16, lineHeight: 1.2 }}>
+                Một chiếc hộp —<br />vô vàn cơ hội
+              </h2>
+              <p style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.8, maxWidth: 520 }}>
+                Cuối ngày, gom những mẻ bánh tươi chưa kịp bán vào Surprise Box. Khách đặt trước trên app, đến nhận đúng giờ — tiệm thu hồi chi phí, khách được bánh ngon giá hời, cùng nhau giảm lãng phí thực phẩm.
+              </p>
+            </div>
+
+            {/* Stats sticker card */}
+            <div style={{
+              background: "white",
+              borderRadius: 20,
+              padding: "32px 28px",
+              textAlign: "center",
+              minWidth: 200,
+              boxShadow: "0 8px 32px rgba(139,111,71,0.15)",
+              flexShrink: 0,
+            }}>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>📦</div>
+              <div style={{ fontSize: 36, fontWeight: 800, fontFamily: "var(--font-display)", color: "var(--primary)", letterSpacing: "-0.03em" }}>−50%</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginTop: 4 }}>mức giá trung bình</div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>khách hàng tiết kiệm được</div>
+            </div>
           </div>
-          <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.8, marginBottom: 20 }} data-reveal data-reveal-delay="1">
-            Cuối ngày, tiệm của bạn luôn có những mẻ bánh tươi ngon chưa kịp tìm được chủ nhân. Thay vì hủy bỏ lãng phí, hãy gom chúng vào chiếc Surprise Box đầy bất ngờ.
-          </p>
-          <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.8 }} data-reveal data-reveal-delay="2">
-            Khách hàng sẽ đặt trước trên ứng dụng và đến nhận vào khung giờ bạn quy định với mức giá giảm sâu. Bằng cách này, bạn vừa bảo vệ được giá trị thương hiệu, vừa cùng cộng đồng lan tỏa lối sống xanh, giảm thiểu rác thải thực phẩm ra môi trường.
-          </p>
         </div>
       </section>
 
       {/* LỢI ÍCH KINH DOANH */}
       <section style={{ padding: "80px 0", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover" }}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 56 }} data-reveal>
-            <h2 style={{ fontSize: 44 }}>Lợi ích kinh doanh thực tế cho tiệm bánh</h2>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
+              Tại sao chọn CrumbUp
+            </div>
+            <h2 style={{ fontSize: 44 }}>Lợi ích thực tế cho tiệm bánh</h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 32 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             {businessBenefits.map((item, i) => (
-              <div key={item.n} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i, 3))} style={{
-                background: "white",
-                borderRadius: 20,
-                padding: "32px 28px",
-                border: "1px solid var(--border)",
-                borderLeft: "4px solid var(--primary)",
+              <div key={item.t} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
+                background: item.bg,
+                borderRadius: 24,
+                padding: "36px 32px",
+                border: `1px solid ${item.border}`,
+                position: "relative",
+                overflow: "hidden",
               }}>
-                <div style={{ fontSize: 36, fontWeight: 800, fontFamily: "var(--font-display)", color: "var(--primary)", marginBottom: 12, opacity: 0.3 }}>
-                  {item.n}
+                {/* Background sticker */}
+                <div style={{ position: "absolute", bottom: -8, right: 12, fontSize: 72, opacity: 0.12, lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>
+                  {item.emoji}
                 </div>
-                <h3 style={{ fontSize: 18, marginBottom: 12, fontWeight: 700 }}>{item.t}</h3>
-                <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.7 }}>{item.d}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                  <span style={{ fontSize: 28, lineHeight: 1 }}>{item.emoji}</span>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                    color: item.labelColor, background: item.labelBg, padding: "4px 10px", borderRadius: 999,
+                  }}>{item.label}</span>
+                </div>
+                <h3 style={{ fontSize: 19, marginBottom: 12, fontWeight: 700, lineHeight: 1.3 }}>{item.t}</h3>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.75, position: "relative" }}>{item.d}</p>
               </div>
             ))}
           </div>
@@ -131,24 +190,40 @@ export default function ForStoresPage() {
 
       {/* MÔ HÌNH VẬN HÀNH */}
       <section style={{ padding: "80px 0", background: "white" }}>
-        <div className="container" style={{ maxWidth: 900 }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }} data-reveal>
-            <h2 style={{ fontSize: 44 }}>Mô hình Surprise Box vận hành như thế nào?</h2>
+        <div className="container">
+          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
+              Đơn giản — 4 bước
+            </div>
+            <h2 style={{ fontSize: 44 }}>Vận hành như thế nào?</h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          <div className="steps-grid" style={{ gap: 20, position: "relative" }}>
+            <svg className="steps-connector" style={{ position: "absolute", top: 48, left: "12%", right: "12%", height: 2, width: "76%", zIndex: 0 }}>
+              <line x1="0" y1="1" x2="100%" y2="1" stroke="var(--border-strong)" strokeWidth="2" strokeDasharray="6 6" />
+            </svg>
+
             {operationSteps.map((item, i) => (
-              <div key={item.step} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i, 3))} style={{
+              <div key={item.step} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
+                position: "relative",
+                zIndex: 1,
                 background: "var(--cream)",
                 borderRadius: 20,
-                padding: "32px 24px",
+                padding: "40px 20px 28px",
                 border: "1px solid var(--border)",
+                textAlign: "center",
               }}>
-                <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "var(--font-display)", color: "var(--primary)", marginBottom: 12 }}>
-                  Bước {item.step}
-                </div>
-                <h3 style={{ fontSize: 17, marginBottom: 12, fontWeight: 700 }}>{item.title}</h3>
-                <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.7 }}>{item.desc}</p>
+                {/* Step badge */}
+                <div style={{
+                  position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
+                  width: 32, height: 32, borderRadius: 999,
+                  background: "var(--primary)", color: "white",
+                  display: "grid", placeItems: "center",
+                  fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 13,
+                }}>{item.step}</div>
+                <div style={{ fontSize: 36, marginBottom: 14 }}>{item.emoji}</div>
+                <h3 style={{ fontSize: 17, marginBottom: 10, fontWeight: 700 }}>{item.title}</h3>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7 }}>{item.desc}</p>
               </div>
             ))}
           </div>
@@ -157,34 +232,57 @@ export default function ForStoresPage() {
 
       {/* DANH MỤC CỬA HÀNG */}
       <section style={{ padding: "80px 0", backgroundColor: "var(--ivory)", backgroundImage: "url('/low-opacity-cumpled-paper.png')", backgroundSize: "cover" }}>
-        <div className="container" style={{ maxWidth: 800 }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }} data-reveal>
-            <h2 style={{ fontSize: 44, marginBottom: 24 }}>Danh mục cửa hàng phù hợp</h2>
+        <div className="container" style={{ maxWidth: 900 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 48 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
+              Ai phù hợp?
+            </div>
+            <h2 style={{ fontSize: 44, marginBottom: 12 }}>Danh mục cửa hàng</h2>
+            <p style={{ fontSize: 15, color: "var(--text-muted)" }}>Chỉ cần có bánh tươi dư thừa cuối ngày, bạn đều có thể tham gia.</p>
           </div>
-          <p style={{ fontSize: 16, color: "var(--text)", lineHeight: 1.8, marginBottom: 32, textAlign: "center" }} data-reveal data-reveal-delay="1">
-            Bất kể tiệm của bạn đang kinh doanh mô hình bakery nào, chỉ cần có bánh tươi dư thừa cuối ngày, bạn đều có thể đồng hành cùng chúng tôi:
-          </p>
-          <ul style={{ paddingLeft: 24, listStyleType: "none", display: "flex", flexDirection: "column", gap: 12 }}>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {storeCategories.map((cat, i) => (
-              <li key={cat} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i, 3))} style={{ paddingLeft: 24, fontSize: 15, color: "var(--text)", position: "relative" }}>
-                <span style={{ position: "absolute", left: 0, color: "var(--primary)", fontWeight: 700 }}>•</span>
-                {cat}
-              </li>
+              <div key={cat.title} className="card-hover" data-reveal data-reveal-delay={String(i + 1)} style={{
+                background: "white",
+                borderRadius: 20,
+                border: "1px solid var(--border)",
+                padding: "24px 28px",
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+              }}>
+                <div style={{
+                  width: 52, height: 52, borderRadius: 14,
+                  background: "var(--cream)",
+                  display: "grid", placeItems: "center",
+                  fontSize: 26, flexShrink: 0,
+                }}>{cat.emoji}</div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 4 }}>
+                    {cat.label}
+                  </div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text)" }}>{cat.title}</div>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
 
       {/* PARTNER FAQs */}
       <section style={{ padding: "80px 0", background: "white" }}>
-        <div className="container" style={{ maxWidth: 880 }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }} data-reveal>
-            <h2 style={{ fontSize: 44, marginBottom: 12 }}>Câu hỏi thường gặp — Dành cho chủ quán</h2>
+        <div className="container" style={{ maxWidth: 800 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 48 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>
+              FAQ
+            </div>
+            <h2 style={{ fontSize: 44 }}>Câu hỏi thường gặp</h2>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {partnerFaqs.map((item, i) => (
-              <details key={i} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i, 3))} style={{
+              <details key={i} className="card-hover" data-reveal data-reveal-delay={String(Math.min(i + 1, 4))} style={{
                 background: "var(--cream)",
                 borderRadius: 16,
                 border: "1px solid var(--border)",
@@ -192,33 +290,23 @@ export default function ForStoresPage() {
               }}>
                 <summary style={{
                   padding: "20px 24px",
-                  fontSize: 15,
-                  fontWeight: 700,
+                  fontSize: 15, fontWeight: 700,
                   cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 16,
+                  display: "flex", alignItems: "center", gap: 14,
                   listStyle: "none",
                 }}>
                   <span style={{
-                    minWidth: 32, height: 32,
-                    borderRadius: 999,
-                    background: "var(--primary-soft)",
-                    color: "var(--primary)",
-                    display: "grid",
-                    placeItems: "center",
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 800,
-                    fontSize: 12,
+                    minWidth: 30, height: 30, borderRadius: 999,
+                    background: "var(--primary)", color: "white",
+                    display: "grid", placeItems: "center",
+                    fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 12,
                   }}>{i + 1}</span>
                   <span style={{ flex: 1 }}>{item.q}</span>
-                  <span style={{ color: "var(--text-muted)", fontSize: 18 }}>+</span>
+                  <span style={{ color: "var(--text-muted)", fontSize: 20, lineHeight: 1 }}>+</span>
                 </summary>
                 <div style={{
-                  padding: "0 24px 20px 72px",
-                  fontSize: 14,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.7,
+                  padding: "0 24px 20px 68px",
+                  fontSize: 14, color: "var(--text-muted)", lineHeight: 1.75,
                 }}>{item.a}</div>
               </details>
             ))}
@@ -227,24 +315,32 @@ export default function ForStoresPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: "72px 0 96px", background: "white" }}>
+      <section style={{ padding: "56px 0 96px", background: "white" }}>
         <div className="container">
-          <div className="card-hover" data-reveal style={{
+          <div data-reveal style={{
             background: "var(--text)",
             borderRadius: 28,
-            padding: "56px 40px",
-            color: "white",
+            padding: "56px 64px",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
           }}>
-            <h2 style={{ color: "white", fontSize: 40, marginBottom: 16, lineHeight: 1.15 }}>
-              Sẵn sàng tham gia CrumbUp?
-            </h2>
-            <p style={{ fontSize: 16, opacity: 0.8, maxWidth: 480, margin: "0 auto 28px" }}>
-              Hãy cho bánh cuối ngày của bạn một cơ hội thứ hai. Kết nối với hàng ngàn khách hàng tiềm năng ngay hôm nay.
-            </p>
-            <a href="/register/business" className="btn btn-primary btn-lg">Đăng ký đối tác ngay →</a>
+            {/* Decorative stickers */}
+            <div style={{ position: "absolute", top: -10, left: "5%", fontSize: 80, opacity: 0.07, transform: "rotate(-15deg)", userSelect: "none" }}>🥐</div>
+            <div style={{ position: "absolute", bottom: -10, right: "5%", fontSize: 80, opacity: 0.07, transform: "rotate(12deg)", userSelect: "none" }}>🎂</div>
+
+            <div style={{ position: "relative" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
+                Bắt đầu ngay hôm nay
+              </div>
+              <h2 style={{ color: "white", fontSize: 40, marginBottom: 16, lineHeight: 1.15 }}>
+                Sẵn sàng tham gia CrumbUp?
+              </h2>
+              <p style={{ fontSize: 15, color: "rgba(253,245,230,0.75)", maxWidth: 440, margin: "0 auto 28px", lineHeight: 1.7 }}>
+                Hãy cho bánh cuối ngày của bạn một cơ hội thứ hai. Không phí khởi tạo, không ràng buộc.
+              </p>
+              <a href="/register/business" className="btn btn-primary btn-lg">Đăng ký đối tác ngay →</a>
+            </div>
           </div>
         </div>
       </section>

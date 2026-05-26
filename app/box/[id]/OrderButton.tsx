@@ -8,9 +8,9 @@ import { formatPrice } from "@/lib/utils";
 const BANK = { name: "MB Bank", number: "0987654321", owner: "CONG TY CO PHAN CRUMBUP" };
 
 const PICKUP_GUIDE = [
-  "Đến cửa hàng, xuất trình đơn hàng trên website hoặc ứng dụng để nhận Surprise Box của bạn.",
-  "Bạn cũng có thể nhờ bạn bè nhận giúp hoặc lựa chọn giao hàng linh hoạt tại một số cửa hàng đối tác.",
-  "Điều tuyệt nhất là bạn sẽ không biết chính xác bên trong có gì cho đến khi mở hộp.",
+  "Sau khi cửa hàng xác nhận chuyển khoản, mã đơn hàng của bạn sẽ được kích hoạt trong tab "Đơn hàng của tôi".",
+  "Đến cửa hàng trong khung giờ đã đặt, xuất trình mã đơn hàng cho nhân viên để nhận Surprise Box.",
+  "Điều tuyệt nhất là bạn sẽ không biết chính xác bên trong có gì cho đến khi mở hộp!",
 ];
 
 type BoxInfo  = { id: string; name: string; priceSale: number; pickupStart: string; pickupEnd: string };

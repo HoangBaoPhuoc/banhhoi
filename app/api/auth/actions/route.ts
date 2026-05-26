@@ -107,7 +107,7 @@ export async function POST(request: Request) {
       password,
       options: {
         data: { name, role: "CUSTOMER", phone: phone || null },
-        emailRedirectTo: `${new URL(request.url).origin}/api/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin}/api/auth/callback`,
       },
     });
     if (error) return NextResponse.json({ error: error.message }, { status: 400 });
