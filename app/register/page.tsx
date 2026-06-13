@@ -21,21 +21,11 @@ export default function RegisterPage() {
   const [loading, setLoading]   = useState(false);
   const [oauthLoading, setOauthLoading] = useState<"google" | "facebook" | null>(null);
   const [error, setError]       = useState("");
+  const [comingSoon, setComingSoon] = useState(false);
 
-  async function signInWithOAuth(provider: "google" | "facebook") {
-    setError("");
-    setOauthLoading(provider);
-    const supabase = createClient();
-    const { error: err } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    });
-    if (err) {
-      setError(err.message);
-      setOauthLoading(null);
-    }
+  function signInWithOAuth(_provider: "google" | "facebook") {
+    setComingSoon(true);
+    setTimeout(() => setComingSoon(false), 3500);
   }
 
   async function register() {
@@ -112,6 +102,7 @@ export default function RegisterPage() {
                   onClick={() => signInWithOAuth("facebook")}
                 />
               </div>
+              {comingSoon && <ComingSoonBox msg="Tính năng đang được phát triển, vui lòng đăng ký bằng email." />}
 
               <Divider label="hoặc đăng ký bằng email" />
 
@@ -275,6 +266,14 @@ function BrandPanel() {
 }
 
 function Req() { return <span style={{ color: "var(--danger)" }}>*</span>; }
+
+function ComingSoonBox({ msg }: { msg: string }) {
+  return (
+    <div style={{ marginBottom: 12, padding: "11px 14px", background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, fontSize: 13, color: "#92400e" }}>
+      {msg}
+    </div>
+  );
+}
 
 function ErrBox({ msg }: { msg: string }) {
   return <div style={{ marginTop: 14, padding: "11px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>{msg}</div>;

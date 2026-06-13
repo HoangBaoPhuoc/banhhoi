@@ -16,16 +16,12 @@ export default function LoginPage() {
   const [loading, setLoading]       = useState(false);
   const [oauthLoading, setOauthLoading] = useState<"google" | "facebook" | null>(null);
   const [error, setError]           = useState("");
+  const [comingSoon, setComingSoon] = useState(false);
+  const [forgotMsg, setForgotMsg]   = useState(false);
 
-  async function signInWithOAuth(provider: "google" | "facebook") {
-    setError("");
-    setOauthLoading(provider);
-    const supabase = createClient();
-    const { error: err } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: `${window.location.origin}/api/auth/callback` },
-    });
-    if (err) { setError(err.message); setOauthLoading(null); }
+  function signInWithOAuth(_provider: "google" | "facebook") {
+    setComingSoon(true);
+    setTimeout(() => setComingSoon(false), 3500);
   }
 
   async function loginPassword() {
@@ -77,6 +73,8 @@ export default function LoginPage() {
               onClick={() => signInWithOAuth("facebook")}
             />
           </div>
+          {comingSoon && <ComingSoonBox msg="Tính năng đang được phát triển, vui lòng đăng nhập bằng email." />}
+          {forgotMsg && <ComingSoonBox msg="Tính năng đang được phát triển, vui lòng liên hệ admin." />}
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "28px 0" }}>
             <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
@@ -99,9 +97,10 @@ export default function LoginPage() {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <label style={lbl}>Mật khẩu</label>
-                  <Link href="/forgot-password" style={{ fontSize: 12, color: "var(--primary)", fontWeight: 600 }}>
+                  <button type="button" onClick={() => { setForgotMsg(true); setTimeout(() => setForgotMsg(false), 3500); }}
+                    style={{ fontSize: 12, color: "var(--primary)", fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
                     Quên mật khẩu?
-                  </Link>
+                  </button>
                 </div>
                 <div style={{ position: "relative" }}>
                   <input type={showPw ? "text" : "password"} value={password} placeholder="••••••••"
@@ -199,6 +198,14 @@ function FacebookIcon() {
 }
 
 /* ── Micro ── */
+function ComingSoonBox({ msg }: { msg: string }) {
+  return (
+    <div style={{ marginTop: 12, padding: "11px 14px", background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, fontSize: 13, color: "#92400e" }}>
+      {msg}
+    </div>
+  );
+}
+
 function ErrBox({ msg }: { msg: string }) {
   return (
     <div style={{ padding: "11px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, fontSize: 13, color: "var(--danger)" }}>
